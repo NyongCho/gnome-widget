@@ -1,0 +1,6 @@
+{
+  "calendarEnabled": false,
+  "calendarSecretDeletionPending": false,
+  "weatherLocation": null,
+  "networkInterface": "auto"
+}

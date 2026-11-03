@@ -10,9 +10,9 @@
 
 **Spec:** [PRD v1.0](liquid-glass-prd.md), [기술 설계](liquid-glass-design.md)
 
-**Status:** 2026-11-03 PRD 기준 반영. 시계·연결 해제·출처 변경·접근성 요구를 task와 검증에 배정했다. 체크박스는 아직 실행하지 않은 작업이다.
+**Status:** 2026-11-03 PRD 기준 반영. 시계·연결 해제·출처 변경·접근성 요구를 task와 검증에 배정했다. Task 0의 계약·캘린더 엔진을 구현했으며, 완료 표시된 항목은 실행 검증 결과를 반영한다.
 
-**Review:** [2026-11-03 저장소·로컬 API 검토](liquid-glass-repository-review.md)를 반영했다. 구조 검토를 통과했으며 코드 실행·GPU 성능 검증은 아직 하지 않았다.
+**Review:** [2026-11-03 저장소·로컬 API 검토](liquid-glass-repository-review.md)를 반영했다. 구조 검토를 통과했으며 Task 0의 Rust/TypeScript/GJS 실행 검증을 진행했다. GPU 시각·성능 검증은 아직 하지 않았다.
 
 **Execution order:** 의존성에 따라 **0 → 1 → 2 → 3 → 4 → 5 → 6 → 7** 순서로 진행한다. Task 0과 1은 전체 기능 구현 전 관문이다.
 
@@ -27,7 +27,7 @@
 - 서비스 기동은 systemd 한 경로로 통일한다. Rust 바이너리는 확장 ZIP에 넣지 않는다.
 - 첫 버전은 iCal 1개 읽기 전용, 현재 달, 진행 중·다가오는 일정 최대 3개, 날씨 지역 1곳·향후 6시간, 네트워크 history 60초다.
 - 기본 표시 카드는 시계·달력·일정·날씨·네트워크이며 오른쪽 위에 배치한다. 시스템·음악도 구현하되 기본 표시는 끈다.
-- 실제 설치와 GNOME 세션 조작은 구현 단계에 수행한다. 현재 단계는 문서 정렬까지이며 제품 코드는 없다.
+- 실제 설치와 GNOME 세션 조작은 Task 1 이후에 수행한다. Task 0에는 독립 라이브러리·계약 검증 코드만 있다.
 
 ## Review Focus
 
@@ -39,7 +39,7 @@
 
 ## 파일 구조
 
-프로젝트 루트는 `/home/nyong/projet/gnome-widget/`다. 아래 경로는 이 프로젝트 루트 기준이다. 별도 `work/liquid-glass-widgets/`를 중첩 생성하지 않는다. 현재 구현 파일은 없으며 설계·검토 문서와 HTML 미리보기만 준비되어 있다.
+프로젝트 루트는 `/home/nyong/projet/gnome-widget/`다. 아래 경로는 이 프로젝트 루트 기준이다. 별도 `work/liquid-glass-widgets/`를 중첩 생성하지 않는다. Task 0의 라이브러리·계약·테스트가 준비되어 있다. 아래 구조의 나머지는 후속 구현 대상이다.
 
 ```text
 daemon/Cargo.toml
@@ -75,9 +75,9 @@ docs/{setup,verification,shader-spike,calendar-feasibility,third-party-notices}.
 
 **Interfaces:** `expand_ics(input: &str, context: &CalendarContext, now: &str) -> Result<Vec<CalendarEvent>, CalendarError>`. `now`는 offset을 포함한 RFC3339이며 테스트가 실제 실행일에 의존하지 않도록 주입한다. `CalendarContext={month:string,timeZone:string,weekStart:number}`(0=일요일, 6=토요일). Event와 provider DTO는 Task 2/4에 명시된 계약을 이 task에서 먼저 선언한다. 테스트 helper `seoul_november()`는 2026-11, Asia/Seoul, 월요일 시작의 고정 컨텍스트다.
 
-- [ ] Task 2의 snapshot·provider 변경 계약을 먼저 확정한다. 양쪽에서 사용하는 예시 fixture와 오류 상태를 작성하고 Rust/TypeScript 명명 규칙을 맞춘다.
-- [ ] RRULE/RDATE, EXDATE, RECURRENCE-ID 변경, 취소된 반복 occurrence, TZID/VTIMEZONE, floating time, DST, 여러 날 종일 일정 fixture를 작성한다. 현재 달력 그리드와 다음 30일이 조회 범위다.
-- [ ] `weekly-exdate.ics`에 2026-11-02 09:00 Asia/Seoul 시작, 주간 COUNT=3, 11월 9일 제외를 넣고 아래 assertion을 `weekly_exdate_has_two_occurrences`로 작성한다. `expand_ics` 임시 구현은 비어 있는 결과를 반환하게 해 assertion 실패를 확인한다.
+- [x] Task 2의 snapshot·provider 변경 계약을 먼저 확정한다. 양쪽에서 사용하는 예시 fixture와 오류 상태를 작성하고 Rust/TypeScript 명명 규칙을 맞춘다.
+- [x] RRULE/RDATE, EXDATE, RECURRENCE-ID 변경, 취소된 반복 occurrence, TZID/VTIMEZONE, floating time, DST, 여러 날 종일 일정 fixture를 작성한다. 현재 달력 그리드와 다음 30일이 조회 범위다.
+- [x] `weekly-exdate.ics`에 2026-11-02 09:00 Asia/Seoul 시작, 주간 COUNT=3, 11월 9일 제외를 넣고 아래 assertion을 `weekly_exdate_has_two_occurrences`로 작성한다. `expand_ics` 임시 구현은 비어 있는 결과를 반환하게 해 assertion 실패를 확인한다.
 
 ```rust
 let events = expand_ics(include_str!("../../tests/fixtures/calendar/weekly-exdate.ics"),
@@ -86,10 +86,10 @@ assert_eq!(events.iter().map(|e| e.start.as_str()).collect::<Vec<_>>(),
     ["2026-11-02T09:00:00+09:00", "2026-11-16T09:00:00+09:00"]);
 ```
 
-- [ ] Rust ICS 파서·반복 규칙 후보를 작은 실행 검증으로 비교한다. 유한 조회 범위·반복 건수·연산량 제한을 확인한다. 미지원 시간대를 임의로 로컬 시간대로 바꾸거나 예외 일정을 중복 표시하면 실패다.
-- [ ] `moved_occurrence_replaces_original`, `cancelled_occurrence_is_absent`, `all_day_end_is_exclusive`, `dst_keeps_local_start`, `ongoing_event_overlaps_window`, `custom_vtimezone_is_resolved`, `expansion_limit_returns_error`를 fixture 기대값으로 검증한다. 원본 ICS 최대 5MiB, 반복 확장 최대 10000건을 적용한다.
-- [ ] 통과한 조합과 지원 범위를 기록한다. 실패하면 libical 계열 또는 GOA/EDS 대안의 비용을 비교하고 iCal 방식에 미치는 영향을 보고한다. 전체 UI 구현 전에 해결 방향을 결정한다.
-- [ ] `cargo test --manifest-path daemon/Cargo.toml --test calendar`를 실행해 모든 fixture가 PASS인지 확인하고 라이브러리·lockfile·지원 범위를 기록한다. 계정 연결 없이 통과해야 한다.
+- [x] Rust ICS 파서·반복 규칙 후보를 작은 실행 검증으로 비교한다. 유한 조회 범위·반복 건수·연산량 제한을 확인한다. 미지원 시간대를 임의로 로컬 시간대로 바꾸거나 예외 일정을 중복 표시하면 실패다.
+- [x] `moved_occurrence_replaces_original`, `cancelled_occurrence_is_absent`, `all_day_end_is_exclusive`, `dst_keeps_local_start`, `ongoing_event_overlaps_window`, `custom_vtimezone_is_resolved`, `expansion_limit_returns_error`를 fixture 기대값으로 검증한다. 원본 ICS 최대 5MiB, 반복 확장 최대 10000건을 적용한다.
+- [x] 통과한 조합과 지원 범위를 기록한다. 실패하면 libical 계열 또는 GOA/EDS 대안의 비용을 비교하고 iCal 방식에 미치는 영향을 보고한다. 전체 UI 구현 전에 해결 방향을 결정한다.
+- [x] `cargo test --manifest-path daemon/Cargo.toml --test calendar`를 실행해 모든 fixture가 PASS인지 확인하고 라이브러리·lockfile·지원 범위를 기록한다. 계정 연결 없이 통과해야 한다.
 
 **완료 기준:** 공통 데이터 계약이 있고, 요구한 캘린더 정확성을 입증하는 fixture가 후보 라이브러리에서 통과한다. 실제 계정 없이 검증 가능해야 한다.
 

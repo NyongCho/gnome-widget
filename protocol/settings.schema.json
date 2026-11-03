@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "calendarEnabled",
+    "calendarSecretDeletionPending",
+    "weatherLocation",
+    "networkInterface"
+  ],
+  "properties": {
+    "calendarEnabled": {
+      "type": "boolean"
+    },
+    "calendarSecretDeletionPending": {
+      "type": "boolean"
+    },
+    "weatherLocation": {
+      "anyOf": [
+        {
+          "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/WeatherLocation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "networkInterface": {
+      "type": "string",
+      "maxLength": 64,
+      "minLength": 1
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:liquid-widgets:settings:v1",
+  "$defs": {
+    "CalendarContext": {
+      "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/CalendarContext"
+    },
+    "WeatherLocationInput": {
+      "anyOf": [
+        {
+          "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/WeatherLocation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "LocationSearchResults": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/WeatherLocation"
+      },
+      "maxItems": 20
+    }
+  }
+}

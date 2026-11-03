@@ -1,0 +1,1374 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "revisions",
+    "calendar",
+    "weather",
+    "system",
+    "network",
+    "media"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "revisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calendar",
+        "weather",
+        "system",
+        "network",
+        "media"
+      ],
+      "properties": {
+        "calendar": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "weather": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "system": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "network": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "media": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "calendar": {
+      "$ref": "#/$defs/CalendarState"
+    },
+    "weather": {
+      "$ref": "#/$defs/WeatherState"
+    },
+    "system": {
+      "$ref": "#/$defs/SystemState"
+    },
+    "network": {
+      "$ref": "#/$defs/NetworkState"
+    },
+    "media": {
+      "$ref": "#/$defs/MediaState"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:liquid-widgets:snapshot:v1",
+  "$defs": {
+    "CalendarContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "month",
+        "timeZone",
+        "weekStart"
+      ],
+      "properties": {
+        "month": {
+          "type": "string",
+          "maxLength": 7,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+        },
+        "timeZone": {
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "weekStart": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        }
+      }
+    },
+    "CalendarEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uid",
+        "occurrenceKey",
+        "title",
+        "start",
+        "end",
+        "allDay"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 2048,
+          "minLength": 1
+        },
+        "occurrenceKey": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "start": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "end": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "allDay": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "allDay": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "start": {
+                "type": "string",
+                "maxLength": 10,
+                "format": "date"
+              },
+              "end": {
+                "type": "string",
+                "maxLength": 10,
+                "format": "date"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "start": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              },
+              "end": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CalendarData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "month",
+        "timeZone",
+        "weekStart",
+        "events"
+      ],
+      "properties": {
+        "month": {
+          "type": "string",
+          "maxLength": 7,
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+        },
+        "timeZone": {
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "weekStart": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CalendarEvent"
+          },
+          "maxItems": 10000
+        }
+      }
+    },
+    "WeatherLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "latitude",
+        "longitude",
+        "timeZone"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 512,
+          "minLength": 1
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "timeZone": {
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        }
+      }
+    },
+    "WeatherData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "location",
+        "timeZone",
+        "current",
+        "hourly",
+        "attributionUrl"
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "timeZone": {
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "current": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "temperatureC",
+            "code"
+          ],
+          "properties": {
+            "temperatureC": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "code": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 99
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "hourly": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "temperatureC",
+              "precipitationProbability"
+            ],
+            "properties": {
+              "at": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              },
+              "temperatureC": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "precipitationProbability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "maxItems": 6
+        },
+        "attributionUrl": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^https://"
+        }
+      }
+    },
+    "SystemData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpuPercent",
+        "memoryUsedBytes",
+        "memoryTotalBytes",
+        "temperatureC"
+      ],
+      "properties": {
+        "cpuPercent": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memoryUsedBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "memoryTotalBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "temperatureC": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "NetworkData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interface",
+        "rxBytesPerSec",
+        "txBytesPerSec",
+        "history"
+      ],
+      "properties": {
+        "interface": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "rxBytesPerSec": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "txBytesPerSec": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "at",
+              "rx",
+              "tx"
+            ],
+            "properties": {
+              "at": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              },
+              "rx": {
+                "type": "number",
+                "minimum": 0
+              },
+              "tx": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "maxItems": 60
+        }
+      }
+    },
+    "MediaData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "player",
+        "status",
+        "title",
+        "artist",
+        "artUri"
+      ],
+      "properties": {
+        "player": {
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "playing",
+            "paused",
+            "stopped"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "artist": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "artUri": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 4096,
+              "pattern": "^file:///"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "CalendarState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceId",
+        "updatedAt",
+        "data",
+        "errorCode"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "loading",
+            "ok",
+            "stale",
+            "unconfigured",
+            "unavailable"
+          ]
+        },
+        "sourceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64,
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CalendarData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "enum": [
+                "NETWORK_ERROR",
+                "INVALID_DATA",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "KEYRING_LOCKED",
+                "SECRET_DELETION_FAILED",
+                "AUTH_ERROR",
+                "RATE_LIMITED",
+                "NO_PLAYER",
+                "NO_INTERFACE",
+                "SERVICE_UNAVAILABLE",
+                "INTERNAL_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/CalendarData"
+              },
+              "updatedAt": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unconfigured",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "type": "null"
+              },
+              "updatedAt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "unconfigured",
+                  "loading"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "errorCode": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "errorCode": {
+                "enum": [
+                  "NETWORK_ERROR",
+                  "INVALID_DATA",
+                  "PAYLOAD_TOO_LARGE",
+                  "EXPANSION_LIMIT",
+                  "UNSUPPORTED_CALENDAR",
+                  "UNKNOWN_TIME_ZONE",
+                  "KEYRING_LOCKED",
+                  "SECRET_DELETION_FAILED",
+                  "AUTH_ERROR",
+                  "RATE_LIMITED",
+                  "NO_PLAYER",
+                  "NO_INTERFACE",
+                  "SERVICE_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "WeatherState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceId",
+        "updatedAt",
+        "data",
+        "errorCode"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "loading",
+            "ok",
+            "stale",
+            "unconfigured",
+            "unavailable"
+          ]
+        },
+        "sourceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64,
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WeatherData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "enum": [
+                "NETWORK_ERROR",
+                "INVALID_DATA",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "KEYRING_LOCKED",
+                "SECRET_DELETION_FAILED",
+                "AUTH_ERROR",
+                "RATE_LIMITED",
+                "NO_PLAYER",
+                "NO_INTERFACE",
+                "SERVICE_UNAVAILABLE",
+                "INTERNAL_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/WeatherData"
+              },
+              "updatedAt": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unconfigured",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "type": "null"
+              },
+              "updatedAt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "unconfigured",
+                  "loading"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "errorCode": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "errorCode": {
+                "enum": [
+                  "NETWORK_ERROR",
+                  "INVALID_DATA",
+                  "PAYLOAD_TOO_LARGE",
+                  "EXPANSION_LIMIT",
+                  "UNSUPPORTED_CALENDAR",
+                  "UNKNOWN_TIME_ZONE",
+                  "KEYRING_LOCKED",
+                  "SECRET_DELETION_FAILED",
+                  "AUTH_ERROR",
+                  "RATE_LIMITED",
+                  "NO_PLAYER",
+                  "NO_INTERFACE",
+                  "SERVICE_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SystemState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceId",
+        "updatedAt",
+        "data",
+        "errorCode"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "loading",
+            "ok",
+            "stale",
+            "unconfigured",
+            "unavailable"
+          ]
+        },
+        "sourceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64,
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SystemData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "enum": [
+                "NETWORK_ERROR",
+                "INVALID_DATA",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "KEYRING_LOCKED",
+                "SECRET_DELETION_FAILED",
+                "AUTH_ERROR",
+                "RATE_LIMITED",
+                "NO_PLAYER",
+                "NO_INTERFACE",
+                "SERVICE_UNAVAILABLE",
+                "INTERNAL_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/SystemData"
+              },
+              "updatedAt": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unconfigured",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "type": "null"
+              },
+              "updatedAt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "unconfigured",
+                  "loading"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "errorCode": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "errorCode": {
+                "enum": [
+                  "NETWORK_ERROR",
+                  "INVALID_DATA",
+                  "PAYLOAD_TOO_LARGE",
+                  "EXPANSION_LIMIT",
+                  "UNSUPPORTED_CALENDAR",
+                  "UNKNOWN_TIME_ZONE",
+                  "KEYRING_LOCKED",
+                  "SECRET_DELETION_FAILED",
+                  "AUTH_ERROR",
+                  "RATE_LIMITED",
+                  "NO_PLAYER",
+                  "NO_INTERFACE",
+                  "SERVICE_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "NetworkState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceId",
+        "updatedAt",
+        "data",
+        "errorCode"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "loading",
+            "ok",
+            "stale",
+            "unconfigured",
+            "unavailable"
+          ]
+        },
+        "sourceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64,
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NetworkData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "enum": [
+                "NETWORK_ERROR",
+                "INVALID_DATA",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "KEYRING_LOCKED",
+                "SECRET_DELETION_FAILED",
+                "AUTH_ERROR",
+                "RATE_LIMITED",
+                "NO_PLAYER",
+                "NO_INTERFACE",
+                "SERVICE_UNAVAILABLE",
+                "INTERNAL_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/NetworkData"
+              },
+              "updatedAt": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unconfigured",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "type": "null"
+              },
+              "updatedAt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "unconfigured",
+                  "loading"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "errorCode": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "errorCode": {
+                "enum": [
+                  "NETWORK_ERROR",
+                  "INVALID_DATA",
+                  "PAYLOAD_TOO_LARGE",
+                  "EXPANSION_LIMIT",
+                  "UNSUPPORTED_CALENDAR",
+                  "UNKNOWN_TIME_ZONE",
+                  "KEYRING_LOCKED",
+                  "SECRET_DELETION_FAILED",
+                  "AUTH_ERROR",
+                  "RATE_LIMITED",
+                  "NO_PLAYER",
+                  "NO_INTERFACE",
+                  "SERVICE_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "MediaState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceId",
+        "updatedAt",
+        "data",
+        "errorCode"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "loading",
+            "ok",
+            "stale",
+            "unconfigured",
+            "unavailable"
+          ]
+        },
+        "sourceId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64,
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MediaData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "enum": [
+                "NETWORK_ERROR",
+                "INVALID_DATA",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "KEYRING_LOCKED",
+                "SECRET_DELETION_FAILED",
+                "AUTH_ERROR",
+                "RATE_LIMITED",
+                "NO_PLAYER",
+                "NO_INTERFACE",
+                "SERVICE_UNAVAILABLE",
+                "INTERNAL_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "stale"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/MediaData"
+              },
+              "updatedAt": {
+                "type": "string",
+                "maxLength": 64,
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unconfigured",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "type": "null"
+              },
+              "updatedAt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ok",
+                  "unconfigured",
+                  "loading"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "errorCode": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "errorCode": {
+                "enum": [
+                  "NETWORK_ERROR",
+                  "INVALID_DATA",
+                  "PAYLOAD_TOO_LARGE",
+                  "EXPANSION_LIMIT",
+                  "UNSUPPORTED_CALENDAR",
+                  "UNKNOWN_TIME_ZONE",
+                  "KEYRING_LOCKED",
+                  "SECRET_DELETION_FAILED",
+                  "AUTH_ERROR",
+                  "RATE_LIMITED",
+                  "NO_PLAYER",
+                  "NO_INTERFACE",
+                  "SERVICE_UNAVAILABLE",
+                  "INTERNAL_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

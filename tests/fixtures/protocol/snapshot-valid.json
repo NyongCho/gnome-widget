@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-03T03:00:00Z",
+  "revisions": {
+    "calendar": 0,
+    "weather": 0,
+    "system": 0,
+    "network": 0,
+    "media": 0
+  },
+  "calendar": {
+    "status": "ok",
+    "sourceId": null,
+    "updatedAt": "2026-11-03T03:00:00Z",
+    "data": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1,
+      "events": [
+        {
+          "uid": "demo-event",
+          "occurrenceKey": "2026-11-03T00:00:00Z",
+          "title": "오늘 일정",
+          "start": "2026-11-03T09:00:00+09:00",
+          "end": "2026-11-03T10:00:00+09:00",
+          "allDay": false
+        }
+      ]
+    },
+    "errorCode": null
+  },
+  "weather": {
+    "status": "stale",
+    "sourceId": null,
+    "updatedAt": "2026-11-03T03:00:00Z",
+    "data": {
+      "location": "서울",
+      "timeZone": "Asia/Seoul",
+      "current": {
+        "temperatureC": 12.5,
+        "code": 1
+      },
+      "hourly": [
+        {
+          "at": "2026-11-03T13:00:00+09:00",
+          "temperatureC": null,
+          "precipitationProbability": 20.0
+        }
+      ],
+      "attributionUrl": "https://open-meteo.com/"
+    },
+    "errorCode": "NETWORK_ERROR"
+  },
+  "system": {
+    "status": "ok",
+    "sourceId": null,
+    "updatedAt": "2026-11-03T03:00:00Z",
+    "data": {
+      "cpuPercent": null,
+      "memoryUsedBytes": 1073741824,
+      "memoryTotalBytes": 8589934592,
+      "temperatureC": null
+    },
+    "errorCode": null
+  },
+  "network": {
+    "status": "ok",
+    "sourceId": null,
+    "updatedAt": "2026-11-03T03:00:00Z",
+    "data": {
+      "interface": "enp1s0",
+      "rxBytesPerSec": 1024.0,
+      "txBytesPerSec": 0.0,
+      "history": [
+        {
+          "at": "2026-11-03T03:00:00Z",
+          "rx": 1024.0,
+          "tx": 0.0
+        }
+      ]
+    },
+    "errorCode": null
+  },
+  "media": {
+    "status": "unavailable",
+    "sourceId": null,
+    "updatedAt": null,
+    "data": null,
+    "errorCode": "NO_PLAYER"
+  }
+}

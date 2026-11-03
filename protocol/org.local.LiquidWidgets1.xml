@@ -1,0 +1,19 @@
+<node name="/org/local/LiquidWidgets">
+  <!-- Session bus: org.local.LiquidWidgets. JSON payloads are UTF-8 <= 512 KiB.
+       ProviderChanged.payload is one provider state, not the whole snapshot.
+       The same-user session bus is not a secret isolation boundary. -->
+  <interface name="org.local.LiquidWidgets1">
+    <method name="GetSnapshot"><arg name="snapshot" type="s" direction="out"/></method>
+    <signal name="ProviderChanged"><arg name="provider" type="s"/><arg name="revision" type="u"/><arg name="payload" type="s"/></signal>
+    <method name="Subscribe"><arg name="providers" type="as" direction="in"/><arg name="token" type="s" direction="out"/></method>
+    <method name="Unsubscribe"><arg name="token" type="s" direction="in"/></method>
+    <method name="Refresh"><arg name="provider" type="s" direction="in"/></method>
+    <method name="GetSettings"><arg name="settings" type="s" direction="out"/></method>
+    <method name="SetCalendarContext"><arg name="contextJson" type="s" direction="in"/></method>
+    <method name="SetCalendarSecret"><arg name="url" type="s" direction="in"/></method>
+    <method name="ClearCalendarSecret"/>
+    <method name="SearchLocations"><arg name="query" type="s" direction="in"/><arg name="locations" type="s" direction="out"/></method>
+    <method name="SetWeatherLocation"><arg name="locationJson" type="s" direction="in"/></method>
+    <method name="SetNetworkInterface"><arg name="name" type="s" direction="in"/></method>
+  </interface>
+</node>

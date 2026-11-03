@@ -1,0 +1,145 @@
+[
+  {
+    "name": "unknown schema version",
+    "kind": "snapshot",
+    "path": [
+      "schemaVersion"
+    ],
+    "value": 2
+  },
+  {
+    "name": "secret URL field",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "privateUrl"
+    ],
+    "value": "https://calendar.google.com/calendar/ical/demo/private-secret/basic.ics"
+  },
+  {
+    "name": "secret source ID",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "sourceId"
+    ],
+    "value": "https://example.com/private-secret"
+  },
+  {
+    "name": "raw error is forbidden",
+    "kind": "snapshot",
+    "path": [
+      "weather",
+      "errorCode"
+    ],
+    "value": "failed GET https://example.com/private-secret"
+  },
+  {
+    "name": "wrong provider shape",
+    "kind": "snapshot",
+    "path": [
+      "network",
+      "data",
+      "rxBytesPerSec"
+    ],
+    "value": "fast"
+  },
+  {
+    "name": "impossible date",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "data",
+      "events",
+      0,
+      "start"
+    ],
+    "value": "2026-02-30T09:00:00+09:00"
+  },
+  {
+    "name": "offset required",
+    "kind": "snapshot",
+    "path": [
+      "generatedAt"
+    ],
+    "value": "2026-11-03T12:00:00"
+  },
+  {
+    "name": "ok needs data",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "data"
+    ],
+    "value": null
+  },
+  {
+    "name": "stale needs timestamp",
+    "kind": "snapshot",
+    "path": [
+      "weather",
+      "updatedAt"
+    ],
+    "value": null
+  },
+  {
+    "name": "unknown provider state",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "status"
+    ],
+    "value": "ready"
+  },
+  {
+    "name": "weekStart bounds",
+    "kind": "snapshot",
+    "path": [
+      "calendar",
+      "data",
+      "weekStart"
+    ],
+    "value": 7
+  },
+  {
+    "name": "negative byte count",
+    "kind": "snapshot",
+    "path": [
+      "system",
+      "data",
+      "memoryUsedBytes"
+    ],
+    "value": -1
+  },
+  {
+    "name": "revision overflow",
+    "kind": "snapshot",
+    "path": [
+      "revisions",
+      "calendar"
+    ],
+    "value": 4294967296
+  },
+  {
+    "name": "secret settings field",
+    "kind": "settings",
+    "path": [
+      "calendarUrl"
+    ],
+    "value": "private-secret"
+  },
+  {
+    "name": "location latitude bounds",
+    "kind": "settings",
+    "path": [
+      "weatherLocation"
+    ],
+    "value": {
+      "id": "seoul",
+      "label": "Seoul",
+      "latitude": 999,
+      "longitude": 127,
+      "timeZone": "Asia/Seoul"
+    }
+  }
+]

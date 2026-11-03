@@ -1,0 +1,17 @@
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import Ajv from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
+import standaloneCode from 'ajv/dist/standalone/index.js';
+import { build } from 'esbuild';
+const ajv = new Ajv({code: {source: true, esm: true}, strict: true, allErrors: false});
+addFormats(ajv);
+const snapshot = JSON.parse(await readFile(new URL('../../protocol/snapshot.schema.json', import.meta.url), 'utf8'));
+const settings = JSON.parse(await readFile(new URL('../../protocol/settings.schema.json', import.meta.url), 'utf8'));
+ajv.addSchema(snapshot); ajv.addSchema(settings);
+const exports = {snapshot: snapshot.$id, settings: settings.$id, calendarContext: `${snapshot.$id}#/$defs/CalendarContext`, weatherLocation: `${settings.$id}#/$defs/WeatherLocationInput`, locationSearchResults: `${settings.$id}#/$defs/LocationSearchResults`};
+for (const name of ['Calendar','Weather','System','Network','Media']) exports[name.toLowerCase()] = `${snapshot.$id}#/$defs/${name}State`;
+const dir = new URL('../generated/', import.meta.url);
+await mkdir(dir, {recursive: true});
+// Bundling replaces Ajv's tiny helper imports. No Node/Ajv/compiler at runtime.
+await build({stdin: {contents: standaloneCode(ajv, exports), resolveDir: new URL('..', import.meta.url).pathname, sourcefile:'validators.js'}, outfile: new URL('validators.js', dir).pathname, bundle:true, format:'esm', platform:'browser', target:'es2022'});
+await writeFile(new URL('validators.d.ts', dir), Object.keys(exports).map(name=>`export function ${name}(data: unknown): boolean;`).join('\n')+'\n');
