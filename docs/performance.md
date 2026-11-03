@@ -34,6 +34,19 @@ FBO 수치는 할당한 RGBA color buffer 합계다. 깊이 버퍼·드라이버
 
 이 구간에서 중복 root/FBO 증가나 제품 예외는 관찰하지 않았다. 전체 Shell RSS에는 DING/BMS/Dock 등과 native allocator 캐시가 포함되므로 변화량만으로 누수 부재를 수학적으로 보장하지 않는다. 정상 시계 갱신은 효과 입력 캐시 재그리기를 늘리지 않는 별도 검사를 통과했다.
 
+## RSS 증가 추가 진단
+
+20회 직후 Shell RSS가 늘어 추가로 같은 세션에서 20·40·60회를 비교했다. 각 구간 뒤 2초 안정화와 GC를 수행했다. [원본 JSON](../outputs/verification/lifecycle-memory.json).
+
+| 누적 활성화 횟수 | Shell RSS MiB | layer / 카드 | FBO bytes |
+|---|---:|---:|---:|
+| 0 | 441.82 | 1 / 6 | 1898320 |
+| 20 | 490.10 | 1 / 6 | 1898320 |
+| 40 | 487.48 | 1 / 6 | 1898320 |
+| 60 | 493.26 | 1 / 6 | 1898320 |
+
+첫 구간의 증가가 이후 구간에서 같은 비율로 누적되지는 않았다. 이 범위에서는 고정된 native/renderer 할당 여유와 일치하는 추이지만, RSS만으로 특정 allocator/cache를 원인으로 확정하지 않는다. 재현: `./scripts/test-gnome.py --lifecycle`.
+
 ## 재현 및 검사기 수정
 
 ```sh

@@ -126,3 +126,5 @@ CPU 첫 표본·guest 중복 제외·카운터 초기화, MemAvailable 기반 RA
 환경 경고는 결과와 구분했다. 로컬 전용 UUID의 확장 사이트 조회 404, 임시 GIO local backend의 Ubuntu Dock `trash://` 미지원, private bus 종료 시 EDS/portal 경고가 로그에 있다. 사용자 세션을 보존하는 검사 환경에서 나온 경고이며 제품 예외나 완전 무경고 실행으로 주장하지 않는다. 긴 soak의 제품 actor/FBO 추이와 완료 결과는 성능 기록에 있다.
 
 최종 전체 GUI 검사도 exit 0: 카드 배치·오류 fallback 경계·잠금 모드·8/8 클릭·20회 cleanup을 통과했다. 30분 soak와 뒤이은 20회 재활성화도 exit 0이며 메모리/FBO 추이를 [성능 기록](performance.md)에 기록했다.
+
+20회 이후 Shell RSS 증가를 확인해 60회까지 추가 진단했다. 20→40→60 구간의 추이와 한계는 [성능 기록](performance.md#rss-증가-추가-진단)에 있다.
