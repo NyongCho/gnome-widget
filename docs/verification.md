@@ -128,3 +128,19 @@ CPU 첫 표본·guest 중복 제외·카운터 초기화, MemAvailable 기반 RA
 최종 전체 GUI 검사도 exit 0: 카드 배치·오류 fallback 경계·잠금 모드·8/8 클릭·20회 cleanup을 통과했다. 30분 soak와 뒤이은 20회 재활성화도 exit 0이며 메모리/FBO 추이를 [성능 기록](performance.md)에 기록했다.
 
 20회 이후 Shell RSS 증가를 확인해 60회까지 추가 진단했다. 20→40→60 구간의 추이와 한계는 [성능 기록](performance.md#rss-증가-추가-진단)에 있다.
+
+## 최종 전체 변경 리뷰와 수정
+
+Tasks 3–7(`e482e8d..519b4f6`)을 별도 fresh-context 리뷰어가 한 번 읽기 전용 검토했다. Critical은 없었고 Important 7개를 모두 수용해 한 번의 수정 단계에서 처리했다.
+
+| 발견 사항 | 수정과 실패→성공 증거 |
+|---|---|
+| 재연결이 기존 키링 삭제 대기를 지움 | pending flag를 성공한 전체 연결 해제까지 유지; 잠금→삭제 실패→재연결/재교체→전체 삭제 Rust 회귀 |
+| 일정 날짜 누락 | 날짜·요일·시각 또는 종일을 표시; caption 회귀와 실제 GUI 캡처 |
+| 30일 밖의 일정 표시 | 월간 grid와 별도로 [오늘, 오늘+30일) 및 진행 중 일정 필터; 12월4일 회귀 |
+| 종일/시간 일정 정렬 오류 | 표시 시간대의 날짜·시간으로 혼합 비교; 서울 11월5일 종일 vs UTC11월4일16시 회귀 |
+| UI 42칸과 엔진 조회 범위 불일치 | 최소 완전한 주 단위 grid로 일치; 2027년2월28칸 및 일요일 시작35칸 회귀 |
+| 반투명 fallback이 stale/오류를 가림 | 렌더링 안내는 제목 옆, 데이터 상태는 footer 유지; 실제 GNOME 상태/시각/경계 assertion |
+| 같은 날 절전 복귀 시 원격 데이터 미갱신 | 활성·설정된 calendar/weather Refresh, loading+기존 성공 시각, 실패 시 취소 가능한60초 재시도; client/실제 resume signal 회귀 |
+
+수정 후 전체 검사 **Rust 76개 + TypeScript 55개 + Python 7개**, fmt/clippy/typecheck/build/GJS/IPC/schema 검사가 통과했다. 실제 전체 GUI도 exit 0로 날짜·fallback stale 안내·resume 연결·8/8 클릭·20회 cleanup을 통과했다. 물리 절전 인수는 여전히 사용자 단계다. 새 Minor는 없었으며 이전 Task0의 Ajv 날짜 구분자 허용 차이는 그대로 문서화했다. 결정과 리뷰 범위 판단은 [전체 결정 기록](implementation-decisions.md)에 보존했다.

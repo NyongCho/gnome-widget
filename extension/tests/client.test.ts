@@ -95,3 +95,19 @@ test('calendar context is sent before subscribe, serialized on change and refres
  client.setCalendarContext({...context,timeZone:'America/New_York'},'2026-11-05');assert.equal(wire.pending.length,0);old.resolve([]);await tick();
  const last=wire.take('SetCalendarContext');assert.ok(String(last.args[0]).includes('America/New_York'));last.resolve([]);await tick();client.stop();
 });
+test('resume refreshes subscribed remote data, marks old data pending, retries failure and cancels on disable',async()=>{
+ const wire=new Wire(),store=new ProviderStore(),client=new DataClient(wire,store,()=>{},()=>{});
+ client.start(['calendar','weather','system']);wire.owner!(':1.1');wire.take('Subscribe').resolve(['token']);await tick();
+ const data=fixture();wire.take('GetSnapshot').resolve([JSON.stringify(data)]);await tick();
+ client.refreshAfterResume();
+ const requests=wire.pending.filter(p=>p.method==='Refresh');assert.deepEqual(requests.map(p=>p.args[0]).sort(),['calendar','weather']);
+ assert.equal(store.get('weather').status,'loading');assert.equal(store.get('weather').updatedAt,data.weather.updatedAt);assert.deepEqual(store.get('weather').data,data.weather.data);
+ wire.take('Refresh').resolve([]);wire.take('Refresh').reject(new Error('rate limited'));await tick();assert.equal(wire.retry(),60000);
+ wire.take('Refresh').reject(new Error('temporary'));await tick();assert.equal(wire.scheduled.size,1);
+ wire.changes.get(':1.1')!('weather',10,JSON.stringify({...data.weather,status:'ok',errorCode:null}));assert.equal(store.get('weather').status,'ok');
+ client.stop();assert.equal(wire.scheduled.size,0);
+});
+test('resume does not refresh hidden or unconfigured providers',async()=>{
+ const wire=new Wire(),client=new DataClient(wire,new ProviderStore(),()=>{},()=>{});client.start(['system']);wire.owner!(':1.1');wire.take('Subscribe').resolve(['token']);await tick();wire.take('GetSnapshot').resolve([JSON.stringify(fixture())]);await tick();
+ client.refreshAfterResume();assert.equal(wire.pending.length,0);client.stop();
+});

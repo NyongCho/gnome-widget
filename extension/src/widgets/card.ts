@@ -17,11 +17,13 @@ export class GlassCard {
     readonly body=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-body',y_expand:true});
     readonly title:St.Label;
     readonly status=label('','liquid-status');
-    readonly mode=label('굴절 사용 불가 · 반투명 모드','liquid-status');
+    readonly mode=label('굴절 불가 · 반투명','liquid-status');
     constructor(readonly id:string,monitor:number,title:string,action:()=>void){
         this.surface=new GlassSurface(monitor,()=>this.applyAppearance());
         this.title=label(title,'liquid-title');
-        this.content.add_child(this.title);this.content.add_child(this.body);this.content.add_child(this.status);this.mode.hide();this.content.add_child(this.mode);
+        const heading=new St.BoxLayout({x_expand:true});
+        heading.add_child(this.title);this.mode.x_expand=false;this.mode.x_align=Clutter.ActorAlign.END;this.mode.hide();heading.add_child(this.mode);
+        this.content.add_child(heading);this.content.add_child(this.body);this.content.add_child(this.status);
         this.button=new St.Button({child:this.content,reactive:true,can_focus:true,track_hover:true,style_class:'liquid-card',accessible_name:title});
         this.button.connect('clicked',action);this.surface.actor.add_child(this.button);
     }
@@ -35,7 +37,6 @@ export class GlassCard {
     }
     private applyAppearance():void{
         this.mode.visible=this.surface.fallback;
-        this.status.visible=!this.surface.fallback;
         this.button.set_style(`font-size:${14*this.scale}px;background-color:rgba(12,24,42,${this.lowPower||this.surface.fallback?Math.max(.72,this.opacity):this.opacity});`);
     }
     clear():void{this.body.destroy_all_children();}

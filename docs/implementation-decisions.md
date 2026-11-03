@@ -1,6 +1,6 @@
 # 구현 중 결정과 남은 경미한 사항
 
-단계별 기록을 시간순으로 보존한다. 초기 단계에서 미룬 사항은 후속 검증 기록과 함께 읽는다. 현재 사용자 단계와 최종 결과는 [검증 기록](verification.md)에 있다.
+단계별 기록을 시간순으로 보존한다. 초기 단계에서 미룬 사항은 후속 기록과 함께 읽는다. 현재 인수 범위는 [검증 기록](verification.md)에 있다.
 
 ## 결정 기록
 
@@ -63,6 +63,20 @@
 - Task 7: Ruling: benchmark uses GNOME's actual stagePaintStart→stagePaintDone timings without forced glFinish, which includes possible swap time and is not a presentation-latency/GPU-only measurement. Actual 1280×800 NVIDIA Devkit, same animated/moving foreground window, DING/BMS/Ubuntu Dock. Device-global nvidia-smi memory is supplementary, not extension-owned allocation.
 
 - Task 7: Ruling: new/updated local extension code may need logout/login because GNOME 50 discovers local extensions at session start and caches imported code. Installer records only this UUID in enabled/disabled lists, starts the user service, and reports next-login activation honestly. Do not restart the user's Wayland session. Cost: live outer-shell visual acceptance remains a human session gate.
+
+- Final: Ruling: unchanged Tasks0–2 are outside this review except integration dependencies — earlier reviews stand. Cost: this is not a fresh audit of unchanged recurrence internals.
+
+- Final: Ruling: private iCal/location/browser login and physical logout/lock/auth/suspend/hotplug remain user acceptance — do not interrupt the user's desktop. Cost: injected transitions do not prove those physical paths.
+
+- Final: Ruling: paint timing, device-global GPU readings and bounded RSS samples do not establish presentation latency/exact allocation/proof of leak absence. Cost: real workload/hardware can differ from measured Devkit.
+
+- Final: Ruling: unsupported recurrence constructs and GNOME versions other than50 remain excluded — reject unsupported feeds explicitly. Cost: some feeds/platforms cannot be used in v1.
+
+- Final: Ruling: preserve the calendar deletion-pending flag across replacements; only successful explicit disconnect clears all app keyring items and the flag. This keeps current replacement usable without falsely reporting old secrets deleted. Cost: user must finish pending disconnect cleanup, which also disconnects the current calendar.
+
+- Final: Ruling: display the same minimal complete-week month grid as the calendar engine; agenda independently uses [today,today+30 local days) plus ongoing entries. Cost: February can show four weeks rather than a fixed six-row grid.
+
+- Final: Ruling: resume refreshes subscribed configured calendar/weather, shows old data as updating, retries rejected refresh after60seconds with owner/source fencing. Preserve service rate limits. Cost: a rate-limited resume can wait up to60seconds rather than immediate network fetch.
 
 ## 남은 경미한 사항
 

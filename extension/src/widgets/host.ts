@@ -8,7 +8,7 @@ import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
 import {clockValues} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
-import {selectAgenda} from '../shared/agenda.js';
+import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
 const TITLES:Record<string,string>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
@@ -103,7 +103,7 @@ export class WidgetHost {
             const grid=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-calendar-grid'});
             const days=monthGrid(clock.today.slice(0,7),this.weekStart);
             const dots=eventDays((view.data as CalendarData|null)?.events??[],days,this.zone);
-            for(let row=0;row<7;row++){
+            for(let row=0;row<1+days.length/7;row++){
                 const line=new St.BoxLayout({x_expand:true});
                 for(let column=0;column<7;column++){
                     const day=days[(row-1)*7+column];
@@ -133,9 +133,9 @@ export class WidgetHost {
         }
         if(id==='agenda'){
             const data=view.data as CalendarData;
-            const events=selectAgenda(data.events,this.now,clock.today);
+            const events=selectAgenda(data.events,this.now,clock.today,this.zone);
             if(!events.length)card.body.add_child(label('예정된 일정 없음'));
-            for(const event of events){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(event.allDay?'종일':new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit',hourCycle:this.hour12?'h12':'h23'}).format(Date.parse(event.start)),'liquid-agenda-time'));}
+            for(const event of events){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(formatAgendaWhen(event,this.zone,this.locale,this.hour12),'liquid-agenda-time'));}
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
             renderWeather(card,data,this.scale,this.locale,this.hour12);

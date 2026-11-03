@@ -1,28 +1,28 @@
 [
   {
     "cycles": 0,
-    "rssKiB": 452424,
+    "rssKiB": 455936,
     "roots": 1,
     "cards": 6,
     "offscreenBytes": 1898320
   },
   {
     "cycles": 20,
-    "rssKiB": 501860,
+    "rssKiB": 497940,
     "roots": 1,
     "cards": 6,
     "offscreenBytes": 1898320
   },
   {
     "cycles": 40,
-    "rssKiB": 499184,
+    "rssKiB": 504544,
     "roots": 1,
     "cards": 6,
     "offscreenBytes": 1898320
   },
   {
     "cycles": 60,
-    "rssKiB": 505100,
+    "rssKiB": 507828,
     "roots": 1,
     "cards": 6,
     "offscreenBytes": 1898320

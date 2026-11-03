@@ -15,3 +15,7 @@ test('event dots cover local days and exclude the exclusive all-day end',async()
  ],monthGrid('2026-11',1),'Asia/Seoul');
  assert.deepEqual([...dates].sort(),['2026-11-04','2026-11-05','2026-11-06','2026-11-07','2026-11-09']);
 });
+test('calendar cells match the backend minimal full-week month range',()=>{
+ const feb=monthGrid('2027-02',1);assert.equal(feb.length,28);assert.equal(feb.at(-1)!.iso,'2027-02-28');
+ const nov=monthGrid('2026-11',0);assert.equal(nov.length,35);assert.equal(nov.at(-1)!.iso,'2026-12-05');
+});

@@ -136,7 +136,8 @@ impl Runtime {
         let mut next = inner.config.clone();
         let old = next.sources[&ProviderName::Calendar].clone();
         next.settings.calendar_enabled = true;
-        next.settings.calendar_secret_deletion_pending = false;
+        // A replacement only deletes its immediate predecessor. Earlier failed
+        // deletions stay pending until explicit disconnect purges all app items.
         next.sources.insert(ProviderName::Calendar, source);
         self.commit_calendar(&mut inner, next).await?;
         drop(inner);

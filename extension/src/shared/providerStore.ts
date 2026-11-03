@@ -19,6 +19,10 @@ export class ProviderStore {
         this.states[name]=state; this.revisions.set(name,revision);
         return true;
     }
+    markRefreshing<K extends ProviderName>(name:K):void {
+        const state=this.states[name];
+        if(state.status!=='unconfigured')this.states[name]={...state,status:'loading',errorCode:null} as ProviderMap[K];
+    }
     // Retain values for the disconnected UI; revision ownership never crosses owners.
     resetOwner():void { this.revisions.clear(); }
     get<K extends ProviderName>(name:K):ProviderMap[K] { return this.states[name]; }

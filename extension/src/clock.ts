@@ -15,12 +15,12 @@ export class ClockController {
     get hour12():boolean{return this.settings.get_string('clock-format')==='12h';}
     get locale():string {const raw=(GLib.get_language_names()[0]??'en_US').split('.')[0]!.split('@')[0]!;return raw==='C'||raw==='POSIX'?'en-US':raw.replaceAll('_','-');}
     get weekStart():number{return Shell.util_get_week_start();}
-    start(onTick:(nowMs:number)=>void):void {
+    start(onTick:(nowMs:number)=>void,onResume:()=>void=()=>{}):void {
         this.callback=onTick;
         this.signals.push({object:this.clock,id:this.clock.connect('notify::clock',()=>this.tick())});
         this.signals.push({object:this.clock,id:this.clock.connect('notify::timezone',()=>this.tick())});
         this.signals.push({object:this.settings,id:this.settings.connect('changed::clock-format',()=>this.tick())});
-        this.signals.push({object:this.login,id:this.login.connect('prepare-for-sleep',(_object:unknown,sleeping:boolean)=>{if(!sleeping)this.tick();})});
+        this.signals.push({object:this.login,id:this.login.connect('prepare-for-sleep',(_object:unknown,sleeping:boolean)=>{if(!sleeping){this.tick();onResume();}})});
         this.tick();
     }
     private tick():void {

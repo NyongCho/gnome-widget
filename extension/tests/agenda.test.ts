@@ -17,3 +17,16 @@ test('equal starts have stable uid and occurrence ordering without mutating inpu
  const values=['b','a'].map(id=>event(id,'2026-11-04T11:00:00+09:00','2026-11-04T12:00:00+09:00'));
  assert.deepEqual(selectAgenda(values,now,'2026-11-04').map(e=>e.uid),['a','b']);assert.equal(values[0]!.uid,'b');
 });
+test('agenda applies its own 30-day display-zone horizon and keeps ongoing events',()=>{
+ const values=[event('outside','2026-12-04','2026-12-05',true),event('boundary','2026-12-01T00:00:00+09:00','2026-12-01T01:00:00+09:00'),event('inside','2026-11-30T23:00:00+09:00','2026-12-01T01:00:00+09:00'),event('ongoing','2026-10-01','2026-11-03',true)];
+ assert.deepEqual(selectAgenda(values,Date.parse('2026-11-01T09:00:00+09:00'),'2026-11-01','Asia/Seoul').map(e=>e.uid),['ongoing','inside']);
+});
+test('mixed all-day and timed starts sort in the display zone',()=>{
+ const values=[event('one-am','2026-11-04T16:00:00Z','2026-11-04T17:00:00Z'),event('all-day','2026-11-05','2026-11-06',true)];
+ assert.deepEqual(selectAgenda(values,now,'2026-11-04','Asia/Seoul').map(e=>e.uid),['all-day','one-am']);
+});
+test('agenda captions identify dates for timed and all-day events',async()=>{
+ const {formatAgendaWhen}=await import('../src/shared/agenda.js');
+ assert.match(formatAgendaWhen(event('a','2026-11-04T16:00:00Z','2026-11-04T17:00:00Z'),'Asia/Seoul','en-US',false),/Nov 5.*01:00/);
+ assert.match(formatAgendaWhen(event('b','2026-11-12','2026-11-13',true),'Asia/Seoul','en-US',false),/Nov 12.*종일/);
+});

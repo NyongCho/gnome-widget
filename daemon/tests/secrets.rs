@@ -278,3 +278,54 @@ fn real_keyring_adapter_uses_isolated_collection_and_handles_lock() {
         );
     });
 }
+
+#[tokio::test]
+async fn reconnect_preserves_pending_cleanup_until_all_app_secrets_are_deleted() {
+    let dir = tempfile::tempdir().unwrap();
+    let secrets = Arc::new(FakeSecrets::default());
+    let runtime = Runtime::new_with_secrets(
+        dir.path().join("config"),
+        dir.path().join("cache"),
+        Arc::new(UnavailableCollector),
+        secrets.clone(),
+    )
+    .await
+    .unwrap();
+    runtime.set_calendar_secret(URL.into()).await.unwrap();
+    secrets.locked.store(true, Ordering::SeqCst);
+    assert!(runtime.clear_calendar_secret().await.is_err());
+    secrets.locked.store(false, Ordering::SeqCst);
+    runtime
+        .set_calendar_secret(URL.replace("sensitive-token", "new-token"))
+        .await
+        .unwrap();
+    assert_eq!(secrets.values.lock().unwrap().len(), 2);
+    assert!(
+        runtime
+            .settings_json()
+            .await
+            .unwrap()
+            .contains("\"calendarSecretDeletionPending\":true")
+    );
+    runtime
+        .set_calendar_secret(URL.replace("sensitive-token", "third-token"))
+        .await
+        .unwrap();
+    assert_eq!(secrets.values.lock().unwrap().len(), 2);
+    assert!(
+        runtime
+            .settings_json()
+            .await
+            .unwrap()
+            .contains("\"calendarSecretDeletionPending\":true")
+    );
+    runtime.clear_calendar_secret().await.unwrap();
+    assert!(secrets.values.lock().unwrap().is_empty());
+    assert!(
+        runtime
+            .settings_json()
+            .await
+            .unwrap()
+            .contains("\"calendarSecretDeletionPending\":false")
+    );
+}

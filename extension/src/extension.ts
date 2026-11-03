@@ -37,7 +37,7 @@ export default class LiquidWidgets extends Extension {
         this.clock=new ClockController();
         this.clock.start(now=>{const clock=this.clock!;this.host?.tick(now,clock.timeZone,clock.hour12,clock.locale,clock.weekStart);
             const today=clockValues(now,clock.timeZone,clock.hour12,clock.locale).today;
-            this.client?.setCalendarContext({month:today.slice(0,7),timeZone:clock.timeZone,weekStart:clock.weekStart},today);});
+            this.client?.setCalendarContext({month:today.slice(0,7),timeZone:clock.timeZone,weekStart:clock.weekStart},today);},()=>this.client?.refreshAfterResume());
         this.layout();
     }
     private syncProviders():void{

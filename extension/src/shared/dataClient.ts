@@ -19,6 +19,9 @@ export class DataClient {
     private desiredContext:{json:string;day:string;key:string}|null=null;
     private appliedContext:{json:string;day:string;key:string}|null=null;
     private contextPump:Promise<void>|null=null;
+    private providers:ProviderName[]=[];
+    private resumePending=false;
+    private resumeRetries=new Map<ProviderName,()=>void>();
     private generation=0;
     private retryCancel:(()=>void)|null=null;
     private retryDelay=1000;
@@ -54,21 +57,41 @@ export class DataClient {
         void pump.finally(()=>{if(this.contextPump===pump)this.contextPump=null;}).catch(()=>{});
         return pump;
     }
+    refreshAfterResume():void {
+        this.resumePending=true;
+        if(!this.owner||!this.token)return;
+        this.resumePending=false;
+        const owner=this.owner,generation=this.generation;
+        const current=()=>this.owner===owner&&this.generation===generation;
+        for(const name of this.providers.filter(p=>(p==='calendar'||p==='weather')&&this.store.get(p).status!=='unconfigured')){
+            this.resumeRetries.get(name)?.();this.resumeRetries.delete(name);
+            this.store.markRefreshing(name);this.changed(name);
+            const source=this.store.get(name).sourceId;
+            const relevant=()=>current()&&this.store.get(name).sourceId===source&&this.store.get(name).status==='loading';
+            const refresh=async()=>{
+                try{await this.wire.call(owner,'Refresh',[name],this.cancel);}
+                catch{if(relevant())this.resumeRetries.set(name,this.wire.schedule(60000,()=>{this.resumeRetries.delete(name);if(relevant())void refresh();}));}
+            };
+            void refresh();
+        }
+    }
     start(providers:ProviderName[]):void {
         this.stop();
         if(!providers.length || providers.some(p=>!PROVIDERS.includes(p))) throw new Error('Invalid providers');
+        this.providers=[...new Set(providers)];
         this.unwatch=this.wire.watchOwner(owner=>{this.retryDelay=1000;void this.connect(owner,[...new Set(providers)]);});
     }
     private release(owner:string,token:string):void {void this.wire.call(owner,'Unsubscribe',[token],null).catch(()=>{});}
     private disconnect():void {
         this.retryCancel?.();this.retryCancel=null;
+        for(const cancel of this.resumeRetries.values())cancel();this.resumeRetries.clear();
         this.appliedContext=null;this.contextPump=null;
         this.generation++;this.cancel.cancel();this.cancel=new Cancellation();
         this.unsignal?.();this.unsignal=null;
         if(this.owner && this.token) this.release(this.owner,this.token);
         this.token=null;this.owner=null;this.store.resetOwner();
     }
-    stop():void {this.retryDelay=1000;this.unwatch?.();this.unwatch=null;this.disconnect();this.connection('disconnected');}
+    stop():void {this.resumePending=false;this.providers=[];this.retryDelay=1000;this.unwatch?.();this.unwatch=null;this.disconnect();this.connection('disconnected');}
     private async connect(owner:string|null,providers:ProviderName[]):Promise<void> {
         if(owner && owner===this.owner) return;
         this.disconnect();this.owner=owner;
@@ -80,7 +103,10 @@ export class DataClient {
             if(!current()) return;
             try {
                 const provider=name as ProviderName;
-                if(this.store.applyChange(provider,revision,parseProviderState(provider,payload))) this.changed(provider);
+                if(this.store.applyChange(provider,revision,parseProviderState(provider,payload))) {
+                    this.resumeRetries.get(provider)?.();this.resumeRetries.delete(provider);
+                    this.changed(provider);
+                }
             } catch {this.connection('invalid-data');}
         });
         try {
@@ -95,6 +121,7 @@ export class DataClient {
             if(!current()) return;
             if(typeof raw!=='string') throw new Error('Invalid snapshot');
             this.store.acceptSnapshot(parseSnapshot(raw));this.retryDelay=1000;this.changed();this.connection('connected');
+            if(this.resumePending)this.refreshAfterResume();
         } catch {
             if(current()) {
                 this.disconnect();this.connection('unavailable');
