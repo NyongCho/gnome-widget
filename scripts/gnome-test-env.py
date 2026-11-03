@@ -10,6 +10,15 @@ work=Path(os.environ['LIQUID_TEST_OUTPUT'])
 # Test-tool owns this temporary keyfile; never target the live dconf backend.
 if os.environ.get('GSETTINGS_BACKEND') != 'keyfile' or config == Path.home()/'.config':
     raise SystemExit('Expected isolated GNOME test-tool environment')
+# Shell's crash sentinel and Wayland sockets must not touch the live session.
+# The Devkit viewer still connects to the outer compositor by absolute path.
+outer_runtime=Path(os.environ['XDG_RUNTIME_DIR'])
+outer_display=Path(os.environ['WAYLAND_DISPLAY'])
+if not outer_display.is_absolute():os.environ['WAYLAND_DISPLAY']=str(outer_runtime/outer_display)
+runtime=Path(os.environ['LIQUID_TEST_RUNTIME'])
+os.environ['XDG_RUNTIME_DIR']=str(runtime)
+# Devkit streams the nested output through the existing PipeWire server.
+os.environ['PIPEWIRE_RUNTIME_DIR']=str(outer_runtime)
 apps=data/'applications';apps.mkdir(parents=True,exist_ok=True)
 (apps/'liquid-test-browser.desktop').write_text(f'[Desktop Entry]\nType=Application\nName=Liquid Test Browser\nExec=/usr/bin/python3 {root}/tests/gnome/record-uri.py %u\nNoDisplay=true\nMimeType=x-scheme-handler/http;x-scheme-handler/https;\n')
 (config/'mimeapps.list').write_text('[Default Applications]\nx-scheme-handler/http=liquid-test-browser.desktop\nx-scheme-handler/https=liquid-test-browser.desktop\n')
@@ -32,6 +41,9 @@ if blur.is_dir():
 os.environ.pop('SHELL_BACKGROUND_IMAGE',None)
 # D-Bus activated preferences/portal processes must join the test display and
 # temporary settings, not inherit the outer desktop from dbus-run-session.
-values=[f'{key}={os.environ[key]}' for key in ('XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','GSETTINGS_BACKEND') if key in os.environ]
-subprocess.run(['dbus-update-activation-environment','WAYLAND_DISPLAY=gnome-shell-test-display',*values],check=True)
-os.execv(sys.argv[1],sys.argv[1:])
+values=[f'{key}={os.environ[key]}' for key in ('XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','XDG_RUNTIME_DIR','PIPEWIRE_RUNTIME_DIR','GSETTINGS_BACKEND') if key in os.environ]
+display=os.environ.get('LIQUID_TEST_DISPLAY','gnome-shell-test-display')
+subprocess.run(['dbus-update-activation-environment',f'WAYLAND_DISPLAY={display}',*values],check=True)
+arguments=sys.argv[1:]
+if '--wayland-display' in arguments: arguments[arguments.index('--wayland-display')+1]=display
+os.execv(arguments[0],arguments)

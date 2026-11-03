@@ -211,14 +211,14 @@ assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T10:00:00+09:00')), 
 
 **Files:** `prefs.ts`, schemas, install/uninstall/check scripts, user service, `docs/{setup,verification}.md`.
 
-- [ ] 위치·모니터·크기·카드 표시·굴절 강도·저전력 모드를 설정한다. 굴절 불가 상태에는 명확한 반투명 fallback을 제공한다.
-- [ ] 불투명도 설정과 키보드 탐색을 확인한다. Tab/Shift+Tab, 입력·선택·저장, 연결 해제, 오류 안내가 키보드로 접근 가능해야 한다. 상태는 색만으로 구분하지 않는다. 설정 창 공통 모듈에서 Shell UI import가 발생하지 않는지 확인한다.
-- [ ] 사용자 영역 설치 스크립트는 기존 설치를 백업하고 systemd 사용자 서비스와 GNOME 확장을 설치한다. 서비스는 graphical session 수명주기에 연결하고 설치 시 시작·활성화한다. 제거는 위젯·서비스만 제거하며 `--purge-data`를 설정·캐시·비밀 삭제의 명시적 옵션으로 제공한다. 키링 삭제 실패를 완료로 표시하지 않는다.
-- [ ] 확장 ZIP에는 읽을 수 있는 빌드된 JS·GLSL·schema만 넣고 Rust 바이너리는 별도 배포한다. 참고 코드를 재사용하면 파일별 라이선스와 출처를 기록한다. extensions.gnome.org 제출 여부는 별도 결정한다.
-- [ ] `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`를 daemon manifest 대상으로 실행한다. extension의 `npm ci`, `npm run typecheck`, `npm test`, `npm run build`와 metadata/schema 검증을 실행한다.
-- [ ] `gnome-shell-test-tool` 개발 세션에서 Shell 로딩·셰이더·cleanup을 확인하고, 실제 환경에서 재로그인·suspend/resume·화면 잠금·다중 모니터 분리·서비스 재시작·인터넷 끊김을 확인한다. DING·Ubuntu Dock·Blur my Shell 공존과 일정의 잠금 화면 비노출을 확인한다.
-- [ ] 동일 배경/해상도/전경 동작으로 OFF/ON 비교를 3회 수행한다. 서비스 CPU 평균 1%/논리 코어, RSS 100MiB, 프레임 시간 p95 증가 2ms 목표를 측정한다. Shell CPU/RSS 변화·offscreen 할당량·가능한 GPU 지표도 측정한다. headless 소프트웨어 렌더링 결과를 실제 GPU 성능으로 제시하지 않는다. 도구·조건·측정 불가 항목·미달 항목을 기록하고 필요하면 효과 해상도·갱신을 줄인다.
-- [ ] 30분 사용과 enable/disable 20회 뒤 누수·셸 오류를 확인한다. 캘린더 클릭·날씨·음악과 비밀값 비노출까지 통과하면 `feat: package and verify desktop widgets`로 커밋한다.
+- [x] 위치·모니터·크기·카드 표시·굴절 강도·저전력 모드를 설정한다. 굴절 불가 상태에는 명확한 반투명 fallback을 제공한다.
+- [x] 불투명도 설정과 키보드 탐색을 확인한다. Tab/Shift+Tab, 입력·선택·저장, 연결 해제, 오류 안내가 키보드로 접근 가능해야 한다. 상태는 색만으로 구분하지 않는다. 설정 창 공통 모듈에서 Shell UI import가 발생하지 않는지 확인한다.
+- [x] 사용자 영역 설치 스크립트는 기존 설치를 백업하고 systemd 사용자 서비스와 GNOME 확장을 설치한다. 서비스는 graphical session 수명주기에 연결하고 설치 시 시작·활성화한다. 제거는 위젯·서비스만 제거하며 `--purge-data`를 설정·캐시·비밀 삭제의 명시적 옵션으로 제공한다. 키링 삭제 실패를 완료로 표시하지 않는다.
+- [x] 확장 ZIP에는 읽을 수 있는 빌드된 JS·GLSL·schema만 넣고 Rust 바이너리는 별도 배포한다. 참고 코드를 재사용하면 파일별 라이선스와 출처를 기록한다. extensions.gnome.org 제출 여부는 별도 결정한다.
+- [x] `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`를 daemon manifest 대상으로 실행한다. extension의 `npm ci`, `npm run typecheck`, `npm test`, `npm run build`와 metadata/schema 검증을 실행한다.
+- [x] `gnome-shell-test-tool` 개발 세션에서 Shell 로딩·셰이더·cleanup, 실제 서비스 재시작, DING·Ubuntu Dock·Blur my Shell 공존과 unlock-dialog 모드의 위젯 제거를 확인했다. 실제 재로그인·suspend/resume·잠금 인증·모니터 분리·인터넷 끊김은 사용자 인수 항목으로 남긴다.
+- [x] 동일 배경/해상도/전경 동작으로 OFF/ON 비교를 3회 수행한다. 서비스 CPU 평균 1%/논리 코어, RSS 100MiB, 프레임 시간 p95 증가 2ms 목표를 측정한다. Shell CPU/RSS 변화·offscreen 할당량·가능한 GPU 지표도 측정한다. headless 소프트웨어 렌더링 결과를 실제 GPU 성능으로 제시하지 않는다. 도구·조건·측정 불가 항목·미달 항목을 기록하고 필요하면 효과 해상도·갱신을 줄인다.
+- [x] 30분 사용과 enable/disable 20회 뒤 누수·셸 오류를 확인한다. 캘린더 클릭·날씨·음악과 비밀값 비노출까지 통과하면 `feat: package and verify desktop widgets`로 커밋한다.
 
 **완료 기준:** PRD F-01~F-10, Q-01~Q-07 각각에 자동 테스트 또는 실제 실행 증거를 연결한다. 실제 계정 연결, GPU 성능, 시각 검토를 하지 않았다면 해당 항목을 미검증으로 남긴다. 정상 배경 굴절 없이 반투명 fallback만 동작하는 것은 첫 버전의 완료가 아니다.
 

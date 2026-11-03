@@ -93,6 +93,17 @@ export async function run(){
         process.force_exit();await until(()=>!host.connected,'service loss not reflected');
         check(host.cards.get('clock').body.get_children()[0].get_text().length>0,'clock stopped with service');
     }finally{process.force_exit();}
+    const fallbackCard=host.cards.get('clock');
+    fallbackCard.surface.effect.ensureTarget=()=>{throw new Error('test allocation failure');};
+    fallbackCard.surface.effect.invalidate();
+    await until(()=>fallbackCard.surface.fallback&&fallbackCard.mode.visible&&!fallbackCard.surface.source.visible,'allocation failure did not activate translucent fallback');
+    check(fallbackCard.mode.get_text().includes('굴절 사용 불가'),'fallback has no readable explanation');
+    check(!fallbackCard.surface.source.visible,'failed background source still visible');
+    await Scripting.sleep(100);
+    const [modeX,modeY]=fallbackCard.mode.get_transformed_position();
+    const [cardX,cardY]=fallbackCard.button.get_transformed_position();
+    check(modeX>=cardX&&modeY+fallbackCard.mode.height<=cardY+fallbackCard.button.height-8,'fallback explanation overflows the card');
+    await capture('widgets-fallback');
     await enable('ding@rastersoft.com');await enable('blur-my-shell@aunetx');
     let clicks=0;host.preferences=()=>{clicks++;};
     const [x,y]=host.cards.get('clock').button.get_transformed_position();
@@ -106,6 +117,9 @@ export async function run(){
     await click(x+80,y+60);check(clicks===8,`card intercepted application input count=${clicks}`);await Scripting.destroyTestWindows();
     Main.overview.show();await Scripting.sleep(300);check(!extension.stateObj.layer.actor.visible,'cards visible in overview');Main.overview.hide();await Scripting.sleep(300);
     const rootCount=()=>global.window_group.get_children().filter(child=>child.name==='liquid-widgets-layer').length;
+    Main.sessionMode.pushMode('unlock-dialog');
+    await until(()=>rootCount()===0,'widgets remained in locked session mode');await capture('widgets-locked-mode');
+    Main.sessionMode.popMode('unlock-dialog');await until(()=>extension.state===1&&rootCount()===1,'widgets did not recover from locked mode');host=extension.stateObj.host;
     for(let i=0;i<20;i++){
         const oldClock=extension.stateObj.clock;const timer=oldClock.timer;
         const layer=extension.stateObj.layer;const signal=layer.restacked;

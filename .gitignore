@@ -6,3 +6,6 @@ extension/dist/
 *.log
 
 extension/generated/
+
+/dist/
+__pycache__/

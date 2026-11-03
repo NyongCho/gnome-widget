@@ -4,9 +4,11 @@ Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 �
 
 ## 현재 상태
 
-2026-11-04 기준 Task 0의 일정 엔진·공통 계약, Task 1의 실제 GNOME 굴절 검증, Task 2의 Rust 서비스·GJS 통신을 구현했다. 서비스 재시작, 구독 수명, 출처 변경과 캐시 격리를 검증했다. Task 3의 반응형 카드 배치·독립 시계·기본 설정과 반복 활성화 정리도 구현했다. Task 4의 Google iCal·키링·오프라인 달력 연동도 구현했다. 개인 주소 입력은 [캘린더 설정 안내](docs/calendar.md)를 따른다. Task 5의 현재·6시간 날씨와 지역 검색을 구현했으며 실제 지역은 미설정이다. [날씨 설정](docs/weather.md)을 참고한다. Task 6의 실제 시스템·네트워크 측정과 MPRIS 음악도 구현했다. [측정 정의와 지원 범위](docs/live-data.md)를 참고한다. 설치·성능 인수 검증은 후속 단계다. [데이터 서비스 구조와 실행 방법](docs/data-service.md), [셰이더 검증 결과](docs/shader-spike.md)를 참고한다.
+GNOME Shell 50용 Rust 서비스·TypeScript 확장·GLSL 굴절을 구현했다. 시계, Google iCal 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, MPRIS 음악을 표시한다. 개인 캘린더와 날씨 지역은 사용자가 설정한다.
 
-검증: `./scripts/check.sh`. 처음 준비하는 환경은 [개발 환경 안내](docs/setup.md)를 따른다. [캘린더 적합성 결과와 지원 범위](docs/calendar-feasibility.md), [데이터 계약](protocol/README.md)을 확인할 수 있다.
+빌드된 배포본 설치: `./dist/liquid-widgets/install.py`. 새 확장 코드는 로그아웃·로그인 후 적용될 수 있다. [설치·설정·제거 안내](docs/setup.md), [검증 결과와 남은 인수 항목](docs/verification.md)을 참고한다. extensions.gnome.org에는 게시하지 않았다.
+
+개발 검증: `./scripts/check.sh`. 실제 GPU의 격리 GNOME 검사: `./scripts/test-gnome.py`. 아키텍처와 제약은 [데이터 서비스](docs/data-service.md), [캘린더](docs/calendar.md), [날씨](docs/weather.md), [실시간 측정](docs/live-data.md), [굴절 검증](docs/shader-spike.md)에 있다.
 
 ## 먼저 읽을 문서
 
@@ -20,12 +22,12 @@ Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 �
 
 - Rust 사용자 서비스 + TypeScript로 작성해 GJS에서 실행하는 GNOME 확장 + GLSL 효과를 사용한다.
 - 날짜·시계, 월간 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, 재생 중 음악을 표시한다.
-- Google Calendar는 계획상 비공개 iCal 읽기 전용이며, 클릭하면 기본 브라우저에서 Google Calendar를 연다. 비밀 주소와 날씨 지역은 아직 설정하지 않았다.
+- Google Calendar는 비공개 iCal 읽기 전용이며, 클릭하면 기본 브라우저에서 Google Calendar를 연다. 비밀 주소와 날씨 지역은 아직 설정하지 않았다.
 - 대상 환경은 Ubuntu 26.04.1 / GNOME Shell 50.1 / Wayland다. 새 환경에서 작업하면 버전을 다시 확인한다.
-- 단일 굴절 카드와 DING 아이콘의 클릭 공존을 먼저 검증한다. 배경화면만 처리하며 글자는 별도 레이어에 표시한다.
+- 단일 굴절 카드와 DING 아이콘의 클릭 공존을 검증했다. 배경화면만 처리하며 글자는 별도 레이어에 표시한다.
 - 로컬에 없는 ShaderEffect API를 사용하지 않는다. Cogl API 존재 확인을 실제 렌더링 성공으로 간주하지 않는다.
-- ICS 반복 일정·취소·시간대 처리를 먼저 검증한 뒤 전체 UI를 만든다.
-- Task 0 검증 코드는 실제 계정 없이 실행할 수 있다. Task 1의 GNOME 시각 검증을 통과한 다음 전체 UI와 데이터 서비스를 연결한다.
+- ICS 반복 일정·취소·시간대 처리는 libical 기반 엔진과 적합성 테스트를 사용한다.
+- 검증은 실제 개인 계정 없이 실행한다. 개인 계정·물리 세션 전환의 최종 확인은 사용자 단계다.
 
 ## Codex CLI에서 대화 이어가기
 

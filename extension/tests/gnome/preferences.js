@@ -1,0 +1,22 @@
+// Disposable GTK harness uses the production form with a private fake D-Bus service.
+import Adw from 'gi://Adw';import Gtk from 'gi://Gtk?version=4.0';import Gio from 'gi://Gio';import GLib from 'gi://GLib';
+import {fillSettingsWindow} from '../../src/prefs/pages.js';
+if(GLib.getenv('GSETTINGS_BACKEND')!=='keyfile')throw new Error('private settings required');
+const schema=Gio.SettingsSchemaSource.new_from_directory(GLib.getenv('LIQUID_TEST_SCHEMAS'),Gio.SettingsSchemaSource.get_default(),false).lookup('org.gnome.shell.extensions.liquid-widgets',false);
+const settings=new Gio.Settings({settings_schema:schema});
+const current={calendarEnabled:false,calendarSecretDeletionPending:false,weatherLocation:null,networkInterface:'auto'};let searches=0,connections=0,clears=0;
+const location={id:'test-seoul',label:'서울 · 테스트',latitude:37.5,longitude:127,timeZone:'Asia/Seoul'};
+const api=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.local.LiquidWidgets1">
+<method name="GetSettings"><arg type="s" direction="out"/></method><method name="SearchLocations"><arg type="s" direction="in"/><arg type="s" direction="out"/></method><method name="SetWeatherLocation"><arg type="s" direction="in"/></method><method name="SetNetworkInterface"><arg type="s" direction="in"/></method><method name="SetCalendarSecret"><arg type="s" direction="in"/></method><method name="ClearCalendarSecret"/>
+</interface></node>`,{
+ GetSettings(){return JSON.stringify(current);},SearchLocations(query){searches++;if(query==='Fail')throw new Error('test lookup failure');return JSON.stringify([location]);},SetWeatherLocation(raw){current.weatherLocation=JSON.parse(raw);},SetNetworkInterface(value){if(value==='invalid/name')throw new Error('invalid interface');current.networkInterface=value;},SetCalendarSecretAsync([url],invocation){connections++;if(url!=='https://calendar.google.com/calendar/ical/test/public/basic.ics'){invocation.return_dbus_error('org.local.LiquidWidgets.InvalidArgs','invalid calendar address');return;}current.calendarEnabled=true;invocation.return_value(null);},ClearCalendarSecret(){clears++;current.calendarEnabled=false;}
+});
+api.export(Gio.DBus.session,'/org/local/LiquidWidgets');Gio.bus_own_name_on_connection(Gio.DBus.session,'org.local.LiquidWidgets',Gio.BusNameOwnerFlags.NONE,null,null);
+function walk(widget){const result=[widget];for(let child=widget.get_first_child();child;child=child.get_next_sibling())result.push(...walk(child));return result;}
+let window;let keyEvents=0;
+const control=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.local.LiquidPreferencesTest1"><method name="State"><arg type="s" direction="out"/></method><method name="Focus"><arg type="s" direction="in"/></method></interface></node>`,{
+ State(){const widgets=walk(window);let focus=window.get_focus();const focused=[];while(focus){focused.push(focus.get_title?.()??focus.get_label?.()??focus.constructor.name);focus=focus.get_parent();}return JSON.stringify({keyEvents,current,searches,connections,clears,focus:focused,rows:widgets.filter(w=>w instanceof Adw.PreferencesRow).map(w=>w.title),messages:widgets.filter(w=>w instanceof Gtk.Label).map(w=>w.label),city:widgets.find(w=>w instanceof Adw.EntryRow&&w.title==='도시 이름')?.text,calendarEmpty:widgets.find(w=>w instanceof Adw.PasswordEntryRow)?.text==='',anchor:settings.get_string('anchor'),offsetX:settings.get_int('offset-x'),monitor:settings.get_string('monitor')});},
+ Focus(title){window.set_visible_page_name(['모니터','기준 위치','가로 여백','세로 여백','전체 크기'].includes(title)?'widgets':'data');const widget=walk(window).find(w=>(w.get_title?.()??w.get_label?.())===title);if(!widget)throw new Error(`missing preference: ${title}`);widget.grab_focus();window.present();}
+});control.export(Gio.DBus.session,'/org/local/LiquidPreferencesTest');Gio.bus_own_name_on_connection(Gio.DBus.session,'org.local.LiquidPreferencesTest',Gio.BusNameOwnerFlags.NONE,null,null);
+const app=new Adw.Application({application_id:'org.local.LiquidPreferencesHarness'});
+app.connect('activate',()=>{window=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets Keyboard Test'});fillSettingsWindow(window,settings);const controller=new Gtk.EventControllerKey({propagation_phase:Gtk.PropagationPhase.CAPTURE});controller.connect('key-pressed',()=>{keyEvents++;return false;});window.add_controller(controller);window.present();});app.run([]);

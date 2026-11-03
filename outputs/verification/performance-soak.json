@@ -1,0 +1,561 @@
+{
+  "trials": [
+    {
+      "mode": "OFF",
+      "seconds": 20.000239,
+      "shellCpuPercent": 9.749883488892307,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 447032,
+      "serviceRssKiB": 31240,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1596, 29",
+      "frames": 3164,
+      "paintP95Ms": 0.57
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000645,
+      "shellCpuPercent": 13.899551739456403,
+      "serviceCpuPercent": 0.0999967751040029,
+      "shellRssKiB": 449856,
+      "serviceRssKiB": 31672,
+      "offscreenBytes": 1898320,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1615, 28",
+      "frames": 3067,
+      "paintP95Ms": 0.954
+    },
+    {
+      "mode": "OFF",
+      "seconds": 20.000149,
+      "shellCpuPercent": 8.649935557980093,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 449488,
+      "serviceRssKiB": 31672,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1596, 29",
+      "frames": 3120,
+      "paintP95Ms": 0.511
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000195,
+      "shellCpuPercent": 13.799865451311847,
+      "serviceCpuPercent": 0.09999902500950615,
+      "shellRssKiB": 450444,
+      "serviceRssKiB": 31848,
+      "offscreenBytes": 1898320,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1615, 40",
+      "frames": 2960,
+      "paintP95Ms": 0.964
+    },
+    {
+      "mode": "OFF",
+      "seconds": 20.000123,
+      "shellCpuPercent": 8.89994526533662,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 450612,
+      "serviceRssKiB": 31848,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1596, 30",
+      "frames": 3199,
+      "paintP95Ms": 0.611
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000221,
+      "shellCpuPercent": 13.94984585420331,
+      "serviceCpuPercent": 0.09999889501221013,
+      "shellRssKiB": 450680,
+      "serviceRssKiB": 31864,
+      "offscreenBytes": 1898320,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1616, 30",
+      "frames": 2949,
+      "paintP95Ms": 1.039
+    }
+  ],
+  "soak": [
+    {
+      "seconds": 0.000008,
+      "shell": {
+        "ticks": 2041,
+        "rssKiB": 468300
+      },
+      "service": {
+        "ticks": 17,
+        "rssKiB": 33736
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 60.002144,
+      "shell": {
+        "ticks": 2082,
+        "rssKiB": 468224
+      },
+      "service": {
+        "ticks": 28,
+        "rssKiB": 33980
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 120.004234,
+      "shell": {
+        "ticks": 2146,
+        "rssKiB": 469620
+      },
+      "service": {
+        "ticks": 39,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 180.006286,
+      "shell": {
+        "ticks": 2183,
+        "rssKiB": 469708
+      },
+      "service": {
+        "ticks": 50,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 240.007888,
+      "shell": {
+        "ticks": 2220,
+        "rssKiB": 465864
+      },
+      "service": {
+        "ticks": 60,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 300.009943,
+      "shell": {
+        "ticks": 2257,
+        "rssKiB": 465704
+      },
+      "service": {
+        "ticks": 70,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 360.011788,
+      "shell": {
+        "ticks": 2294,
+        "rssKiB": 465792
+      },
+      "service": {
+        "ticks": 80,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 420.01375,
+      "shell": {
+        "ticks": 2329,
+        "rssKiB": 465816
+      },
+      "service": {
+        "ticks": 92,
+        "rssKiB": 34036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 480.015255,
+      "shell": {
+        "ticks": 2386,
+        "rssKiB": 465804
+      },
+      "service": {
+        "ticks": 106,
+        "rssKiB": 34048
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 540.016854,
+      "shell": {
+        "ticks": 2424,
+        "rssKiB": 465764
+      },
+      "service": {
+        "ticks": 117,
+        "rssKiB": 34048
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 600.01887,
+      "shell": {
+        "ticks": 2462,
+        "rssKiB": 465816
+      },
+      "service": {
+        "ticks": 128,
+        "rssKiB": 34048
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 660.020339,
+      "shell": {
+        "ticks": 2501,
+        "rssKiB": 465908
+      },
+      "service": {
+        "ticks": 139,
+        "rssKiB": 33036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 720.023284,
+      "shell": {
+        "ticks": 2537,
+        "rssKiB": 465804
+      },
+      "service": {
+        "ticks": 149,
+        "rssKiB": 33036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 780.02491,
+      "shell": {
+        "ticks": 2573,
+        "rssKiB": 465960
+      },
+      "service": {
+        "ticks": 160,
+        "rssKiB": 33036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 840.027305,
+      "shell": {
+        "ticks": 2621,
+        "rssKiB": 466184
+      },
+      "service": {
+        "ticks": 170,
+        "rssKiB": 33036
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 900.029281,
+      "shell": {
+        "ticks": 2659,
+        "rssKiB": 466300
+      },
+      "service": {
+        "ticks": 181,
+        "rssKiB": 33440
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 960.032281,
+      "shell": {
+        "ticks": 2696,
+        "rssKiB": 466128
+      },
+      "service": {
+        "ticks": 192,
+        "rssKiB": 33464
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1020.035308,
+      "shell": {
+        "ticks": 2732,
+        "rssKiB": 466232
+      },
+      "service": {
+        "ticks": 203,
+        "rssKiB": 33464
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1080.037277,
+      "shell": {
+        "ticks": 2768,
+        "rssKiB": 466264
+      },
+      "service": {
+        "ticks": 213,
+        "rssKiB": 33464
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1140.040162,
+      "shell": {
+        "ticks": 2804,
+        "rssKiB": 466304
+      },
+      "service": {
+        "ticks": 224,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1200.042293,
+      "shell": {
+        "ticks": 2840,
+        "rssKiB": 466268
+      },
+      "service": {
+        "ticks": 234,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1260.044349,
+      "shell": {
+        "ticks": 2877,
+        "rssKiB": 466236
+      },
+      "service": {
+        "ticks": 245,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1320.046324,
+      "shell": {
+        "ticks": 2915,
+        "rssKiB": 466332
+      },
+      "service": {
+        "ticks": 256,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1380.048813,
+      "shell": {
+        "ticks": 2959,
+        "rssKiB": 466468
+      },
+      "service": {
+        "ticks": 267,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1440.051383,
+      "shell": {
+        "ticks": 3006,
+        "rssKiB": 466544
+      },
+      "service": {
+        "ticks": 278,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1500.054024,
+      "shell": {
+        "ticks": 3043,
+        "rssKiB": 466468
+      },
+      "service": {
+        "ticks": 289,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1560.056237,
+      "shell": {
+        "ticks": 3093,
+        "rssKiB": 466388
+      },
+      "service": {
+        "ticks": 300,
+        "rssKiB": 33468
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1620.058243,
+      "shell": {
+        "ticks": 3135,
+        "rssKiB": 466360
+      },
+      "service": {
+        "ticks": 312,
+        "rssKiB": 33472
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1680.060234,
+      "shell": {
+        "ticks": 3175,
+        "rssKiB": 466580
+      },
+      "service": {
+        "ticks": 323,
+        "rssKiB": 33472
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1740.062245,
+      "shell": {
+        "ticks": 3218,
+        "rssKiB": 466464
+      },
+      "service": {
+        "ticks": 334,
+        "rssKiB": 33472
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    },
+    {
+      "seconds": 1799.999971,
+      "shell": {
+        "ticks": 3265,
+        "rssKiB": 466808
+      },
+      "service": {
+        "ticks": 346,
+        "rssKiB": 33624
+      },
+      "roots": 1,
+      "cards": 6,
+      "offscreenBytes": 1898320
+    }
+  ],
+  "method": "GNOME 50 stagePaintStart → stagePaintDone (includes swap, no forced glFinish); foreground window follows the same 16ms motion in each trial",
+  "clockTicks": 100,
+  "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1584, 6",
+  "stage": {
+    "width": 1280,
+    "height": 800
+  },
+  "pairs": [
+    {
+      "trial": 1,
+      "p95IncreaseMs": 0.384
+    },
+    {
+      "trial": 2,
+      "p95IncreaseMs": 0.45299999999999996
+    },
+    {
+      "trial": 3,
+      "p95IncreaseMs": 0.42799999999999994
+    }
+  ],
+  "soakAfterGc": {
+    "seconds": 1800.309251,
+    "shell": {
+      "ticks": 3266,
+      "rssKiB": 466748
+    },
+    "service": {
+      "ticks": 346,
+      "rssKiB": 33624
+    },
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 1898320
+  },
+  "afterCycles": {
+    "seconds": 1810.999159,
+    "shell": {
+      "ticks": 4129,
+      "rssKiB": 515544
+    },
+    "service": {
+      "ticks": 363,
+      "rssKiB": 33820
+    },
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 1898320
+  }
+}

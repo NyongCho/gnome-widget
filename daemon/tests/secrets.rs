@@ -230,7 +230,28 @@ fn real_keyring_adapter_uses_isolated_collection_and_handles_lock() {
         }
         assert!(ready, "isolated keyring did not become available");
         assert_eq!(store.read("fixture".into()).await.unwrap(), URL);
-        store.delete(None).await.unwrap();
+        let mut clear = std::process::Command::new(env!("CARGO_BIN_EXE_liquid-widgets-daemon"))
+            .arg("--clear-calendar")
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .spawn()
+            .unwrap();
+        let mut result = None;
+        for _ in 0..100 {
+            if let Some(status) = clear.try_wait().unwrap() {
+                result = Some(status);
+                break;
+            }
+            tokio::time::sleep(std::time::Duration::from_millis(20)).await;
+        }
+        if result.is_none() {
+            clear.kill().unwrap();
+            clear.wait().unwrap();
+        }
+        assert!(
+            result.is_some_and(|status| status.success()),
+            "clear-calendar command must exit successfully"
+        );
         assert!(store.read("fixture".into()).await.is_err());
         store.write("fixture".into(), URL.into()).await.unwrap();
         let service = secret_service::SecretService::connect(secret_service::EncryptionType::Dh)
@@ -245,5 +266,15 @@ fn real_keyring_adapter_uses_isolated_collection_and_handles_lock() {
             .unwrap();
         assert!(store.read("fixture".into()).await.is_err());
         assert!(store.delete(None).await.is_err());
+        let status = std::process::Command::new(env!("CARGO_BIN_EXE_liquid-widgets-daemon"))
+            .arg("--clear-calendar")
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .status()
+            .unwrap();
+        assert!(
+            !status.success(),
+            "locked keyring must not report purge complete"
+        );
     });
 }

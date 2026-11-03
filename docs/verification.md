@@ -16,7 +16,7 @@
 
 첫 주간 EXDATE 테스트는 빈 구현에서 assertion 실패를 확인한 뒤 구현했다. 이후 날짜 변경·취소·종일·범위·밀집 반복·공통 계약 테스트를 실패시킨 뒤 구현했다. DST gap/fold와 JSON 정수의 `1.0` 표기는 추가 회귀 테스트에서 실패를 재현하고 수정했다.
 
-## 아직 검증하지 않은 것
+## Task 0 당시 미검증 항목 (후속 결과는 아래 기록 참고)
 
 - 실제 사용자 세션 장시간 사용과 GPU 성능 예산. 단일 카드 렌더링·분수 배율·DING 입력 공존은 아래 Task 1에서 검증했다.
 - 실제 사용자 서비스 설치/제거. 격리된 bus에서의 실제 호출·owner 변경·재연결은 아래 Task 2에서 검증했다.
@@ -84,3 +84,45 @@ CPU 첫 표본·guest 중복 제외·카운터 초기화, MemAvailable 기반 RA
 `cargo test --test network live_metrics_with_active_tailscale -- --ignored --nocapture`를 명시적으로 실행했다. Tailscale Running 상태에서 자동 `enp5s0`의 RX 약 42.7 kB/s, TX 약 5.7 kB/s와 CPU 8.4%, RAM 13,530,468,352/32,951,459,840 bytes, CPU 온도 42°C를 읽었다. 표본 시점의 값이며 부하 목표 측정은 아니다. 일반 공개 HTTPS 트래픽을 사용했고 사설 Tailscale peer에 시험 트래픽을 보내지 않았다. 명시적 `tailscale0` 전환에서 속도와 history가 초기화됐다.
 
 실제 GNOME에서 live CPU/RAM/온도·네트워크 그래프, 재생 카드·기본 음악 아이콘과 숨김을 캡처해 확인했다. 아이콘은 비동기 로딩 완료 후 캡처하도록 검사기를 보완했다. 반복 실행 중 기존 가상 마우스 8회 검사에서 7회만 도달한 사례가 다시 있었다. 매 클릭마다 장치를 제거/추가하던 검사기를 하나의 지속 마우스로 바꾼 최종 실행은 8/8과 20회 cleanup까지 exit 0였다. 이것만으로 물리 입력 문제의 근본 원인이 확정되지는 않는다. 별도 실행의 clock cache assertion도 한 차례 실패했으나 진단을 추가한 후 두 번의 후속 실행에서는 재현되지 않았다. Task 7 장시간·성능 검사에서 계속 관찰한다.
+
+## Task 7 — 배포와 최종 인수, 2026-11-04
+
+설치/제거는 실제 서비스 활성화와 분리한 임시 루트에서도 실행하며, 기존 프로그램 백업·교체·시작 실패 복구·다른 확장 보존·명시적 purge를 검사한다. 키링 삭제 실패는 완료로 처리하지 않고 재시도할 프로그램을 남긴다. 설치된 앱 디렉터리에도 제거 도구를 보관한다. 배포 ZIP에는 읽을 수 있는 JS/GLSL/CSS/schema/metadata만 포함하며 Rust 실행 파일은 별도다.
+
+실제 GTK 설정창에서 가상 키보드로 Tab/Shift+Tab, 모니터·위치·여백·NIC 선택, 지역 검색·선택·해제, 캘린더 입력·저장·해제·오류 안내를 검사했다. 입력 주소는 공개 fixture이고 사용자 키링은 사용하지 않았다. Shell/GTK 전용 import가 서로 섞이지 않는 빌드 검사도 수행한다.
+
+실제 GNOME Devkit의 `unlock-dialog` session mode에서 확장 root가 0개가 되고 일반 모드에서 1개로 복구되는 것을 확인했다. 이는 물리 잠금·비밀번호 인증을 거친 검사와 구분한다. FBO 할당 오류를 주입해 예외 반복 없이 반투명 모드로 바뀌는 경로를 검사했고, 안내문이 카드 밖으로 나가는 회귀도 검증한다. 이 fallback이 모든 GPU 드라이버의 비동기 오류를 감지한다고 주장하지 않는다.
+
+밝은 배경의 작은 글자 대비를 위해 전경에 그림자를 넣었고 불투명도 조절을 제공한다. 최종 디자인 선호는 사용자 확인이 필요하다. 개인 일정은 모든 캡처에서 사용하지 않았다.
+
+### 요구사항별 증거
+
+| 요구 | 구현·검사 증거 | 남은 실제 사용 확인 |
+|---|---|---|
+| F-01 굴절 | 실제 NVIDIA Devkit `--spike`: 배경 굴절, 정렬, 선명한 텍스트, 배경 교체; 밝음/어두움 캡처 | 사용자의 배경에서 디자인 선호 |
+| F-02 시계 | pure clock tests, 실제 12/24시간 전환, 시간대 주입, resume 신호 | 물리 절전과 OS 시간대 변경 |
+| F-03 달력 | 월 경계/주 시작/오늘·일정 점, 실제 카드 클릭 URI | 개인 일정 표시 |
+| F-04 일정 | 27개 엔진 검사, 실제 공개 Google 피드, 격리 키링/HTTP/IPC, 일정 3개 UI | 개인 비공개 피드·브라우저 로그인 |
+| F-05 날씨 | 실제 Open-Meteo probe, 누락/0·도시 교체·오프라인 fixture, GTK 검색 | 사용자 지역 선택 |
+| F-06 시스템 | `/proc`·센서 fixture와 실제 CPU/RAM/온도 수집 | 지원 외 센서는 unavailable |
+| F-07 네트워크 | 실제 Tailscale 활성 환경의 물리 NIC 측정, 수동 NIC·초기화 검사 | 사설 VPN peer 트래픽은 미시험 |
+| F-08 음악 | 실제 private-bus MPRIS 재생/일시정지/종료, UI cover/기본 아이콘 | 사용자의 플레이어에서 실사용 |
+| F-09 설정 | 키보드 prefs, 작은 화면 스크롤, 125%, 모니터 소실 주입 | 재로그인 유지·물리 모니터 분리 |
+| F-10 복구 | 실제 서비스 재시작/owner loss, 취소·출처 교체·오프라인 캐시·오류 검사 | 실제 인터넷 연결 끊기는 미실행 |
+| Q-01 데스크톱 공존 | DING 아이콘 선택/드래그, 8회 카드 클릭, 앱 겹침, overview/workspace, BMS/Dock | 실제 세션 장시간 마우스 사용 |
+| Q-02 성능 | 실제 GPU OFF/ON 3쌍, Shell/service CPU·RSS/FBO와 device-global GPU 계측 | 전체 환경의 presentation latency는 미계측 |
+| Q-03 수명주기 | 30분 soak·20회 enable/disable 결과는 성능 기록 참조; 실제 서비스 재시작 | 물리 절전·모니터 분리·재로그인 |
+| Q-04 비밀 보호 | 실제 임시 keyring CRUD/lock, config·snapshot·cache 권한, disconnect purge | 개인 키링 잠금 해제는 사용자 수행 |
+| Q-05 잠금 비노출 | 실제 private Shell unlock-dialog 모드에서 위젯 root 제거 | 실제 잠금/인증 화면 육안 확인 |
+| Q-06 가독성/접근 | 밝음/어두움/복잡한 배경·125%, 키보드 입력/선택/저장/해제/오류 | 사용자 취향·실제 디스플레이 가독성 |
+| Q-07 되돌리기 | 설치 정책 7개 회귀, 실제 staging 설치/업데이트/제거, keyring purge CLI | 사용자 실제 데이터 purge는 실행하지 않음 |
+
+### 남겨 둔 사용자 단계
+
+설치 후 로그아웃·로그인, 비공개 iCal 주소 입력/필요한 키링 해제, 날씨 도시 선택, 브라우저 계정 로그인, 실제 배경에서 외형 확인이 필요하다. 물리 잠금·절전/복귀·모니터 분리는 사용자가 작업을 저장한 뒤 확인한다. 자동화는 실제 사용자 세션을 강제 종료하거나 개인 캘린더 주소를 가져오지 않는다.
+
+최종 `./scripts/check.sh`: Rust 75개, TypeScript 49개, Python 설치 회귀 7개와 fmt/clippy/typecheck/build, GJS smoke/IPC, metadata/schema/import 검사가 통과했다. 실제 staging 배포본을 두 번 설치해 백업을 확인하고 **설치된 경로의 제거 도구**로 제거했다. `--spike`, `--preferences`, `--benchmark`는 최종 코드에서 exit 0였다. [실제 화면](../outputs/verification/README.md)과 [성능 원본·방법](performance.md)을 보존한다.
+
+환경 경고는 결과와 구분했다. 로컬 전용 UUID의 확장 사이트 조회 404, 임시 GIO local backend의 Ubuntu Dock `trash://` 미지원, private bus 종료 시 EDS/portal 경고가 로그에 있다. 사용자 세션을 보존하는 검사 환경에서 나온 경고이며 제품 예외나 완전 무경고 실행으로 주장하지 않는다. 긴 soak의 제품 actor/FBO 추이와 완료 결과는 성능 기록에 있다.
+
+최종 전체 GUI 검사도 exit 0: 카드 배치·오류 fallback 경계·잠금 모드·8/8 클릭·20회 cleanup을 통과했다. 30분 soak와 뒤이은 20회 재활성화도 exit 0이며 메모리/FBO 추이를 [성능 기록](performance.md)에 기록했다.

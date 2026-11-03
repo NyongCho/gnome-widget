@@ -24,7 +24,8 @@ interface Target {
     width: number;
     height: number;
 }
-export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassEffect50'}, class GlassEffect extends Clutter.Effect {
+export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassEffect50',Signals:{failed:{}}}, class GlassEffect extends Clutter.Effect {
+    failed = false;
     private target: Target | null = null;
     private dirty = true;
     private strength = 16;
@@ -60,9 +61,11 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
         return this.target;
     }
     vfunc_paint(node: Clutter.PaintNode, context: Clutter.PaintContext, flags: Clutter.EffectPaintFlags): void {
+        if (this.failed) return;
         const actor = this.get_actor();
         if (!actor || actor.width <= 0 || actor.height <= 0) return;
         if (flags & Clutter.EffectPaintFlags.BYPASS_EFFECT) { node.add_child(Clutter.ActorNode.new(actor,-1)); return; }
+        try {
         const target = this.ensureTarget(context.get_framebuffer().get_context(), actor.width, actor.height, actor.get_resource_scale());
         if (this.dirty) {
             const layer = Clutter.LayerNode.new_to_framebuffer(target.framebuffer,target.pipeline);
@@ -80,5 +83,9 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
         output.add_rectangle(box);
         node.add_child(output);
         this.outputPaints++;
+        } catch {
+            this.failed = true; this.release(); this.emit('failed');
+            console.warn('Liquid Widgets: refraction unavailable; using translucent cards');
+        }
     }
 });

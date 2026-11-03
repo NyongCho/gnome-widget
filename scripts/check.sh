@@ -13,3 +13,6 @@ cd "$project_root"
 gjs -m extension/tests/gjs-smoke.js
 
 ./scripts/test-ipc.py
+
+python3 scripts/check-build.py
+python3 tests/test_install.py

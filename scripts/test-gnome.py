@@ -5,11 +5,13 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WORK = ROOT / '.superpowers/sdd/liquid-glass-plan'
-SHOTS = WORK / 'screenshots'
+SHOT_MODE = next((flag[2:] for flag in ('--preferences', '--visual', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
+SHOTS = WORK / 'screenshots' / SHOT_MODE
 
 
 def verify_images():
@@ -49,15 +51,25 @@ def verify_images():
 
 def main():
     if '--child' not in sys.argv:
-        env = os.environ | {'LIQUID_PARENT_BUS': os.environ.get('DBUS_SESSION_BUS_ADDRESS', '')}
-        return subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--child', *sys.argv[1:]], env=env).returncode
+        # Keep runtime outside test-tool's temporary XDG root: portal mounts
+        # are released only after the private bus has shut down.
+        with tempfile.TemporaryDirectory(prefix='liquid-widgets-runtime-') as runtime:
+            env = os.environ | {'LIQUID_PARENT_BUS': os.environ.get('DBUS_SESSION_BUS_ADDRESS', ''), 'GVFS_DISABLE_FUSE': '1', 'LIQUID_TEST_RUNTIME': runtime}
+            result = subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--child', *sys.argv[1:]], env=env).returncode
+            for name in ('doc', 'gvfs'):
+                mount = Path(runtime) / name
+                if mount.is_mount():
+                    # Portal shutdown may unmount between the check and command.
+                    subprocess.run(['fusermount3', '-uz', str(mount)], check=False, capture_output=True)
+                    if mount.is_mount(): raise RuntimeError(f'Could not release private test mount: {mount}')
+            return result
     if not os.environ.get('LIQUID_PARENT_BUS') or os.environ.get('DBUS_SESSION_BUS_ADDRESS') == os.environ['LIQUID_PARENT_BUS']:
         raise SystemExit('Refusing to use the live desktop bus; launch from a graphical session')
     if not os.environ.get('WAYLAND_DISPLAY'):
         raise SystemExit('A visible Wayland desktop is required')
     os.chdir(ROOT)
     SHOTS.mkdir(parents=True, exist_ok=True)
-    env = os.environ | {'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(ROOT / 'daemon/target/debug/liquid-widgets-daemon')}
+    env = os.environ | {'LIQUID_TEST_DISPLAY': f'liquid-widgets-test-{os.getpid()}', 'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(ROOT / 'daemon/target/debug/liquid-widgets-daemon'), 'LIQUID_TEST_PREFS': str(ROOT / 'extension/dist/tests/preferences.js'), 'LIQUID_TEST_SCHEMAS': str(ROOT / 'extension/dist/schemas'), 'LIQUID_CLOCK_TICKS': str(os.sysconf('SC_CLK_TCK')), 'LIQUID_SOAK_SECONDS': '1800' if '--soak' in sys.argv else '0'}
     archive = WORK / 'liquid-widgets.shell-extension.zip'
     with zipfile.ZipFile(archive, 'w') as output:
         for file in (ROOT / 'extension/dist').rglob('*'):
@@ -71,7 +83,7 @@ def main():
         raise SystemExit('mutter-devkit missing; see docs/shader-spike.md')
     shell = subprocess.Popen([
         'gnome-shell-test-tool', '--devkit', '--wrap', str(ROOT / 'scripts/gnome-test-env.py'),
-        '--extension', str(archive), str(ROOT / ('tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/widgets.js')),
+        '--extension', str(archive), str(ROOT / ('tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
     ], env=env, start_new_session=True)
     viewer = None
     try:
@@ -79,7 +91,7 @@ def main():
         # Mutter launches the system viewer itself. Only supplement a missing binary.
         if not system_viewer.exists():
             viewer = subprocess.Popen([str(local_viewer)], env=env)
-        result = shell.wait(timeout=100)
+        result = shell.wait(timeout=2300 if '--soak' in sys.argv else 300 if '--benchmark' in sys.argv else 120)
         if result:
             return result
         if '--spike' in sys.argv: verify_images()
