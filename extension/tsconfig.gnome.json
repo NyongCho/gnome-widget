@@ -8,6 +8,8 @@
     "src/extension.ts",
     "src/effects/**/*.ts",
     "src/platform/**/*.ts",
-    "src/glsl.d.ts"
+    "src/glsl.d.ts",
+    "src/dbus.ts",
+    "src/shared/**/*.ts"
   ]
 }

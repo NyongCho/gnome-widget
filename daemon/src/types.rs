@@ -37,7 +37,7 @@ pub enum ProviderStatus {
     Unconfigured,
     Unavailable,
 }
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[serde(rename_all = "lowercase")]
 pub enum ProviderName {
     Calendar,
@@ -47,6 +47,16 @@ pub enum ProviderName {
     Media,
 }
 impl ProviderName {
+    pub const ALL: [Self; 5] = [
+        Self::Calendar,
+        Self::Weather,
+        Self::System,
+        Self::Network,
+        Self::Media,
+    ];
+    pub fn parse(value: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|p| p.as_str() == value)
+    }
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Calendar => "calendar",

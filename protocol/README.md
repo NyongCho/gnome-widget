@@ -14,3 +14,7 @@
 `org.local.LiquidWidgets1.xml`은 예정된 세션 D-Bus 인터페이스다. GIO로 구문 검증했지만 현재 서비스가 bus name을 소유하거나 요청을 처리하는 것은 아니다.
 
 참조: [Ajv standalone 생성](https://ajv.js.org/standalone.html), [Rust jsonschema 형식 검증](https://docs.rs/jsonschema/0.60.2/jsonschema/). 자동 생성 파일을 수정하지 말고 schema·양쪽 DTO·공유 fixture를 함께 변경한다.
+
+## Task 2 런타임
+
+Rust zbus 서비스와 GJS 비동기 클라이언트를 구현했다. GetSnapshot/ProviderChanged는 기존 schema를 그대로 쓰며, 서비스 인스턴스가 바뀌면 provider revision을 초기화한다. 구독은 sender+token에 귀속된다. 설정 메서드의 현재 지원 범위, 캐시·취소와 설치 소유권은 [데이터 서비스](../docs/data-service.md)에 있다.

@@ -64,6 +64,8 @@ export async function run() {
     await Scripting.sleep(1000);
     const extension = Main.extensionManager.lookup('liquid-widgets@local');
     if (!extension?.stateObj) throw new Error('Liquid Widgets extension did not load');
+    const labels=extension.stateObj.surface.actor.get_children().filter(child=>child.get_text);
+    if (!labels.some(label=>label.get_text()==='사용자 서비스를 설치·시작해 주세요')) throw new Error('missing service installation hint');
     extension.stateObj.layer.actor.hide();
     await Scripting.sleep(200);
     await capture('background');
@@ -123,7 +125,9 @@ export async function run() {
     if (!desktop) throw new Error('DING desktop window missing');
     const children=global.window_group.get_children();
     if (children.indexOf(extension.stateObj.layer.actor) <= children.indexOf(desktop)) throw new Error('card is below DING desktop window');
+    print(`LIQUID_PICK_BEFORE: ${global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE,500,370)} button=${extension.stateObj.button} count=${extension.stateObj.clickCount}`);
     await click(500,370);
+    print(`LIQUID_PICK_AFTER: ${global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE,500,370)} count=${extension.stateObj.clickCount}`);
     if (extension.stateObj.clickCount !== 4) throw new Error('DING intercepts card click');
     await click(64,74);
     await capture('icon-selected');

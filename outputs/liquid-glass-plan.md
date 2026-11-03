@@ -123,16 +123,16 @@ assert_eq!(events.iter().map(|e| e.start.as_str()).collect::<Vec<_>>(),
 
 클라이언트 상태 병합 경계: `ProviderStore.acceptSnapshot(snapshot:Snapshot):void`, `applyChange<K extends ProviderName>(name:K,revision:number,state:ProviderMap[K]):boolean`, `resetOwner():void`, `get<K extends ProviderName>(name:K):ProviderMap[K]`. revision이 같거나 더 낮으면 false를 반환하며 데이터를 바꾸지 않는다. 알 수 없는 schema/provider·초과 payload는 검증 단계에서 거부한다.
 
-- [ ] 계약 테스트에 잘못된 schemaVersion, 비밀 URL 누출, provider별 독립 실패, 512KiB 초과 입력 거부, 중복·역순 신호, 서비스 owner 변경을 명시하고 실패를 확인한다. 신호 payload에도 크기·구조 검증을 적용한다.
-- [ ] serde 타입·JSON Schema·TypeScript 검증을 구현해 동일 fixture를 양쪽에서 통과시킨다.
-- [ ] `provider_revision_is_monotonic` 테스트를 먼저 실패시킨 뒤 구현한다. revision 4를 적용한 후 revision 3과 4를 전달하면 `applyChange`는 false이고 기존 값이 유지되어야 한다. owner 변경 후에는 새 snapshot의 revision 1을 받을 수 있어야 한다.
-- [ ] Tokio 비동기 서비스와 zbus를 연결한다. 구독자 0명일 때 수집을 멈추고 재구독 시 재개한다. ICS 계산은 제한된 worker에서 유한 범위·연산량 상한으로 실행하여 async executor를 막지 않는다.
-- [ ] GJS 호출은 비동기·취소 가능하게 하고 enable/disable 세대가 다른 응답은 버린다. 신호 연결·구독 후 snapshot을 읽고, 그 사이의 신호를 revision으로 병합한다. 재연결 시 전체 snapshot을 다시 가져온다.
-- [ ] 확장 disable 시 해당 token을 해제하며 공유 session bus 연결 자체를 닫지 않는다. systemd가 서비스를 관리하고 확장에서 별도 spawn하지 않는다. 서비스가 없으면 연결 오류와 설치 안내를 표시한다.
-- [ ] 원자적 캐시 교체와 0600/0700 권한 테스트를 통과시킨다. 서비스 재시작·연결 끊김에서도 확장이 마지막 값을 유지하게 한다.
-- [ ] 출처가 바뀌면 sourceId를 교체하고 provider data를 비운다. 비동기 작업 결과는 시작 당시 sourceId·조회 컨텍스트 세대가 현재와 일치할 때만 publish/cache한다. `old_source_response_is_discarded`, `new_source_never_reads_old_cache`, `late_old_owner_response_is_discarded`를 지연된 가짜 요청으로 검증한다.
-- [ ] `dbus-run-session -- cargo test --manifest-path daemon/Cargo.toml --test ipc`에서 구독 두 개 중 하나 해제, caller 소실, 서비스 재연결을 검증한다. 실제 사용자 세션의 bus name을 테스트가 점유하지 않는다.
-- [ ] `cargo test --manifest-path daemon/Cargo.toml`와 extension 타입·계약 검사를 통과시키고 `feat: add typed local data service`로 커밋한다.
+- [x] 계약 테스트에 잘못된 schemaVersion, 비밀 URL 누출, provider별 독립 실패, 512KiB 초과 입력 거부, 중복·역순 신호, 서비스 owner 변경을 명시하고 실패를 확인한다. 신호 payload에도 크기·구조 검증을 적용한다.
+- [x] serde 타입·JSON Schema·TypeScript 검증을 구현해 동일 fixture를 양쪽에서 통과시킨다.
+- [x] `provider_revision_is_monotonic` 테스트를 먼저 실패시킨 뒤 구현한다. revision 4를 적용한 후 revision 3과 4를 전달하면 `applyChange`는 false이고 기존 값이 유지되어야 한다. owner 변경 후에는 새 snapshot의 revision 1을 받을 수 있어야 한다.
+- [x] Tokio 비동기 서비스와 zbus를 연결한다. 구독자 0명일 때 수집을 멈추고 재구독 시 재개한다. ICS 계산은 제한된 worker에서 유한 범위·연산량 상한으로 실행하여 async executor를 막지 않는다.
+- [x] GJS 호출은 비동기·취소 가능하게 하고 enable/disable 세대가 다른 응답은 버린다. 신호 연결·구독 후 snapshot을 읽고, 그 사이의 신호를 revision으로 병합한다. 재연결 시 전체 snapshot을 다시 가져온다.
+- [x] 확장 disable 시 해당 token을 해제하며 공유 session bus 연결 자체를 닫지 않는다. systemd가 서비스를 관리하고 확장에서 별도 spawn하지 않는다. 서비스가 없으면 연결 오류와 설치 안내를 표시한다.
+- [x] 원자적 캐시 교체와 0600/0700 권한 테스트를 통과시킨다. 서비스 재시작·연결 끊김에서도 확장이 마지막 값을 유지하게 한다.
+- [x] 출처가 바뀌면 sourceId를 교체하고 provider data를 비운다. 비동기 작업 결과는 시작 당시 sourceId·조회 컨텍스트 세대가 현재와 일치할 때만 publish/cache한다. `old_source_response_is_discarded`, `new_source_never_reads_old_cache`, `late_old_owner_response_is_discarded`를 지연된 가짜 요청으로 검증한다.
+- [x] `dbus-run-session -- cargo test --manifest-path daemon/Cargo.toml --test ipc`에서 구독 두 개 중 하나 해제, caller 소실, 서비스 재연결을 검증한다. 실제 사용자 세션의 bus name을 테스트가 점유하지 않는다.
+- [x] `cargo test --manifest-path daemon/Cargo.toml`와 extension 타입·계약 검사를 통과시키고 `feat: add typed local data service`로 커밋한다.
 
 ## Task 3: 카드 배치와 확장 생명주기
 

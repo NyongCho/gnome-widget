@@ -1,0 +1,15 @@
+[Unit]
+Description=Liquid Widgets local data service
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.local.LiquidWidgets
+ExecStart=%h/.local/lib/liquid-widgets/liquid-widgets-daemon
+Restart=on-failure
+RestartSec=3
+UMask=0077
+
+[Install]
+WantedBy=graphical-session.target
