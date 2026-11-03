@@ -1,0 +1,15 @@
+# 시스템·네트워크·음악
+
+시스템과 네트워크는 해당 카드를 켠 구독자가 있을 때 약 2초마다 수집한다. 카드가 모두 꺼지거나 확장이 비활성화되면 수집도 멈춘다. 처음 켰을 때와 인터페이스 전환·카운터 초기화 후에는 `측정 중`을 표시한다. 가짜 0을 그래프에 넣지 않는다.
+
+CPU는 `/proc/stat`의 전체 CPU tick 차이를 사용한다. user/nice에 이미 포함된 guest는 합산하지 않고, idle+iowait를 유휴 시간으로 계산한다. RAM은 `(MemTotal - MemAvailable) × 1024` 바이트다. `free` 열이나 프로세스 RSS 합계와는 정의가 다르다. 표시는 GiB다. [Linux proc 문서](https://docs.kernel.org/filesystems/proc.html)
+
+온도는 hwmon `coretemp`의 Package id(없으면 Core), `k10temp`의 Tdie(없으면 Tctl)만 사용한다. 같은 우선순위의 센서가 여럿이면 가장 높은 값을 표시한다. 디스크·랜카드·종류를 알 수 없는 센서를 CPU 온도로 추정하지 않는다. 지원 센서가 없거나 읽을 수 없으면 `CPU 온도 센서 없음`이다. 값의 나이가 5초 이상일 때 다시 읽으므로 2초 수집 주기에서는 보통 6초마다 갱신한다. root 권한은 필요 없다. [hwmon 인터페이스](https://docs.kernel.org/hwmon/sysfs-interface.html)
+
+네트워크 자동 선택은 IPv4 기본 경로의 최저 metric 인터페이스 하나이며, 없으면 IPv6 기본 경로를 사용한다. loopback과 Tailscale은 자동 선택에서 제외한다. 명시적으로 `tailscale0`을 선택하면 VPN 인터페이스만 측정한다. 물리 NIC와 VPN 카운터를 더하지 않는다. 속도는 단조 시계로 측정한 실제 경과 시간에 대한 RX/TX 바이트 차이이며 B/s, KiB/s, MiB/s, GiB/s로 자동 표시한다. 최근 60초의 표본을 최대 60개 유지한다. 다운로드는 실선, 업로드는 점선이다. 임의 정책 라우팅·복수 네임스페이스의 최적 경로 탐지는 지원하지 않는다.
+
+음악은 [MPRIS Player](https://specifications.freedesktop.org/mpris/latest/Player_Interface.html)의 Metadata/PlaybackStatus와 D-Bus 소유자 변경 이벤트를 구독한다. 재생 중인 플레이어 중 bus 이름 순으로 하나를 선택한다. 일시정지·정지·종료 시 숨기며, 지원하지 않는 앱의 음악은 표시할 수 없다. 최대 32개 이름을 검사하고 응답 없는 앱은 2초 timeout으로 건너뛴다. 정기 상태 polling은 하지 않는다. 서비스 연결 실패 시에만 5초 후 재연결한다.
+
+앨범 커버는 읽을 수 있는 8 MiB 이하 로컬 일반 파일만 허용한다. 원격 URL·디렉터리·FIFO 등은 기본 음악 아이콘으로 대체한다. Shell은 원격 앨범 이미지를 다운로드하지 않는다. 카드에 재생 제어 버튼은 없다.
+
+CPU·네트워크·음악은 메모리에만 유지한다. 캘린더와 날씨의 오프라인 캐시와 달리 재시작 후 과거 사용량·재생 상태를 복원하지 않으며, 예전 버전의 실시간 캐시는 시작 시 제거한다.

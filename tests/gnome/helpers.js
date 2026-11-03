@@ -12,18 +12,22 @@ export async function capture(name) {
     await new Shell.Screenshot().screenshot(false,stream);
     stream.close(null);
 }
+// Reuse one mouse across gestures, like a physical device. Repeatedly removing
+// the seat's pointer between presses introduces device-hotplug/focus races.
+let pointer=null;
+function mouse(){return pointer??=global.stage.get_context().get_backend().get_default_seat().create_virtual_device(Clutter.InputDeviceType.POINTER_DEVICE);}
+export function releaseInput(){pointer?.run_dispose();pointer=null;}
 export async function click(x,y) {
-    const device = global.stage.get_context().get_backend().get_default_seat().create_virtual_device(Clutter.InputDeviceType.POINTER_DEVICE);
+    const device = mouse();
     device.notify_absolute_motion(GLib.get_monotonic_time(),x,y);
     await Scripting.sleep(100);
     device.notify_button(GLib.get_monotonic_time(),Clutter.BUTTON_PRIMARY,Clutter.ButtonState.PRESSED);
     await Scripting.sleep(100);
     device.notify_button(GLib.get_monotonic_time(),Clutter.BUTTON_PRIMARY,Clutter.ButtonState.RELEASED);
     await Scripting.sleep(150);
-    device.run_dispose();
 }
 export async function drag(x,y,toX,toY) {
-    const device=global.stage.get_context().get_backend().get_default_seat().create_virtual_device(Clutter.InputDeviceType.POINTER_DEVICE);
+    const device=mouse();
     device.notify_absolute_motion(GLib.get_monotonic_time(),x,y);
     await Scripting.sleep(100);
     device.notify_button(GLib.get_monotonic_time(),Clutter.BUTTON_PRIMARY,Clutter.ButtonState.PRESSED);
@@ -34,7 +38,6 @@ export async function drag(x,y,toX,toY) {
     }
     device.notify_button(GLib.get_monotonic_time(),Clutter.BUTTON_PRIMARY,Clutter.ButtonState.RELEASED);
     await Scripting.sleep(500);
-    device.run_dispose();
 }
 export async function displayCall(method, parameters = null) {
     return new Promise((resolve,reject)=>Gio.DBus.session.call(

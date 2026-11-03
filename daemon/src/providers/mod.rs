@@ -8,6 +8,8 @@ use crate::{
 };
 use std::{future::Future, pin::Pin};
 pub struct Providers {
+    pub system: system::System,
+    pub network: network::Network,
     pub calendar: calendar_feed::CalendarFeed,
     pub weather: weather::Weather,
 }
@@ -57,9 +59,34 @@ impl Collector for Providers {
                         .map_err(|_| Failure::Invalid)?
                         .into())
                 }
-                _ => Err(Failure::Unavailable),
+                ProviderName::System => Ok(serde_json::to_value(
+                    self.system
+                        .collect(request.ticket, request.blocking)
+                        .await?,
+                )
+                .map_err(|_| Failure::Invalid)?
+                .into()),
+                ProviderName::Network => Ok(serde_json::to_value(
+                    self.network
+                        .collect(
+                            request.ticket,
+                            request.config.settings.network_interface,
+                            request.blocking,
+                        )
+                        .await?,
+                )
+                .map_err(|_| Failure::Invalid)?
+                .into()),
+                ProviderName::Media => Ok(serde_json::to_value(
+                    media::collect(request.previous, request.blocking).await?,
+                )
+                .map_err(|_| Failure::Invalid)?
+                .into()),
             }
         })
     }
 }
+pub mod media;
+pub mod network;
+pub mod system;
 pub mod weather;

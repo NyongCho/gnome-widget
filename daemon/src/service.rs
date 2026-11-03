@@ -29,6 +29,7 @@ pub struct ServiceError;
 #[derive(Clone)]
 pub struct CollectRequest {
     pub ticket: Ticket,
+    pub previous: Option<Value>,
     pub config: Config,
     pub blocking: crate::worker::BlockingWorker,
     pub calendar_cache: Option<crate::providers::calendar_feed::CalendarCache>,
@@ -210,7 +211,14 @@ impl Runtime {
             for provider in ProviderName::ALL {
                 let source = config.sources[&provider].clone();
                 state.set_source(provider, source.clone(), config.enabled(provider));
-                if config.enabled(provider)
+                if matches!(
+                    provider,
+                    ProviderName::System | ProviderName::Network | ProviderName::Media
+                ) {
+                    cache.remove_provider(provider)?;
+                }
+                if matches!(provider, ProviderName::Calendar | ProviderName::Weather)
+                    && config.enabled(provider)
                     && let Ok(Some(bytes)) = cache.read(&CacheKey::new(provider, &source)?)
                     && let Ok(value) = serde_json::from_slice::<Value>(&bytes)
                     && value["context"] == config.context_key(provider)
@@ -432,6 +440,10 @@ impl Runtime {
         let inner = self.inner.lock().await;
         let mut request = CollectRequest {
             ticket: inner.state.begin(name),
+            previous: (name == ProviderName::Media
+                && (inner.state.provider(name)["status"] == "ok"
+                    || inner.state.provider(name)["errorCode"] == "NO_PLAYER"))
+                .then(|| inner.state.provider(name)["data"].clone()),
             config: inner.config.clone(),
             blocking: self.blocking.clone(),
             calendar_cache: None,
@@ -484,7 +496,9 @@ impl Runtime {
                 eprintln!("calendar cache write failed");
             }
         }
-        if !inner.state.provider(name)["data"].is_null() {
+        if matches!(name, ProviderName::Calendar | ProviderName::Weather)
+            && !inner.state.provider(name)["data"].is_null()
+        {
             let bytes=json!({"context":inner.config.context_key(name),"state":inner.state.provider(name)}).to_string().into_bytes();
             let cache = self.cache.clone();
             let key = CacheKey::new(name, &request.ticket.source_id).map_err(|_| ServiceError)?;
@@ -527,7 +541,7 @@ impl Runtime {
                 Err(error) => Some(*error),
                 Ok(value) => value.stale,
             };
-            failures = if error.is_some() {
+            failures = if error.is_some_and(|e| e != Failure::NoPlayer) {
                 failures.saturating_add(1)
             } else {
                 0
@@ -744,6 +758,34 @@ impl Drop for Server {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn live_measurements_are_not_written_or_restored_from_disk() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = dir.path().join("config");
+        let cache = dir.path().join("cache");
+        let runtime = Runtime::new(
+            config.clone(),
+            cache.clone(),
+            Arc::new(UnavailableCollector),
+        )
+        .await
+        .unwrap();
+        runtime.controls[&ProviderName::System].send_modify(|c| c.active = true);
+        let request = runtime.request(ProviderName::System).await;
+        runtime.complete(&request,Ok(json!({"cpuPercent":42,"memoryUsedBytes":100,"memoryTotalBytes":200,"temperatureC":null}).into())).await.unwrap();
+        let key = CacheKey::new(ProviderName::System, &request.ticket.source_id).unwrap();
+        assert!(runtime.cache.read(&key).unwrap().is_none());
+        let old = json!({"context":"","state":runtime.snapshot().await.unwrap()["system"]});
+        runtime
+            .cache
+            .write(&key, old.to_string().as_bytes())
+            .unwrap();
+        let restarted = Runtime::new(config, cache, Arc::new(UnavailableCollector))
+            .await
+            .unwrap();
+        assert!(restarted.snapshot().await.unwrap()["system"]["data"].is_null());
+        assert!(restarted.cache.read(&key).unwrap().is_none());
+    }
     #[test]
     fn delayed_subscribe_does_not_keep_a_disconnected_sender() {
         if std::env::var("LIQUID_PRIVATE_TEST").is_err() {

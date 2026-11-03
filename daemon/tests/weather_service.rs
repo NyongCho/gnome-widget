@@ -58,6 +58,8 @@ fn weather_search_select_failure_and_clear_over_real_dbus() {
         let fetch = Arc::new(Fetch(AtomicBool::new(false)));
         let secrets = Arc::new(NoSecrets);
         let providers = Arc::new(Providers {
+            system: Default::default(),
+            network: Default::default(),
             calendar: CalendarFeed {
                 fetcher: fetch.clone(),
                 secrets,

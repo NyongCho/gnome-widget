@@ -74,3 +74,13 @@ GNOME 화면에서는 테스트 일정 세 개와 오늘의 일정 점, 종료 �
 전체 검사에서 Rust 62개 + TypeScript 47개와 타입 검사·빌드·GJS IPC가 통과했다. 실제 Open-Meteo 검색·현재/6시간 예보 live probe도 별도로 통과했으며 실제 사용자 지역은 저장하지 않았다. D-Bus 검색/선택/해제, 검색 실패 후 기존 선택 유지, stale 원래 성공 시각, 60초 수동 갱신 제한을 검증했다. 도시 A의 지연 응답이 B를 덮지 않고 B가 빈 loading 상태에서 시작하는 테스트는 실패 후 통과했다.
 
 GNOME 캡처에서 정상·오프라인 예보, 누락값과 0 구분, 데이터 설정 화면과 출처 링크를 확인했다. 도시 교체 시 이전 도시 제목이 남는 문제를 실제 GUI assertion으로 재현한 뒤 기본 카드 제목을 복원하도록 수정했다. 최종 GUI 검사와 수정 후 타입 검사·빌드가 통과했다. 개인 지역 입력은 사용자 단계이며, 실제 GTK 검색/선택 키보드 흐름은 Task 7 인수에서 다룬다.
+
+## Task 6 — 2026-11-04
+
+CPU 첫 표본·guest 중복 제외·카운터 초기화, MemAvailable 기반 RAM, 센서 부재/CPU 패키지 선택, 네트워크 실경과 시간·동일 카운터 0·NIC 전환·60초 history, MPRIS 재생 우선/동률/일시정지/종료와 로컬 artwork 검사를 추가했다. 전체 검사는 Rust 74개 + TypeScript 49개 및 GJS IPC가 통과했고, 추가 FIFO artwork 회귀 테스트를 포함한 media 5개와 clippy/build도 통과했다(최종 Rust 총 75개). FIFO를 일반 파일처럼 열어 worker가 멈추는 실패를 재현한 뒤 nonblocking open과 일반 파일 확인으로 고쳤다.
+
+실제 private D-Bus의 MPRIS 플레이어를 생성·재생·일시정지·종료해 각 변경이 3초 제한 안에 전달됨을 검사했다. 구독이 필요 없는 카드는 수집하지 않고, CPU·네트워크·음악은 재시작 뒤 디스크 상태를 복원하지 않는다.
+
+`cargo test --test network live_metrics_with_active_tailscale -- --ignored --nocapture`를 명시적으로 실행했다. Tailscale Running 상태에서 자동 `enp5s0`의 RX 약 42.7 kB/s, TX 약 5.7 kB/s와 CPU 8.4%, RAM 13,530,468,352/32,951,459,840 bytes, CPU 온도 42°C를 읽었다. 표본 시점의 값이며 부하 목표 측정은 아니다. 일반 공개 HTTPS 트래픽을 사용했고 사설 Tailscale peer에 시험 트래픽을 보내지 않았다. 명시적 `tailscale0` 전환에서 속도와 history가 초기화됐다.
+
+실제 GNOME에서 live CPU/RAM/온도·네트워크 그래프, 재생 카드·기본 음악 아이콘과 숨김을 캡처해 확인했다. 아이콘은 비동기 로딩 완료 후 캡처하도록 검사기를 보완했다. 반복 실행 중 기존 가상 마우스 8회 검사에서 7회만 도달한 사례가 다시 있었다. 매 클릭마다 장치를 제거/추가하던 검사기를 하나의 지속 마우스로 바꾼 최종 실행은 8/8과 20회 cleanup까지 exit 0였다. 이것만으로 물리 입력 문제의 근본 원인이 확정되지는 않는다. 별도 실행의 clock cache assertion도 한 차례 실패했으나 진단을 추가한 후 두 번의 후속 실행에서는 재현되지 않았다. Task 7 장시간·성능 검사에서 계속 관찰한다.

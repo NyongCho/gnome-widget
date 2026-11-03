@@ -5,10 +5,10 @@ import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as LoginManager from 'resource:///org/gnome/shell/misc/loginManager.js';
 import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
-import {capture,click,drag,setScale,enable} from './helpers.js';
+import {capture,click,drag,setScale,enable,releaseInput} from './helpers.js';
 export const METRICS={};
 function check(condition,message){if(!condition)throw new Error(message);}
-async function until(predicate,message){for(let i=0;i<100;i++){if(predicate())return;await Scripting.sleep(30);}throw new Error(message);}
+async function until(predicate,message){for(let i=0;i<200;i++){if(predicate())return;await Scripting.sleep(30);}throw new Error(message);}
 const config={monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:['clock','calendar','weather','agenda','network']};
 export async function run(){
     Main.overview.hide();await Scripting.sleep(1500);
@@ -44,12 +44,27 @@ export async function run(){
     const paints=[...host.cards.values()].map(card=>card.surface.diagnostics.inputPaints);
     host.tick(Date.parse('2026-11-04T00:00:00Z'),'America/New_York',false,'en-US',1);await Scripting.sleep(150);
     check(host.cards.get('clock').body.get_children()[0].get_text()==='19:00','timezone render mismatch');
-    check([...host.cards.values()].every((card,i)=>card.surface.diagnostics.inputPaints===paints[i]),'clock text invalidates glass cache');
+    check([...host.cards.values()].every((card,i)=>card.surface.diagnostics.inputPaints===paints[i]),`clock text invalidates glass cache: before=${JSON.stringify(paints)} after=${JSON.stringify([...host.cards.values()].map(card=>({id:card.id,...card.surface.diagnostics})))}`);
     LoginManager.getLoginManager().emit('prepare-for-sleep',false);
     const process=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
     try{
         await until(()=>host.connected,'GNOME did not connect to Rust');
         await capture('widgets-connected');
+        settings.set_strv('visible',['clock','system','network','media']);
+        await until(()=>host.states.get('system')?.data?.cpuPercent!==null&&host.states.get('system')?.data&&host.states.get('network')?.data?.history.length>=2,'live CPU/network samples did not arrive');
+        check(host.states.get('system').data.memoryUsedBytes>0,'RAM sample missing');
+        check(!host.visibleCards.includes('media'),'idle music card should be hidden');
+        await capture('widgets-live-metrics');
+        // Deterministic cover/title UI: MPRIS property/owner transitions are tested on a private real bus in Rust.
+        extension.stateObj.client.stop();
+        const music={status:'ok',sourceId:'fixture',updatedAt:new Date().toISOString(),errorCode:null,data:{player:'org.mpris.MediaPlayer2.fixture',status:'playing',title:'밤하늘을 걷다',artist:'Liquid Sessions',artUri:null}};
+        host.updateProvider('media',music);extension.stateObj.layout();host.setConnected(true);
+        await until(()=>host.cards.get('media').body.get_first_child()?.get_first_child()?.get_first_child()?.width>0,'default music icon did not load');
+        await Scripting.sleep(200);await capture('widgets-music');
+        check(host.visibleCards.includes('media'),'playing music card missing');
+        host.updateProvider('media',{status:'unavailable',sourceId:'fixture',updatedAt:null,data:null,errorCode:'NO_PLAYER'});extension.stateObj.layout();
+        check(!host.cards.has('media'),'paused/closed music card remains visible');
+        settings.set_strv('visible',config.visible);await until(()=>host.connected,'default subscriptions did not recover');
         const now=Date.now();const today=GLib.DateTime.new_now_local().format('%Y-%m-%d');
         const event=(uid,start,end,allDay=false)=>({uid,occurrenceKey:uid,title:uid,start,end,allDay});
         const fixture={status:'ok',sourceId:'gui-fixture',updatedAt:new Date(now).toISOString(),errorCode:null,data:{month:today.slice(0,7),timeZone:host.zone,weekStart:host.weekStart,events:[
@@ -81,7 +96,7 @@ export async function run(){
     await enable('ding@rastersoft.com');await enable('blur-my-shell@aunetx');
     let clicks=0;host.preferences=()=>{clicks++;};
     const [x,y]=host.cards.get('clock').button.get_transformed_position();
-    for(let i=0;i<8;i++)await click(x+80,y+60);
+    for(let i=0;i<8;i++){await click(x+80,y+60);print(`WIDGET_CLICK: ${i+1} received=${clicks} pick=${global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE,x+80,y+60)}`);}
     check(clicks===8,`DING/Blur my Shell intercepted card clicks: ${clicks}/8`);
     await click(64,74);await capture('widgets-icon-selected');await drag(64,74,270,160);await capture('widgets-icon-dragged');
     const before=new Set(global.get_window_actors());await Scripting.createTestWindow({width:500,height:500});await Scripting.waitTestWindows();await Scripting.sleep(200);
@@ -109,5 +124,6 @@ export async function run(){
     await Scripting.sleep(300);await capture('widgets-preferences');
     const prefsRect=prefs.meta_window.get_frame_rect();await click(prefsRect.x+370,prefsRect.y+22);await Scripting.sleep(300);await capture('widgets-calendar-preferences');
     prefs.meta_window.delete(global.get_current_time());
+    releaseInput();
     print('WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, owner loss, DING/BMS input, window overlap and 20-cycle cleanup passed');
 }

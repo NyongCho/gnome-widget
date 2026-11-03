@@ -3,6 +3,7 @@ import Gio from 'gi://Gio';
 import St from 'gi://St';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
 import {GlassCard,label} from './card.js';
+import {renderNetwork,renderSystem,renderMedia} from './live.js';
 import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
 import {clockValues} from '../shared/clockValues.js';
@@ -138,20 +139,11 @@ export class WidgetHost {
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
             renderWeather(card,data,this.scale,this.locale,this.hour12);
-        }else if(id==='system'){
-            const data=view.data as NonNullable<ProviderMap['system']['data']>;
-            card.body.add_child(label(data.cpuPercent===null?'CPU 측정 중':`CPU  ${Math.round(data.cpuPercent)}%`,'liquid-value'));
-            card.body.add_child(label(`RAM  ${(data.memoryUsedBytes/2**30).toFixed(1)} / ${(data.memoryTotalBytes/2**30).toFixed(1)} GB`));
-            card.body.add_child(label(data.temperatureC===null?'온도 센서 없음':`${Math.round(data.temperatureC)}°C`));
-        }else if(id==='network'){
-            const data=view.data as NonNullable<ProviderMap['network']['data']>;
-            card.title.set_text(`네트워크 · ${data.interface}`);
-            card.body.add_child(label(data.rxBytesPerSec===null?'↓ 측정 중':`↓ ${(data.rxBytesPerSec/1024).toFixed(1)} KB/s`,'liquid-value'));
-            card.body.add_child(label(data.txBytesPerSec===null?'↑ 측정 중':`↑ ${(data.txBytesPerSec/1024).toFixed(1)} KB/s`,'liquid-caption'));
-        }else if(id==='media'){
-            const data=view.data as NonNullable<ProviderMap['media']['data']>;card.body.add_child(label(data.title,'liquid-value'));card.body.add_child(label(data.artist));
-        }
+        }else if(id==='system')renderSystem(card,view.data as NonNullable<ProviderMap['system']['data']>);
+        else if(id==='network')renderNetwork(card,view.data as NonNullable<ProviderMap['network']['data']>,this.scale);
+        else if(id==='media')renderMedia(card,view.data as NonNullable<ProviderMap['media']['data']>,this.scale);
     }
+
     get diagnostics():object{return{cards:this.cards.size,layout:this.current,scroll:this.scroll.vadjustment.value};}
     destroy():void{this.scroll.vadjustment.disconnect(this.adjustmentSignal);for(const card of this.cards.values())card.destroy();this.cards.clear();this.actor.destroy();}
 }

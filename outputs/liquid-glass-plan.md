@@ -198,14 +198,14 @@ assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T10:00:00+09:00')), 
 
 **Interfaces:** `SystemData={cpuPercent:number|null,memoryUsedBytes:number,memoryTotalBytes:number,temperatureC:number|null}`; `NetworkData={interface:string,rxBytesPerSec:number|null,txBytesPerSec:number|null,history:{at:string,rx:number,tx:number}[]}`; `MediaData={player:string,status:'playing'|'paused'|'stopped',title:string,artist:string,artUri:string|null}`. CPU·속도의 첫 표본은 null/측정 중으로 표시하며 history에 가짜 0을 추가하지 않는다.
 
-- [ ] 시간차 기반 네트워크 속도 계산 테스트: 동일 counter는 0, 재설정·NIC 전환은 첫 표본을 버림, 2초간 2048바이트 증가는 1024 B/s, NIC 합산 없음.
-- [ ] CPU 첫 표본 처리, 온도 센서 없음→null, RAM 사용량 정의를 구현·검증한다. root 권한을 요구하지 않는다.
-- [ ] `system_first_sample_has_no_cpu_rate`, `missing_sensor_is_null`을 먼저 실패시킨 뒤 구현한다. 메모리 사용량은 MemTotal-MemAvailable을 기준으로 하고 표시·비교 도구의 정의를 문서화한다.
-- [ ] 2초 수집·5초 온도·60초 네트워크 history를 구현하고 단위 표시를 자동 변환한다.
-- [ ] MPRIS 다중 플레이어 중 재생 중인 앱을 우선하며 이름 순으로 동률 결정한다. 종료·pause·미지원 앱에서 카드가 올바르게 숨겨지는지 검증한다.
-- [ ] `mpris_selects_playing_player`, `paused_players_hide_card`, `interface_change_resets_rate_and_history`를 가짜 이벤트·counter fixture로 검증한다. 네트워크의 2초간 2048바이트 증가는 정확히 1024 B/s여야 한다.
-- [ ] 앨범 커버는 선택적이다. 초기판은 읽을 수 있는 로컬 artUri만 허용하고 그 외에는 기본 아이콘을 사용한다.
-- [ ] Rust 테스트와 실제 Tailscale 사용 중 속도 확인 후 `feat: add system network and media widgets`로 커밋한다.
+- [x] 시간차 기반 네트워크 속도 계산 테스트: 동일 counter는 0, 재설정·NIC 전환은 첫 표본을 버림, 2초간 2048바이트 증가는 1024 B/s, NIC 합산 없음.
+- [x] CPU 첫 표본 처리, 온도 센서 없음→null, RAM 사용량 정의를 구현·검증한다. root 권한을 요구하지 않는다.
+- [x] `system_first_sample_has_no_cpu_rate`, `missing_sensor_is_null`을 먼저 실패시킨 뒤 구현한다. 메모리 사용량은 MemTotal-MemAvailable을 기준으로 하고 표시·비교 도구의 정의를 문서화한다.
+- [x] 2초 수집·5초 온도·60초 네트워크 history를 구현하고 단위 표시를 자동 변환한다.
+- [x] MPRIS 다중 플레이어 중 재생 중인 앱을 우선하며 이름 순으로 동률 결정한다. 종료·pause·미지원 앱에서 카드가 올바르게 숨겨지는지 검증한다.
+- [x] `mpris_selects_playing_player`, `paused_players_hide_card`, `interface_change_resets_rate_and_history`를 가짜 이벤트·counter fixture로 검증한다. 네트워크의 2초간 2048바이트 증가는 정확히 1024 B/s여야 한다.
+- [x] 앨범 커버는 선택적이다. 초기판은 읽을 수 있는 로컬 artUri만 허용하고 그 외에는 기본 아이콘을 사용한다.
+- [x] Rust 테스트와 Tailscale Running 상태의 물리 NIC 실측·명시적 VPN 전환 확인 후 `feat: add system network and media widgets`로 커밋한다.
 
 ## Task 7: 설치 설정 성능과 인수 검증
 

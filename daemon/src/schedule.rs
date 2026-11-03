@@ -7,6 +7,7 @@ pub fn poll_seconds(name: ProviderName, failures: u32, rate_limited: bool) -> u6
             .min(900),
         ProviderName::Calendar => 300,
         ProviderName::System | ProviderName::Network => 2,
-        ProviderName::Media => 30,
+        ProviderName::Media if failures == 0 => 0, // collector awaits MPRIS events
+        ProviderName::Media => 5,
     }
 }

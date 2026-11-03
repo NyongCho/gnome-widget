@@ -134,8 +134,9 @@ fn ipc_subscription_lifecycle_and_reconnect() {
             .await
             .unwrap();
             let cached = runtime2.snapshot().await.unwrap();
-            assert_eq!(cached["system"]["status"], "stale");
-            assert!(!cached["system"]["data"].is_null());
+            // Live measurements restart empty; only calendar/weather have disk caches.
+            assert_eq!(cached["system"]["status"], "unavailable");
+            assert!(cached["system"]["data"].is_null());
             assert_eq!(cached["revisions"]["system"], 0);
             let second_server = Server::start(runtime2.clone()).await.unwrap();
             let connection = zbus::Connection::session().await.unwrap();

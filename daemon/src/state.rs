@@ -5,7 +5,7 @@ use crate::{
 };
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, time::SystemTime};
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Ticket {
     pub provider: ProviderName,
     pub source_id: String,
@@ -23,6 +23,8 @@ pub enum Failure {
     ExpansionLimit,
     TimeZone,
     RateLimited,
+    NoInterface,
+    NoPlayer,
 }
 impl Failure {
     fn code(self) -> &'static str {
@@ -37,6 +39,8 @@ impl Failure {
             Self::ExpansionLimit => "EXPANSION_LIMIT",
             Self::TimeZone => "UNKNOWN_TIME_ZONE",
             Self::RateLimited => "RATE_LIMITED",
+            Self::NoInterface => "NO_INTERFACE",
+            Self::NoPlayer => "NO_PLAYER",
         }
     }
 }
@@ -153,7 +157,7 @@ impl ServiceState {
             Ok(data) => {
                 json!({"status":if stale.is_some(){"stale"}else{"ok"},"sourceId":job.source_id,"updatedAt":updated_at.unwrap_or_else(now),"data":data,"errorCode":stale.map(Failure::code)})
             }
-            Err(error) => failed(&old, error, true),
+            Err(error) => failed(&old, error, error != Failure::NoPlayer),
         };
         let raw = value.to_string();
         if raw.len() > MAX_PAYLOAD_BYTES {

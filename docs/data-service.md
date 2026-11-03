@@ -46,3 +46,5 @@ ICS 계산에는 공용 bounded blocking worker를 제공한다. 최대 2개의 
 검증 범위: 공통 schema/크기 제한, 독립 provider 실패, revision 역순·중복, snapshot/신호 경합, 구독 token 소유권, 두 구독 중 하나 해제, caller 소실, 지연된 등록, 구독 0명에서 수집 중단, 재구독·서비스 재시작, 늦은 이전 출처/owner 응답 무시, 이전 캐시 차단, 원자적 교체와 권한, bounded worker, GJS 공유 bus 유지. GNOME 카드에서는 서비스 부재 안내, 임시 Rust 서비스 연결 상태와 기존 굴절·입력 공존을 캡처로 확인했다. `screenshots/service-connected.png`는 git에서 제외한 `.superpowers/sdd/liquid-glass-plan/` 아래에 있다.
 
 Tokio의 blocking 작업은 시작 후 강제 취소되지 않으므로 semaphore로 동시 실행을 제한했다. [Tokio spawn_blocking 문서](https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html). D-Bus 인터페이스는 name을 요청하기 전에 등록했다. [zbus Connection Builder](https://docs.rs/zbus/5.19.0/zbus/connection/struct.Builder.html).
+
+Task 6 이후 시스템·네트워크·음악 수집기가 연결되어 있다. 실제 설정한 카드만 구독하며 실시간 값은 디스크에 보관하지 않는다. 측정 정의와 MPRIS 범위는 [실시간 데이터](live-data.md)를 참고한다.
