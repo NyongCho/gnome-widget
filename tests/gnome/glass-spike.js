@@ -92,9 +92,10 @@ export async function run() {
     await click(500,370);
     if (extension.stateObj.clickCount !== 2) throw new Error('card did not recover after window closed');
     const initialPaints=extension.stateObj.diagnostics.inputPaints;
-    extension.stateObj.setStrength(12); // Changes foreground text and output uniform only.
+    extension.stateObj.setStrength(0); // Changes button text from on to off and the output uniform only.
     await Scripting.sleep(200);
     if (extension.stateObj.diagnostics.inputPaints !== initialPaints) throw new Error('foreground update invalidated wallpaper cache');
+    extension.stateObj.setStrength(16);
     const settings=new Gio.Settings({schema_id:'org.gnome.desktop.background'});
     const alternate=Gio.File.new_for_path(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/background-alternate.svg`).get_uri();
     settings.set_string('picture-uri',alternate); settings.set_string('picture-uri-dark',alternate);

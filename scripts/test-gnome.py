@@ -32,6 +32,10 @@ def verify_images():
     text_a = [min(p) > 245 for p in pixels(off.crop(text_region))]
     text_b = [min(p) > 245 for p in pixels(on.crop(text_region))]
     assert sum(text_a) > 100 and text_a == text_b, 'foreground text missing or distorted'
+    # The alternate fixture replaces pink light with green; stale input must fail.
+    before = on.getpixel((700, 300))
+    after = read('wallpaper-changed').getpixel((700, 300))
+    assert after[0] < before[0] - 40 and after[1] > before[1] + 20, 'card still shows the old wallpaper'
     selected, dragged, idle = (read(name) for name in ('icon-selected', 'icon-dragged', 'ding-enabled'))
     box = (10, 35, 115, 145)
     assert ImageChops.difference(selected.crop(box), idle.crop(box)).getbbox(), 'icon selection missing'
@@ -40,7 +44,7 @@ def verify_images():
     assert white(selected, (30, 40, 95, 102)) > 1000, 'icon missing from source position'
     assert white(dragged, (30, 40, 95, 102)) < 250, 'icon did not leave source after drag'
     assert white(dragged, (260, 160, 380, 235)) > 1000, 'icon missing from drag destination'
-    print('LIQUID_TEST: refraction edge, wallpaper alignment, sharp text, icon selection/drag passed')
+    print('LIQUID_TEST: refraction edge, wallpaper alignment, sharp text, wallpaper refresh, icon selection/drag passed')
 
 
 def main():
