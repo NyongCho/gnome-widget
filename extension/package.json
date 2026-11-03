@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "node scripts/test.mjs",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json && tsc -p tsconfig.prefs.json",
     "build": "node scripts/build.mjs",
     "generate": "node scripts/generate-validators.mjs",
     "pretest": "npm run generate",

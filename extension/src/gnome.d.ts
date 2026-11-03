@@ -4,3 +4,5 @@ import '@girs/st-18/ambient';
 import '@girs/clutter-18/ambient';
 import '@girs/cogl-18/ambient';
 import '@girs/graphene-1.0/ambient';
+
+import '@girs/gnomedesktop-4.0/ambient';

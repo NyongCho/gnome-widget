@@ -2,7 +2,7 @@
 """Configure only the temporary XDG environment created by GNOME's test tool."""
 from pathlib import Path
 from configparser import ConfigParser
-import os, shutil, sys
+import os, shutil, sys, subprocess
 root=Path(__file__).resolve().parent.parent
 config=Path(os.environ['XDG_CONFIG_HOME'])
 data=Path(os.environ['XDG_DATA_HOME'])
@@ -26,4 +26,8 @@ if blur.is_dir():
     target=data/'gnome-shell/extensions/blur-my-shell@aunetx'
     if not target.exists(): shutil.copytree(blur,target)
 os.environ.pop('SHELL_BACKGROUND_IMAGE',None)
+# D-Bus activated preferences/portal processes must join the test display and
+# temporary settings, not inherit the outer desktop from dbus-run-session.
+values=[f'{key}={os.environ[key]}' for key in ('XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','GSETTINGS_BACKEND') if key in os.environ]
+subprocess.run(['dbus-update-activation-environment','WAYLAND_DISPLAY=gnome-shell-test-display',*values],check=True)
 os.execv(sys.argv[1],sys.argv[1:])

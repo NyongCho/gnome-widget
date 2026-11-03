@@ -1,0 +1,86 @@
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as LoginManager from 'resource:///org/gnome/shell/misc/loginManager.js';
+import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
+import {capture,click,drag,setScale,enable} from './helpers.js';
+export const METRICS={};
+function check(condition,message){if(!condition)throw new Error(message);}
+async function until(predicate,message){for(let i=0;i<100;i++){if(predicate())return;await Scripting.sleep(30);}throw new Error(message);}
+const config={monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:['clock','calendar','weather','agenda','network']};
+export async function run(){
+    Main.overview.hide();await Scripting.sleep(1500);
+    const extension=Main.extensionManager.lookup('liquid-widgets@local');
+    check(extension?.stateObj?.host,'WidgetHost did not load');
+    let host=extension.stateObj.host;
+    print(`WIDGET_LAYOUT: ${JSON.stringify(host.diagnostics)}`);
+    check(host.diagnostics.cards===5,'expected five default cards');
+    await capture('widgets-default');
+    const settings=extension.stateObj.settings;
+    settings.set_double('scale',1.5);await Scripting.sleep(400);await capture('widgets-large');
+    check(host.diagnostics.layout.overflow,'large widgets should scroll on 800px monitor');
+    host.scroll.vadjustment.value=host.scroll.vadjustment.upper;await Scripting.sleep(250);await capture('widgets-scrolled');
+    check(host.scroll.vadjustment.value>0,'scroll adjustment did not move');
+    // Independently verify fixed toolbar remains within the stage while content scrolls.
+    const [toolbarX,toolbarY]=host.toolbar.get_transformed_position();check(toolbarX>=0&&toolbarY>=0&&toolbarY<100,'toolbar left the viewport');
+    settings.set_double('scale',1);await Scripting.sleep(250);
+    host.layout(config,{x:900,y:40,width:300,height:420},0);
+    check(host.diagnostics.layout.columns===1&&host.diagnostics.layout.overflow,'small workarea did not reflow');
+    await capture('widgets-narrow');host.scroll.vadjustment.value=host.scroll.vadjustment.upper;await Scripting.sleep(250);await capture('widgets-narrow-bottom');
+    check(host.scroll.vadjustment.value>500,'lower cards are not reachable in narrow view');
+    settings.set_string('monitor','missing-monitor');await Scripting.sleep(300);
+    check(host.actor.visible&&host.diagnostics.cards===5,'monitor fallback failed');
+    settings.set_string('monitor','primary');await Scripting.sleep(300);
+    await setScale(1.25);await capture('widgets-fractional');await setScale(1);
+    const format=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
+    format.set_string('clock-format','12h');await Scripting.sleep(200);
+    check(/AM|PM|오전|오후/.test(host.cards.get('clock').body.get_children()[0].get_text()),'clock ignored 12-hour preference');
+    format.set_string('clock-format','24h');await Scripting.sleep(200);
+    const clock=extension.stateObj.clock;const previousTimer=clock.timer;
+    LoginManager.getLoginManager().emit('prepare-for-sleep',false);await Scripting.sleep(100);
+    check(clock.timer!==previousTimer && !GLib.MainContext.default().find_source_by_id(previousTimer),'resume did not replace the minute timer');
+    const paints=[...host.cards.values()].map(card=>card.surface.diagnostics.inputPaints);
+    host.tick(Date.parse('2026-11-04T00:00:00Z'),'America/New_York',false,'en-US',1);await Scripting.sleep(150);
+    check(host.cards.get('clock').body.get_children()[0].get_text()==='19:00','timezone render mismatch');
+    check([...host.cards.values()].every((card,i)=>card.surface.diagnostics.inputPaints===paints[i]),'clock text invalidates glass cache');
+    LoginManager.getLoginManager().emit('prepare-for-sleep',false);
+    const process=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
+    try{
+        await until(()=>host.connected,'GNOME did not connect to Rust');
+        await capture('widgets-connected');
+        process.force_exit();await until(()=>!host.connected,'service loss not reflected');
+        check(host.cards.get('clock').body.get_children()[0].get_text().length>0,'clock stopped with service');
+    }finally{process.force_exit();}
+    await enable('ding@rastersoft.com');await enable('blur-my-shell@aunetx');
+    let clicks=0;host.preferences=()=>{clicks++;};
+    const [x,y]=host.cards.get('clock').button.get_transformed_position();
+    for(let i=0;i<8;i++)await click(x+80,y+60);
+    check(clicks===8,`DING/Blur my Shell intercepted card clicks: ${clicks}/8`);
+    await click(64,74);await capture('widgets-icon-selected');await drag(64,74,270,160);await capture('widgets-icon-dragged');
+    const before=new Set(global.get_window_actors());await Scripting.createTestWindow({width:500,height:500});await Scripting.waitTestWindows();await Scripting.sleep(200);
+    let app;await until(()=>{app=global.get_window_actors().find(a=>!before.has(a)&&a.mapped&&a.meta_window.get_frame_rect().width>=500);return !!app;},'application window was never mapped');app.meta_window.move_resize_frame(false,x,y,500,500);await until(()=>app.meta_window.get_frame_rect().x===x&&app.meta_window.get_frame_rect().y===y,'application position did not settle');
+    await capture('widgets-window-overlap');
+
+    await click(x+80,y+60);check(clicks===8,`card intercepted application input count=${clicks}`);await Scripting.destroyTestWindows();
+    Main.overview.show();await Scripting.sleep(300);check(!extension.stateObj.layer.actor.visible,'cards visible in overview');Main.overview.hide();await Scripting.sleep(300);
+    const rootCount=()=>global.window_group.get_children().filter(child=>child.name==='liquid-widgets-layer').length;
+    for(let i=0;i<20;i++){
+        const oldClock=extension.stateObj.clock;const timer=oldClock.timer;
+        const layer=extension.stateObj.layer;const signal=layer.restacked;
+        Main.extensionManager.disableExtension('liquid-widgets@local');await until(()=>extension.state===2,'extension disable failed');
+        check(rootCount()===0,'orphan layer after disable');check(!GLib.MainContext.default().find_source_by_id(timer),'orphan minute timer');check(!GObject.signal_handler_is_connected(global.display,signal),'orphan display signal');
+        Main.extensionManager.enableExtension('liquid-widgets@local');await until(()=>extension.state===1,'extension enable failed');await Scripting.sleep(50);
+        check(rootCount()===1,'duplicate layer after enable');
+    }
+    host=extension.stateObj.host;await capture('widgets-lifecycle');
+    for(const card of host.cards.values())check(card.content.width>=card.button.width-2,`card content shrank after enable: ${card.id} ${card.content.width}/${card.button.width}`);
+    const clockLabel=host.cards.get('clock').body.get_children()[0];
+    host.updateProvider('network',{status:'unavailable',sourceId:'test',updatedAt:null,data:null,errorCode:'NO_INTERFACE'});
+    check(host.cards.get('clock').body.get_children()[0]===clockLabel,'network update rebuilt clock');
+    Gio.Subprocess.new(['gnome-extensions','prefs','liquid-widgets@local'],Gio.SubprocessFlags.NONE);
+    let prefs;await until(()=>{prefs=global.get_window_actors().find(a=>a.mapped&&a.meta_window.get_title()==='Liquid Widgets');return !!prefs;},'preferences window did not map');
+    await Scripting.sleep(300);await capture('widgets-preferences');prefs.meta_window.delete(global.get_current_time());
+    print('WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, owner loss, DING/BMS input, window overlap and 20-cycle cleanup passed');
+}

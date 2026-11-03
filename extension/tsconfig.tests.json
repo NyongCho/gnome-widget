@@ -9,5 +9,8 @@
     "src/types.ts",
     "src/shared/**/*.ts",
     "tests/**/*.ts"
+  ],
+  "exclude": [
+    "tests/gnome"
   ]
 }

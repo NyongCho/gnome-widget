@@ -24,7 +24,7 @@ export class DataClient {
     private unsignal:(()=>void)|null=null;
     private token:string|null=null;
     private cancel=new Cancellation();
-    constructor(private wire:Transport,readonly store:ProviderStore,private changed:()=>void,private connection:(state:ConnectionState)=>void){}
+    constructor(private wire:Transport,readonly store:ProviderStore,private changed:(provider?:ProviderName)=>void,private connection:(state:ConnectionState)=>void){}
     start(providers:ProviderName[]):void {
         this.stop();
         if(!providers.length || providers.some(p=>!PROVIDERS.includes(p))) throw new Error('Invalid providers');
@@ -50,7 +50,7 @@ export class DataClient {
             if(!current()) return;
             try {
                 const provider=name as ProviderName;
-                if(this.store.applyChange(provider,revision,parseProviderState(provider,payload))) this.changed();
+                if(this.store.applyChange(provider,revision,parseProviderState(provider,payload))) this.changed(provider);
             } catch {this.connection('invalid-data');}
         });
         try {

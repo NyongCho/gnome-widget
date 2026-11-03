@@ -142,22 +142,24 @@ assert_eq!(events.iter().map(|e| e.start.as_str()).collect::<Vec<_>>(),
 
 `millisecondsToNextMinute(nowMs:number):number`는 다음 분 경계까지의 지연이며 1..60000 범위다. `ClockController.start(onTick:(nowMs:number)=>void):void`, `destroy():void`는 GI adapter로 시스템 시간·설정 변경과 절전 복귀를 수신한다. `computeLayout(config:LayoutConfig,workarea:Rect,visibleCards:string[]):LayoutResult`는 순수 함수이며 `LayoutResult={cards:{id:string,rect:Rect}[],columns:1|2,overflow:boolean,viewport:Rect}`를 반환한다. cards 좌표는 스크롤 콘텐츠 기준, viewport는 화면 좌표다. `CardStateView.update(state:ProviderState<unknown>,connected:boolean):void`는 데이터·로딩·오류 표시를 갱신한다.
 
-- [ ] `layout` 순수 함수 테스트에 작은 화면, 모니터 소실, 배율 변경을 넣는다. viewport는 항상 작업 영역 안에 있고 콘텐츠가 높이를 넘으면 overflow=true여야 한다. 표시되는 내용은 viewport에서 clip한다.
-- [ ] 레이아웃 함수를 구현하고 타입 검사·테스트를 통과시킨다.
-- [ ] 시계와 기본 카드(달력·일정·날씨·네트워크), 설정에서 켜는 시스템·음악을 구성한다. 공간 부족 시 1열로 재배치하고 세로 공간도 부족하면 묶음 내부 스크롤을 사용한다. 숨긴 음악 카드의 빈 공간을 제거하고 설정 진입점은 화면 안에 유지한다.
-- [ ] `clock_values_follow_minute_boundary`를 아래 assertion으로 먼저 실패시킨 뒤 구현한다. 별도 테스트에서 자정·시간대·12/24시간 변경을 고정 시간으로 검증한다. 서비스 연결이 없어도 시계가 갱신되어야 한다.
+- [x] `layout` 순수 함수 테스트에 작은 화면, 모니터 소실, 배율 변경을 넣는다. viewport는 항상 작업 영역 안에 있고 콘텐츠가 높이를 넘으면 overflow=true여야 한다. 표시되는 내용은 viewport에서 clip한다.
+- [x] 레이아웃 함수를 구현하고 타입 검사·테스트를 통과시킨다.
+- [x] 시계와 기본 카드(달력·일정·날씨·네트워크), 설정에서 켜는 시스템·음악을 구성한다. 공간 부족 시 1열로 재배치하고 세로 공간도 부족하면 묶음 내부 스크롤을 사용한다. 숨긴 음악 카드의 빈 공간을 제거하고 설정 진입점은 화면 안에 유지한다.
+- [x] `clock_values_follow_minute_boundary`를 아래 assertion으로 먼저 실패시킨 뒤 구현한다. 별도 테스트에서 자정·시간대·12/24시간 변경을 고정 시간으로 검증한다. 서비스 연결이 없어도 시계가 갱신되어야 한다.
 
 ```typescript
 assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T09:59:59.250+09:00')), 750);
 assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T10:00:00+09:00')), 60000);
 ```
 
-- [ ] 연결 전·최초 loading·정상 빈 결과·stale·unavailable·연결 해제를 구분한다. 기존 데이터가 있는 갱신 실패는 마지막 성공 시각을 보존하고, 출처 변경은 기존 데이터를 숨긴다. snapshot fixture로 `card_states_do_not_fabricate_values`를 검증한다.
-- [ ] Task 1의 DesktopLayerAdapter를 통해 배치하고 카드 외부 입력은 통과시킨다. 모니터/workarea 변경을 처리하며 잠금 화면에는 표시하지 않는다.
-- [ ] provider 변경 시 해당 카드만 갱신한다. 순수 날짜·배치 계산 테스트에는 GJS UI 모듈을 import하지 않는다.
-- [ ] enable/disable 20회 후 남은 actor·signal·timer가 없고 원래 데스크톱 동작이 복원되는지 확인한다.
-- [ ] `npm --prefix extension test -- clockValues.test.ts layout.test.ts cardState.test.ts`와 타입 검사를 실행해 PASS를 확인한다. 실제 GNOME에서 작은 workarea·스크롤 경계·시간대 변경·서비스 종료·절전 복귀를 확인한다.
-- [ ] `feat: add desktop widget layout and lifecycle`로 커밋한다.
+- [x] 연결 전·최초 loading·정상 빈 결과·stale·unavailable·연결 해제를 구분한다. 기존 데이터가 있는 갱신 실패는 마지막 성공 시각을 보존하고, 출처 변경은 기존 데이터를 숨긴다. snapshot fixture로 `card_states_do_not_fabricate_values`를 검증한다.
+- [x] Task 1의 DesktopLayerAdapter를 통해 배치하고 카드 외부 입력은 통과시킨다. 모니터/workarea 변경을 처리하며 잠금 화면에는 표시하지 않는다.
+- [x] provider 변경 시 해당 카드만 갱신한다. 순수 날짜·배치 계산 테스트에는 GJS UI 모듈을 import하지 않는다.
+- [x] enable/disable 20회 후 남은 actor·signal·timer가 없고 원래 데스크톱 동작이 복원되는지 확인한다.
+- [x] `npm --prefix extension test -- clockValues.test.ts layout.test.ts cardState.test.ts`와 타입 검사를 실행해 PASS를 확인한다. 실제 GNOME에서 작은 workarea·스크롤 경계·시간대 변경·서비스 종료·절전 복귀를 확인한다.
+- [x] `feat: add desktop widget layout and lifecycle`로 커밋한다.
+
+**검증 범위:** 실제 GNOME Devkit에서 작은 작업 영역과 시간대는 주입 값, 절전 복귀는 LoginManager 신호로 검증했다. 물리 절전·복귀/모니터 분리/로그아웃은 사용자 인수에 남긴다. 상세 증거는 `docs/verification.md` Task 3을 참고한다.
 
 ## Task 4: Google Calendar와 월간 달력
 

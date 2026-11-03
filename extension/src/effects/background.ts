@@ -13,14 +13,15 @@ export class GlassSurface {
     }
     // GNOME resource scale is authoritative (125% currently allocates at 2x).
     // Keep the logical scale argument for the shared surface interface.
-    setGeometry(rect:Rect, _scale:number):void {
+    setGeometry(rect:Rect, _scale:number, worldRect:Rect=rect):void {
         this.actor.set_position(rect.x,rect.y);
         this.actor.set_size(rect.width,rect.height);
         const p=this.effect.padding;
         this.source.set_position(-p,-p);
         this.source.set_size(rect.width+2*p,rect.height+2*p);
-        this.wallpaper.setGeometry(rect);
+        this.wallpaper.setGeometry(worldRect);
     }
+    setEnabled(enabled:boolean):void { this.source.visible=enabled; if(!enabled)this.effect.release(); }
     setStrength(value:number):void { this.effect.setStrength(value); }
     get diagnostics():object { return {inputPaints:this.effect.inputPaints,outputPaints:this.effect.outputPaints,textureBytes:this.effect.textureBytes}; }
     destroy():void { this.wallpaper.destroy(); this.source.remove_effect(this.effect); this.effect.release(); this.actor.destroy(); }

@@ -50,7 +50,7 @@ def verify_images():
 def main():
     if '--child' not in sys.argv:
         env = os.environ | {'LIQUID_PARENT_BUS': os.environ.get('DBUS_SESSION_BUS_ADDRESS', '')}
-        return subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--child'], env=env).returncode
+        return subprocess.run(['dbus-run-session', '--', sys.executable, str(Path(__file__).resolve()), '--child', *sys.argv[1:]], env=env).returncode
     if not os.environ.get('LIQUID_PARENT_BUS') or os.environ.get('DBUS_SESSION_BUS_ADDRESS') == os.environ['LIQUID_PARENT_BUS']:
         raise SystemExit('Refusing to use the live desktop bus; launch from a graphical session')
     if not os.environ.get('WAYLAND_DISPLAY'):
@@ -60,16 +60,18 @@ def main():
     env = os.environ | {'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(ROOT / 'daemon/target/debug/liquid-widgets-daemon')}
     archive = WORK / 'liquid-widgets.shell-extension.zip'
     with zipfile.ZipFile(archive, 'w') as output:
-        for file in (ROOT / 'extension/dist').glob('*.js'):
-            output.write(file, file.name)
-        output.write(ROOT / 'extension/dist/metadata.json', 'metadata.json')
+        for file in (ROOT / 'extension/dist').rglob('*'):
+            if not file.is_file() or 'tests' in file.relative_to(ROOT / 'extension/dist').parts: continue
+            if '--spike' in sys.argv and file.name == 'extension.js':
+                output.write(ROOT / 'extension/dist/tests/spike.js', 'extension.js')
+            else: output.write(file, str(file.relative_to(ROOT / 'extension/dist')))
     system_viewer = Path('/usr/libexec/mutter-devkit')
     local_viewer = ROOT / '.tools/sysroot/usr/libexec/mutter-devkit'
     if not system_viewer.exists() and not local_viewer.exists():
         raise SystemExit('mutter-devkit missing; see docs/shader-spike.md')
     shell = subprocess.Popen([
         'gnome-shell-test-tool', '--devkit', '--wrap', str(ROOT / 'scripts/gnome-test-env.py'),
-        '--extension', str(archive), str(ROOT / 'tests/gnome/glass-spike.js'),
+        '--extension', str(archive), str(ROOT / ('tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/widgets.js')),
     ], env=env, start_new_session=True)
     viewer = None
     try:
@@ -80,7 +82,7 @@ def main():
         result = shell.wait(timeout=100)
         if result:
             return result
-        verify_images()
+        if '--spike' in sys.argv: verify_images()
         return 0
     finally:
         try:

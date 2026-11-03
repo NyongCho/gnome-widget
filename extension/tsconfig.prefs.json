@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","compilerOptions":{"skipLibCheck":true},"include":["src/prefs.ts","src/prefs-env.d.ts","src/shared/**/*.ts"]}

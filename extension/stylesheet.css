@@ -1,0 +1,23 @@
+.liquid-toolbar { color: rgba(255,255,255,.88); spacing: .571em; }
+.liquid-brand { font-size: .786em; font-weight: 600; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.liquid-settings { border-radius: 14px; padding: 7px; background-color: rgba(20,30,45,.3); color: white; }
+.liquid-settings:hover, .liquid-settings:focus { background-color: rgba(255,255,255,.28); }
+.liquid-card { color: #fff; border-radius: 28px; text-align: left; }
+.liquid-card:focus { box-shadow: inset 0 0 0 2px rgba(210,240,255,.95); }
+.liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); }
+.liquid-content { padding: 1.286em; spacing: .571em; }
+.liquid-title { font-size: .786em; font-weight: 600; color: rgba(255,255,255,.74); letter-spacing: 1px; }
+.liquid-body { spacing: .571em; }
+.liquid-big { font-size: 3.714em; font-weight: 300; letter-spacing: -2px; }
+.liquid-value { font-size: 1.929em; font-weight: 400; }
+.liquid-caption { font-size: .857em; color: rgba(255,255,255,.83); }
+.liquid-status { font-size: .714em; color: rgba(255,255,255,.72); }
+.liquid-clock-time { font-size: 4.143em; font-weight: 300; letter-spacing: -2px; }
+.liquid-clock-date { font-size: 1em; color: rgba(255,255,255,.92); }
+.liquid-calendar-grid { spacing: 3px; }
+.liquid-calendar-day { font-size: .857em; text-align: center; border-radius: 15px; }
+.liquid-calendar-today { background-color: rgba(255,255,255,.88); color: #172536; font-weight: 700; }
+.liquid-calendar-muted { color: rgba(255,255,255,.35); }
+.liquid-calendar-dot { font-size: .571em; color: #d0ecff; }
+.liquid-agenda-title { font-size: .929em; font-weight: 500; }
+.liquid-agenda-time { font-size: .786em; color: rgba(255,255,255,.7); }

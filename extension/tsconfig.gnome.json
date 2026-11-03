@@ -10,6 +10,10 @@
     "src/platform/**/*.ts",
     "src/glsl.d.ts",
     "src/dbus.ts",
-    "src/shared/**/*.ts"
+    "src/shared/**/*.ts",
+    "src/clock.ts",
+    "src/layout.ts",
+    "src/widgets/**/*.ts",
+    "tests/gnome/*.ts"
   ]
 }

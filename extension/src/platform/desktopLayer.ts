@@ -2,7 +2,7 @@ import Clutter from 'gi://Clutter';
 import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 export class DesktopLayerAdapter {
-    readonly actor = new Clutter.Actor({reactive:false});
+    readonly actor = new Clutter.Actor({reactive:false,name:'liquid-widgets-layer'});
     private restacked: number;
     private sessionChanged: number;
     private overviewShowing: number;

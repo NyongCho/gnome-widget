@@ -46,3 +46,17 @@ Task 1+ 기능과 native hard CPU/메모리 격리, sanitizer/fuzz 인증은 이
 아직 실제 provider 조회/키링 저장과 systemd 설치를 완료한 것은 아니다. 현재 범위와 한계는 [데이터 서비스](data-service.md)에 기록했다.
 
 Task 2 리뷰에서 같은 owner의 일시적 IPC 실패 뒤 자동 재시도가 없던 문제와 초과 응답이 이전 정상 데이터를 지우던 문제를 재현했다. 취소 가능한 최대 30초 backoff, 개별/전체 payload 초과 시 stale 데이터 보존으로 수정했고 회귀 테스트를 추가했다.
+
+## Task 3 — 2026-11-04
+
+시계·월간 달력·날씨·일정·네트워크 기본 카드, 선택적 시스템·음악, 크기·불투명도·굴절 설정과 고정 설정 버튼을 구현했다. 작은 작업 영역에서는 1열과 내부 스크롤로 바뀐다. 실제 서비스가 없으면 연결 대기를 표시하고 시계는 독립적으로 동작한다.
+
+실제 GNOME 50 / NVIDIA Devkit에서 125% 배율, 300×420 작업 영역 주입, 스크롤 하단, 12/24시간 전환, Rust 서비스 연결/종료, DING·Blur my Shell 공존, 카드 8회 클릭과 일반 창 아래 입력, overview 숨김, enable/disable 20회 후 actor·timer·display signal 정리를 검사했다. 시간대는 고정 시각/시간대를 UI에 주입하고, 절전 복귀는 LoginManager 신호를 발생시켜 처리 경로를 검사했다. 실제 OS 시간대 변경이나 하드웨어 절전/모니터 분리는 하지 않았으며 최종 인수 항목으로 남긴다.
+
+캡처에서 발견한 재활성화 후 카드 내용 축소를 실제 allocation assertion으로 재현해 수정했다. Cogl 50의 snippet pointer 기반 캐시를 확인하고 불변 snippet을 공유해 20회 반복 시 50개 이상 shader/program 생성 경고를 없앴다. [Cogl 50.1 소스](https://github.com/GNOME/mutter/blob/50.1/cogl/cogl/cogl-pipeline-snippet.c)를 기준으로 확인했다. 텍스트 갱신은 굴절 입력 캐시를 다시 그리지 않는다.
+
+입력 테스트의 일반 창 겹침 실패는 unmapped/0×0 perf-helper 창을 검사한 테스트 문제였으며 실제 map과 allocation을 기다린 뒤 통과했다. 이전에 관찰한 간헐적인 가상 포인터 클릭 누락은 진단 실행에서 재현되지 않았다. 물리 포인터와 장시간 실제 세션 입력 확인은 Task 7에 남긴다.
+
+재현: `./scripts/check.sh`, 전체 카드 `./scripts/test-gnome.py`, 단일 굴절 회귀 `./scripts/test-gnome.py --spike`. 개인 캡처는 ignored `.superpowers/sdd/liquid-glass-plan/screenshots/`에 보관한다. 실제 계정 데이터 연동과 최종 UI 세부 표현은 Tasks 4–7의 범위다.
+
+최종 Task 3 검증: Rust 46개 + TypeScript 40개, 타입 검사·빌드·실제 GJS IPC가 통과했다. 전체 카드 GUI와 `--spike` 굴절 회귀 모두 exit 0. 별도 GTK4/Adwaita 설정창이 실제 GNOME에 표시되는 캡처를 확인했다. 테스트용 D-Bus activation 환경을 임시 XDG 경로/개발 디스플레이로 명시해 바깥 세션과 분리했다.

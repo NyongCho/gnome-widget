@@ -1,0 +1,145 @@
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import St from 'gi://St';
+import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
+import {GlassCard,label} from './card.js';
+import {cardState} from '../shared/cardState.js';
+import {clockValues} from '../shared/clockValues.js';
+import {monthGrid} from '../shared/calendarFormat.js';
+import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
+export class WidgetHost {
+    readonly actor=new Clutter.Actor({name:'liquid-widgets-host'});
+    private toolbar=new St.BoxLayout({style_class:'liquid-toolbar'});
+    private scroll=new St.ScrollView({overlay_scrollbars:true,reactive:false});
+    private content=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL});
+    private canvas=new St.Widget({layout_manager:new Clutter.FixedLayout()});
+    private cards=new Map<string,GlassCard>();
+    private current:LayoutResult|null=null;
+    private config:LayoutConfig|null=null;
+    private monitor=-1;
+    private scale=1;
+    private connected=false;
+    private states=new Map<ProviderName,ProviderState<unknown>>();
+    private adjustmentSignal:number;
+    private now=Date.now();private zone='UTC';private hour12=false;private locale='en-US';private weekStart=1;
+    constructor(private settings:Gio.Settings,private preferences:()=>void){
+        const name=label('LIQUID','liquid-brand');this.toolbar.add_child(name);
+        const settingsButton=new St.Button({child:new St.Icon({icon_name:'emblem-system-symbolic',icon_size:15}),style_class:'liquid-settings',can_focus:true,reactive:true,accessible_name:'위젯 설정'});
+        settingsButton.connect('clicked',preferences);this.toolbar.add_child(settingsButton);
+        this.actor.add_child(this.toolbar);this.actor.add_child(this.scroll);
+        this.content.add_child(this.canvas);this.scroll.set_child(this.content);
+        this.scroll.set_policy(St.PolicyType.NEVER,St.PolicyType.AUTOMATIC);
+        this.adjustmentSignal=this.scroll.vadjustment.connect('notify::value',()=>this.placeCards());
+    }
+    get visibleCards():string[]{
+        return this.settings.get_strv('visible').filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
+    }
+    layout(config:LayoutConfig,area:{x:number;y:number;width:number;height:number},monitor:number):void{
+        this.config=config;this.scale=config.scale;
+        if(this.monitor!==monitor){for(const card of this.cards.values())card.destroy();this.cards.clear();this.monitor=monitor;}
+        const wanted=this.visibleCards;
+        for(const [id,card] of this.cards)if(!wanted.includes(id)){card.destroy();this.cards.delete(id);}
+        for(const id of wanted)if(!this.cards.has(id)){
+            const titles:Record<string,string>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
+            const card=new GlassCard(id,monitor,titles[id]??id,()=>{
+                if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text('브라우저를 열 수 없어요');}});
+                else this.preferences();
+            });
+            this.cards.set(id,card);this.canvas.add_child(card.surface.actor);
+            card.button.connect('key-focus-in',()=>this.reveal(id));
+        }
+        this.current=computeLayout(config,area,wanted);
+        const {viewport,toolbarHeight,contentHeight}=this.current;
+        this.actor.set_position(viewport.x,viewport.y);this.actor.set_size(viewport.width,viewport.height);
+        this.toolbar.set_size(viewport.width,toolbarHeight-8);
+        this.scroll.set_position(0,toolbarHeight);this.scroll.set_size(viewport.width,viewport.height-toolbarHeight);
+        this.canvas.set_size(viewport.width,contentHeight);
+        this.placeCards();this.renderAll();
+    }
+    private reveal(id:string):void{
+        const item=this.current?.cards.find(c=>c.id===id);if(!item||!this.current)return;
+        const adjustment=this.scroll.vadjustment;const visible=this.current.viewport.height-this.current.toolbarHeight;
+        if(item.rect.y<adjustment.value)adjustment.value=item.rect.y;
+        else if(item.rect.y+item.rect.height>adjustment.value+visible)adjustment.value=item.rect.y+item.rect.height-visible;
+    }
+    private placeCards():void{
+        if(!this.current)return;const {viewport,toolbarHeight}=this.current;
+        for(const {id,rect} of this.current.cards){
+            const card=this.cards.get(id)!;
+            card.setGeometry(rect,{...rect,x:viewport.x+rect.x,y:viewport.y+toolbarHeight+rect.y-this.scroll.vadjustment.value},this.scale);
+            card.setStyle(this.settings.get_double('strength'),this.settings.get_double('opacity'),this.settings.get_boolean('low-power'));
+        }
+    }
+    update(snapshot:Snapshot):void{for(const name of ['calendar','weather','system','network','media'] as const)this.updateProvider(name,snapshot[name]);}
+    updateProvider<K extends ProviderName>(name:K,state:ProviderMap[K]):void{
+        this.states.set(name,state);for(const id of name==='calendar'?['calendar','agenda']:[name])this.render(id);
+    }
+    setConnected(value:boolean):void{this.connected=value;this.renderAll();}
+    tick(now:number,zone:string,hour12:boolean,locale:string,weekStart:number):void{
+        this.now=now;this.zone=zone;this.hour12=hour12;this.locale=locale;this.weekStart=weekStart;
+        for(const id of ['clock','calendar','agenda'])this.render(id);
+    }
+    private renderAll():void{for(const id of this.cards.keys())this.render(id);}
+    private render(id:string):void{
+        const card=this.cards.get(id);if(!card)return;card.clear();
+        const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
+        if(id==='clock'){
+            card.title.set_text(`${clock.weekday} · ${clock.date}`);card.body.add_child(label(clock.time,'liquid-clock-time'));card.status.set_text('');return;
+        }
+        const provider=(id==='agenda'?'calendar':id) as ProviderName;
+        const state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
+        const view=cardState(state,this.connected);
+        const success=view.updatedAt?new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit'}).format(Date.parse(view.updatedAt)):'';
+        card.status.set_text(`${view.message}${view.kind==='stale'&&success?` · ${success}`:''}`);
+        if(id==='calendar'){
+            card.title.set_text(new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,year:'numeric',month:'long'}).format(this.now));
+            const grid=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-calendar-grid'});
+            const days=monthGrid(clock.today.slice(0,7),this.weekStart);
+            for(let row=0;row<7;row++){
+                const line=new St.BoxLayout({x_expand:true});
+                for(let column=0;column<7;column++){
+                    const day=days[(row-1)*7+column];
+                    const text=row===0?new Intl.DateTimeFormat(this.locale,{weekday:'narrow',timeZone:'UTC'}).format(Date.UTC(2026,10,1+(this.weekStart+column)%7)):String(day!.day);
+                    const item=label(text,'liquid-calendar-day');item.set_size(27*this.scale,23*this.scale);
+                    if(day?.iso===clock.today)item.add_style_class_name('liquid-calendar-today');else if(day&&!day.inMonth)item.add_style_class_name('liquid-calendar-muted');
+                    line.add_child(item);
+                }
+                grid.add_child(line);
+            }
+            card.body.add_child(grid);return;
+        }
+        if(view.data===null){
+            if(id==='network'){
+                const row=new St.BoxLayout({x_expand:true});
+                for(const title of ['↓ 다운로드','↑ 업로드']){const column=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,x_expand:true});column.add_child(label(title));column.add_child(label('—','liquid-value'));row.add_child(column);}
+                card.body.add_child(row);
+            }else if(id==='weather')card.body.add_child(label('—°','liquid-big'));
+            else if(id==='system')card.body.add_child(label('— %','liquid-value'));
+            const prompt=view.kind==='unconfigured'?(id==='weather'?'표시할 도시를 선택하세요':'설정에서 캘린더를 연결하세요'):'연결되면 정보를 표시해요';
+            card.body.add_child(label(prompt));return;
+        }
+        if(id==='agenda'){
+            const data=view.data as CalendarData;
+            if(!data.events.length)card.body.add_child(label('예정된 일정 없음'));
+            for(const event of data.events.slice(0,3)){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(event.allDay?'종일':new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit'}).format(Date.parse(event.start)),'liquid-agenda-time'));}
+        }else if(id==='weather'){
+            const data=view.data as ProviderMap['weather']['data'];if(!data)return;
+            card.title.set_text(data.location);card.body.add_child(label(data.current.temperatureC===null?'—°':`${Math.round(data.current.temperatureC)}°`,'liquid-big'));
+            card.body.add_child(label('Open-Meteo','liquid-caption'));
+        }else if(id==='system'){
+            const data=view.data as NonNullable<ProviderMap['system']['data']>;
+            card.body.add_child(label(data.cpuPercent===null?'CPU 측정 중':`CPU  ${Math.round(data.cpuPercent)}%`,'liquid-value'));
+            card.body.add_child(label(`RAM  ${(data.memoryUsedBytes/2**30).toFixed(1)} / ${(data.memoryTotalBytes/2**30).toFixed(1)} GB`));
+            card.body.add_child(label(data.temperatureC===null?'온도 센서 없음':`${Math.round(data.temperatureC)}°C`));
+        }else if(id==='network'){
+            const data=view.data as NonNullable<ProviderMap['network']['data']>;
+            card.title.set_text(`네트워크 · ${data.interface}`);
+            card.body.add_child(label(data.rxBytesPerSec===null?'↓ 측정 중':`↓ ${(data.rxBytesPerSec/1024).toFixed(1)} KB/s`,'liquid-value'));
+            card.body.add_child(label(data.txBytesPerSec===null?'↑ 측정 중':`↑ ${(data.txBytesPerSec/1024).toFixed(1)} KB/s`,'liquid-caption'));
+        }else if(id==='media'){
+            const data=view.data as NonNullable<ProviderMap['media']['data']>;card.body.add_child(label(data.title,'liquid-value'));card.body.add_child(label(data.artist));
+        }
+    }
+    get diagnostics():object{return{cards:this.cards.size,layout:this.current,scroll:this.scroll.vadjustment.value};}
+    destroy():void{this.scroll.vadjustment.disconnect(this.adjustmentSignal);for(const card of this.cards.values())card.destroy();this.cards.clear();this.actor.destroy();}
+}

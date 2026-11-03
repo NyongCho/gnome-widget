@@ -4,6 +4,17 @@ import GObject from 'gi://GObject';
 import Graphene from 'gi://Graphene';
 import shader from '../../shaders/glass.glsl';
 
+// Cogl 50 hashes snippet identity (not source): sharing avoids new cached programs
+// on each card, resize and extension enable. This snippet owns no actor/context.
+let sharedSnippet: Cogl.Snippet | null = null;
+function glassSnippet(): Cogl.Snippet {
+    if (!sharedSnippet) {
+        sharedSnippet = Cogl.Snippet.new(Cogl.SnippetHook.FRAGMENT, shader, null);
+        sharedSnippet.set_replace('cogl_color_out = lw_glass(cogl_sampler0, cogl_tex_coord0_in.xy);');
+    }
+    return sharedSnippet;
+}
+
 interface Target {
     texture: Cogl.Texture2D;
     framebuffer: Cogl.Offscreen;
@@ -43,9 +54,7 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
         pipeline.set_layer_texture(0, texture);
         pipeline.set_layer_filters(0, Cogl.PipelineFilter.LINEAR, Cogl.PipelineFilter.LINEAR);
         pipeline.set_layer_wrap_mode(0, Cogl.PipelineWrapMode.CLAMP_TO_EDGE);
-        const snippet = Cogl.Snippet.new(Cogl.SnippetHook.FRAGMENT, shader, null);
-        snippet.set_replace('cogl_color_out = lw_glass(cogl_sampler0, cogl_tex_coord0_in.xy);');
-        pipeline.add_snippet(snippet);
+        pipeline.add_snippet(glassSnippet());
         this.target = {texture,framebuffer,pipeline,pixelWidth,pixelHeight,width,height};
         this.dirty = true;
         return this.target;

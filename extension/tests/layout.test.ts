@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {computeLayout,selectMonitor,type LayoutConfig} from '../src/shared/layout.js';
+const config:LayoutConfig={monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:['clock','calendar','weather','agenda','network']};
+test('desktop layout uses two columns and keeps toolbar and viewport inside workarea',()=>{
+ const area={x:1920,y:32,width:1920,height:1048};const result=computeLayout(config,area,config.visible);
+ assert.equal(result.columns,2);assert.ok(result.viewport.x>=area.x);assert.ok(result.viewport.y>=area.y);
+ assert.ok(result.viewport.x+result.viewport.width<=area.x+area.width);
+ assert.ok(result.viewport.y+result.viewport.height<=area.y+area.height);
+ assert.equal(result.cards.length,5);assert.equal(result.cards[0]!.id,'clock');assert.equal(result.cards[0]!.rect.width,result.viewport.width);
+ assert.equal(result.overflow,false);
+});
+test('small workarea switches to one column and scrolls without dropping requested cards',()=>{
+ const result=computeLayout({...config,offsetX:999,offsetY:999},{x:0,y:0,width:300,height:260},config.visible);
+ assert.equal(result.columns,1);assert.equal(result.overflow,true);assert.equal(result.cards.length,5);
+ assert.ok(result.viewport.x>=0 && result.viewport.x+result.viewport.width<=300);
+ assert.ok(result.viewport.y>=0 && result.viewport.y+result.viewport.height<=260);
+ assert.ok(result.viewport.height>result.toolbarHeight);
+});
+test('scale and hidden media do not leave inaccessible space or an empty row',()=>{
+ const area={x:0,y:32,width:1280,height:768};
+ const a=computeLayout({...config,scale:1.25},area,['clock','calendar','weather','media']);
+ const b=computeLayout({...config,scale:1.25},area,['clock','calendar','weather']);
+ assert.ok(a.contentHeight>b.contentHeight);assert.equal(b.cards.length,3);
+ assert.ok(b.viewport.x+b.viewport.width<=1280);
+});
+test('lost monitor falls back to an available primary monitor',()=>{
+ assert.equal(selectMonitor('DP-2',[{id:'DP-1',primary:true},{id:'HDMI-1',primary:false}]),0);
+ assert.equal(selectMonitor('HDMI-1',[{id:'DP-1',primary:true},{id:'HDMI-1',primary:false}]),1);
+ assert.equal(selectMonitor('primary',[]),-1);
+});

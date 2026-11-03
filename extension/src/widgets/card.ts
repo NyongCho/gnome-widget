@@ -1,0 +1,36 @@
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Pango from 'gi://Pango';
+import {GlassSurface} from '../effects/background.js';
+import type {Rect} from '../shared/layout.js';
+export function label(text:string,styleClass='liquid-caption'):St.Label{
+    const actor=new St.Label({text,style_class:styleClass,x_expand:true});
+    actor.clutter_text.ellipsize=Pango.EllipsizeMode.END;
+    return actor;
+}
+export class GlassCard {
+    private scale=1;
+    readonly surface:GlassSurface;
+    readonly button:St.Button;
+    readonly content=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-content',x_expand:true,y_expand:true,x_align:Clutter.ActorAlign.FILL,y_align:Clutter.ActorAlign.FILL});
+    readonly body=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-body',y_expand:true});
+    readonly title:St.Label;
+    readonly status=label('','liquid-status');
+    constructor(readonly id:string,monitor:number,title:string,action:()=>void){
+        this.surface=new GlassSurface(monitor);
+        this.title=label(title,'liquid-title');
+        this.content.add_child(this.title);this.content.add_child(this.body);this.content.add_child(this.status);
+        this.button=new St.Button({child:this.content,reactive:true,can_focus:true,track_hover:true,style_class:'liquid-card',accessible_name:title});
+        this.button.connect('clicked',action);this.surface.actor.add_child(this.button);
+    }
+    setGeometry(local:Rect,world:Rect,scale:number):void{
+        this.surface.setGeometry(local,scale,world);
+        this.scale=scale;this.button.set_size(local.width,local.height);
+    }
+    setStyle(strength:number,opacity:number,lowPower:boolean):void{
+        this.surface.setStrength(strength);this.surface.setEnabled(!lowPower);
+        this.button.set_style(`font-size:${14*this.scale}px;background-color:rgba(12,24,42,${lowPower?Math.max(.72,opacity):opacity});`);
+    }
+    clear():void{this.body.destroy_all_children();}
+    destroy():void{this.surface.destroy();}
+}
