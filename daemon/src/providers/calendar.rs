@@ -320,7 +320,7 @@ pub fn expand_ics(
                     if iterations > MAX_ITERATIONS {
                         return Err(CalendarError::ExpansionLimit);
                     }
-                    let Some(start) = start else {
+                    let Some(start) = start? else {
                         continue;
                     };
                     if start.epoch >= window.end() {

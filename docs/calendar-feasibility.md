@@ -22,10 +22,10 @@
 - 종일 start/end는 날짜 문자열, end는 exclusive. 기본 종료는 종일 다음 날·시각 일정 시작 시각이다.
 - IANA TZID, 임의 VTIMEZONE, floating time의 사용자 시간대 적용. 미지원 TZID는 오류이며 임의 로컬 시간대로 대체하지 않는다.
 - DST 전후 같은 지역 시각 유지. DURATION의 하루는 달력상 하루, 시간 단위는 실제 경과 시간이다. DTEND로 정한 시각 일정은 원본의 실제 지속 시간을 유지한다.
-- DST gap의 존재하지 않는 반복 시각은 건너뛰고 COUNT에 포함하지 않는다. fold의 모호한 시각은 첫 발생을 선택한다. UTC UNTIL은 포함 경계다.
+- DST gap의 존재하지 않는 반복 시각은 건너뛰고 COUNT에 포함하지 않는다. 명시적 DTSTART가 gap에 있으면 전환 이전 offset으로 해석하고 첫 회차로 한 번 센다. DST 및 STANDARD→STANDARD fold의 모호한 시각은 첫 발생을 선택한다. 자정 gap에서도 DATE 필드를 보존한다. UTC UNTIL은 포함 경계다.
 - 조회 범위는 지정 월의 주 단위 그리드와 주입된 now 이후 30×24시간의 합집합이다. 이전에 시작해 범위와 겹치는 일정도 포함하고, 무관한 과거·미래 일정은 제외한다.
 
-직접 사용한 libical의 zoned recurrence iterator는 2026-03-08 New York 02:30을 03:30으로 보정하고 이후 회차에도 영향을 주었다. 따라서 어댑터는 **지역 시각의 반복 날짜 생성 → 각 회차 시간대 변환 → gap/fold 검증**으로 나누고 COUNT/UNTIL을 보존한다. 이 차이는 회귀 테스트로 남겼다. 라이브러리 이름만으로 RFC 정확성을 가정하지 않는다.
+직접 사용한 libical의 zoned recurrence iterator는 2026-03-08 New York 02:30을 03:30으로 보정하고 이후 회차에도 영향을 주었다. 따라서 어댑터는 **지역 시각의 반복 날짜 생성 → 각 회차 시간대 변환 → gap/fold 검증**으로 나누고 COUNT/UNTIL을 보존한다. DST 여부 두 값만으로 offset을 선택하지 않고 timezone의 TZOFFSETFROM/TO 후보를 실제 변환 결과와 대조한다. 이 차이들은 회귀 테스트로 남겼다. 라이브러리 이름만으로 RFC 정확성을 가정하지 않는다.
 
 ## 제한과 오류 정책
 

@@ -259,3 +259,65 @@ fn historical_iteration_budget_returns_error_without_partial_results() {
         CalendarError::ExpansionLimit
     );
 }
+#[test]
+fn explicit_gap_start_uses_pre_gap_offset_and_counts_as_first_occurrence() {
+    let context = liquid_widgets_daemon::types::CalendarContext {
+        month: "2026-03".into(),
+        time_zone: "America/New_York".into(),
+        week_start: 1,
+    };
+    let events = expand_ics(
+        include_str!("../../tests/fixtures/calendar/gap-start.ics"),
+        &context,
+        "2026-03-01T00:00:00-05:00",
+    )
+    .unwrap();
+    assert_eq!(events[0].start, "2026-03-08T03:30:00-04:00");
+    assert_eq!(events[0].end, "2026-03-08T04:30:00-04:00");
+    assert_eq!(events.len(), 3);
+    assert_eq!(events[1].start, "2026-03-09T02:30:00-04:00");
+    assert_eq!(events[2].start, "2026-03-10T02:30:00-04:00");
+}
+#[test]
+fn all_day_dates_survive_midnight_offset_transition() {
+    let context = liquid_widgets_daemon::types::CalendarContext {
+        month: "2026-09".into(),
+        time_zone: "America/Santiago".into(),
+        week_start: 1,
+    };
+    let events = expand_ics(
+        include_str!("../../tests/fixtures/calendar/midnight-gap.ics"),
+        &context,
+        "2026-09-01T00:00:00-04:00",
+    )
+    .unwrap();
+    assert_eq!(events[0].start, "2026-09-06");
+    assert_eq!(events[0].occurrence_key, "2026-09-06");
+    assert_eq!(events[0].end, "2026-09-07");
+}
+#[test]
+fn non_dst_offset_fold_uses_first_occurrence() {
+    let events = expand_ics(
+        include_str!("../../tests/fixtures/calendar/custom-fold.ics"),
+        &seoul_november(),
+        "2026-11-03T12:00:00+09:00",
+    )
+    .unwrap();
+    assert_eq!(events[0].start, "2026-11-01T01:30:00+04:00");
+    assert_eq!(events[0].end, "2026-11-01T01:30:00+03:00");
+}
+#[test]
+fn explicit_gap_start_consumes_count_once() {
+    let context = liquid_widgets_daemon::types::CalendarContext {
+        month: "2026-03".into(),
+        time_zone: "America/New_York".into(),
+        week_start: 1,
+    };
+    let events = expand_ics(
+        include_str!("../../tests/fixtures/calendar/gap-start.ics"),
+        &context,
+        "2026-03-01T00:00:00-05:00",
+    )
+    .unwrap();
+    assert_eq!(events.len(), 3);
+}

@@ -161,13 +161,14 @@ pub(super) struct Recurrence<'a> {
     _root: &'a Root,
 }
 impl Iterator for Recurrence<'_> {
-    type Item = Option<Time>;
+    type Item = Result<Option<Time>, CalendarError>;
     fn next(&mut self) -> Option<Self::Item> {
         let mut out = Time::default();
         match unsafe { lw_recur_next(self.ptr, &mut out) } {
             0 => None,
-            1 => Some(Some(out)),
-            _ => Some(None),
+            1 => Some(Ok(Some(out))),
+            2 => Some(Ok(None)),
+            _ => Some(Err(CalendarError::InvalidCalendar)),
         }
     }
 }
