@@ -6,6 +6,7 @@ import {ProviderStore,PROVIDERS} from './shared/providerStore.js';
 import {DesktopLayerAdapter} from './platform/desktopLayer.js';
 import {WidgetHost} from './widgets/host.js';
 import {ClockController} from './clock.js';
+import {clockValues} from './shared/clockValues.js';
 import {desktopWorkarea,watchDesktopLayout} from './layout.js';
 import type {LayoutConfig} from './shared/layout.js';
 export default class LiquidWidgets extends Extension {
@@ -32,7 +33,9 @@ export default class LiquidWidgets extends Extension {
         },state=>this.host?.setConnected(state==='connected'));
         this.client.start([...PROVIDERS]);
         this.clock=new ClockController();
-        this.clock.start(now=>{const clock=this.clock!;this.host?.tick(now,clock.timeZone,clock.hour12,clock.locale,clock.weekStart);});
+        this.clock.start(now=>{const clock=this.clock!;this.host?.tick(now,clock.timeZone,clock.hour12,clock.locale,clock.weekStart);
+            const today=clockValues(now,clock.timeZone,clock.hour12,clock.locale).today;
+            this.client?.setCalendarContext({month:today.slice(0,7),timeZone:clock.timeZone,weekStart:clock.weekStart},today);});
         this.layout();
     }
     private layout():void{

@@ -43,3 +43,41 @@ fn invalid_names_symlinks_and_oversized_cache_are_rejected() {
     assert!(cache.write(&key, &vec![0; 600 * 1024]).is_err());
     assert_eq!(fs::read(&outside).unwrap(), b"private");
 }
+
+#[test]
+fn raw_calendar_cache_is_private_bounded_source_specific_and_removed_with_disconnect() {
+    use liquid_widgets_daemon::providers::{calendar::MAX_ICS_BYTES, calendar_feed::CalendarCache};
+    let root = tempfile::tempdir().unwrap();
+    let store = PrivateStore::new(root.path()).unwrap();
+    let cached = CalendarCache {
+        fetched_at: "2026-11-04T00:00:00Z".into(),
+        ics: "BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n".into(),
+    };
+    store.write_calendar("source-a", &cached).unwrap();
+    let read = store
+        .read_calendar("source-a")
+        .unwrap()
+        .expect("raw ICS was not persisted");
+    assert_eq!(read.ics, cached.ics);
+    assert_eq!(read.fetched_at, cached.fetched_at);
+    assert!(store.read_calendar("source-b").unwrap().is_none());
+    assert!(
+        store
+            .write_calendar(
+                "source-a",
+                &CalendarCache {
+                    fetched_at: cached.fetched_at.clone(),
+                    ics: "x".repeat(MAX_ICS_BYTES + 1)
+                }
+            )
+            .is_err()
+    );
+    assert_eq!(
+        store.read_calendar("source-a").unwrap().unwrap().ics,
+        cached.ics
+    );
+    store
+        .remove_provider(liquid_widgets_daemon::types::ProviderName::Calendar)
+        .unwrap();
+    assert!(store.read_calendar("source-a").unwrap().is_none());
+}

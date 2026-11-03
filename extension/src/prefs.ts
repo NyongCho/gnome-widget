@@ -1,6 +1,7 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk?version=4.0';
 import Gio from 'gi://Gio';
+import {addCalendarSettings} from './prefs/calendar.js';
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 export default class Preferences extends ExtensionPreferences {
     async fillPreferencesWindow(window:Adw.PreferencesWindow):Promise<void>{
@@ -18,7 +19,7 @@ export default class Preferences extends ExtensionPreferences {
             settings.bind(key,row,'value',Gio.SettingsBindFlags.DEFAULT);appearance.add(row);
         }
         const low=new Adw.SwitchRow({title:'저전력 모드',subtitle:'굴절 대신 반투명 배경을 사용합니다.'});settings.bind('low-power',low,'active',Gio.SettingsBindFlags.DEFAULT);appearance.add(low);
-        const note=new Adw.PreferencesGroup({title:'데이터 연결',description:'캘린더 연결과 날씨 지역 설정은 데이터 설정 화면에서 제공합니다.'});page.add(note);
-        window.add(page);
+        const data=new Adw.PreferencesPage({title:'데이터',icon_name:'network-server-symbolic'});addCalendarSettings(window,data);
+        window.add(page);window.add(data);
     }
 }

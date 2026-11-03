@@ -21,3 +21,6 @@
 .liquid-calendar-dot { font-size: .571em; color: #d0ecff; }
 .liquid-agenda-title { font-size: .929em; font-weight: 500; }
 .liquid-agenda-time { font-size: .786em; color: rgba(255,255,255,.7); }
+
+.liquid-event-dot { background-color: #e1f3ff; border-radius: 2px; }
+.liquid-event-dot.today { background-color: #172536; }

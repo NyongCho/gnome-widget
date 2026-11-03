@@ -11,12 +11,18 @@ pub struct Ticket {
     pub source_id: String,
     generation: u64,
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Failure {
     Network,
     Unavailable,
     Invalid,
     TooLarge,
+    Keyring,
+    Auth,
+    Unsupported,
+    ExpansionLimit,
+    TimeZone,
+    RateLimited,
 }
 impl Failure {
     fn code(self) -> &'static str {
@@ -25,6 +31,12 @@ impl Failure {
             Self::Unavailable => "SERVICE_UNAVAILABLE",
             Self::Invalid => "INVALID_DATA",
             Self::TooLarge => "PAYLOAD_TOO_LARGE",
+            Self::Keyring => "KEYRING_LOCKED",
+            Self::Auth => "AUTH_ERROR",
+            Self::Unsupported => "UNSUPPORTED_CALENDAR",
+            Self::ExpansionLimit => "EXPANSION_LIMIT",
+            Self::TimeZone => "UNKNOWN_TIME_ZONE",
+            Self::RateLimited => "RATE_LIMITED",
         }
     }
 }
@@ -120,13 +132,22 @@ impl ServiceState {
         job: &Ticket,
         result: Result<Value, Failure>,
     ) -> Result<bool, StateError> {
+        self.finish_report(job, result, None, None)
+    }
+    pub fn finish_report(
+        &mut self,
+        job: &Ticket,
+        result: Result<Value, Failure>,
+        updated_at: Option<String>,
+        stale: Option<Failure>,
+    ) -> Result<bool, StateError> {
         if !self.is_current(job) {
             return Ok(false);
         }
         let old = self.provider(job.provider).clone();
         let mut value = match result {
             Ok(data) => {
-                json!({"status":"ok","sourceId":job.source_id,"updatedAt":now(),"data":data,"errorCode":null})
+                json!({"status":if stale.is_some(){"stale"}else{"ok"},"sourceId":job.source_id,"updatedAt":updated_at.unwrap_or_else(now),"data":data,"errorCode":stale.map(Failure::code)})
             }
             Err(error) => failed(&old, error, true),
         };

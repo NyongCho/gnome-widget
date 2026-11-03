@@ -21,6 +21,11 @@ impl CacheKey {
         }
         Ok(Self(format!("{}-{source}.json", name.as_str())))
     }
+    fn calendar_raw(source: &str) -> io::Result<Self> {
+        let mut key = Self::new(ProviderName::Calendar, source)?;
+        key.0 = key.0.replace(".json", ".ics");
+        Ok(key)
+    }
     pub fn settings() -> Self {
         Self("settings.toml".into())
     }
@@ -42,7 +47,10 @@ impl PrivateStore {
         self.0.join(&key.0)
     }
     pub fn write(&self, key: &CacheKey, bytes: &[u8]) -> io::Result<()> {
-        if bytes.len() > LIMIT {
+        self.write_limit(key, bytes, LIMIT)
+    }
+    fn write_limit(&self, key: &CacheKey, bytes: &[u8], limit: usize) -> io::Result<()> {
+        if bytes.len() > limit {
             return Err(io::Error::other("cache too large"));
         }
         let temp = self.0.join(format!(".{}.tmp", uuid::Uuid::new_v4()));
@@ -64,6 +72,9 @@ impl PrivateStore {
         result
     }
     pub fn read(&self, key: &CacheKey) -> io::Result<Option<Vec<u8>>> {
+        self.read_limit(key, LIMIT)
+    }
+    fn read_limit(&self, key: &CacheKey, limit: usize) -> io::Result<Option<Vec<u8>>> {
         let file = match OpenOptions::new()
             .read(true)
             .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
@@ -78,11 +89,67 @@ impl PrivateStore {
             return Err(io::Error::other("insecure cache file"));
         }
         let mut bytes = Vec::new();
-        file.take(LIMIT as u64 + 1).read_to_end(&mut bytes)?;
-        if bytes.len() > LIMIT {
+        file.take(limit as u64 + 1).read_to_end(&mut bytes)?;
+        if bytes.len() > limit {
             return Err(io::Error::other("cache too large"));
         }
         Ok(Some(bytes))
+    }
+    pub fn read_calendar(
+        &self,
+        source: &str,
+    ) -> io::Result<Option<crate::providers::calendar_feed::CalendarCache>> {
+        let Some(bytes) = self.read_limit(
+            &CacheKey::calendar_raw(source)?,
+            crate::providers::calendar::MAX_ICS_BYTES + 128,
+        )?
+        else {
+            return Ok(None);
+        };
+        let text =
+            String::from_utf8(bytes).map_err(|_| io::Error::other("invalid calendar cache"))?;
+        let (fetched_at, ics) = text
+            .split_once('\n')
+            .ok_or_else(|| io::Error::other("invalid calendar cache"))?;
+        chrono::DateTime::parse_from_rfc3339(fetched_at)
+            .map_err(|_| io::Error::other("invalid cache timestamp"))?;
+        if ics.len() > crate::providers::calendar::MAX_ICS_BYTES {
+            return Err(io::Error::other("cache too large"));
+        }
+        Ok(Some(crate::providers::calendar_feed::CalendarCache {
+            fetched_at: fetched_at.into(),
+            ics: ics.into(),
+        }))
+    }
+    pub fn write_calendar(
+        &self,
+        source: &str,
+        cached: &crate::providers::calendar_feed::CalendarCache,
+    ) -> io::Result<()> {
+        chrono::DateTime::parse_from_rfc3339(&cached.fetched_at)
+            .map_err(|_| io::Error::other("invalid cache timestamp"))?;
+        if cached.ics.len() > crate::providers::calendar::MAX_ICS_BYTES {
+            return Err(io::Error::other("cache too large"));
+        }
+        self.write_limit(
+            &CacheKey::calendar_raw(source)?,
+            format!("{}\n{}", cached.fetched_at, cached.ics).as_bytes(),
+            crate::providers::calendar::MAX_ICS_BYTES + 128,
+        )
+    }
+    pub fn remove_provider(&self, provider: ProviderName) -> io::Result<()> {
+        let prefix = format!("{}-", provider.as_str());
+        for entry in fs::read_dir(&self.0)? {
+            let entry = entry?;
+            if entry
+                .file_name()
+                .to_str()
+                .is_some_and(|name| name.starts_with(&prefix))
+            {
+                fs::remove_file(entry.path())?;
+            }
+        }
+        File::open(&self.0)?.sync_all()
     }
     pub fn remove(&self, key: &CacheKey) -> io::Result<()> {
         match fs::remove_file(self.path(key)) {

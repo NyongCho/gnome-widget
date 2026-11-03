@@ -83,3 +83,15 @@ test('owner change cancels retry scheduled for a previous owner',async()=>{
     client.start(['system']);wire.owner!(':1.1');wire.take('Subscribe').reject(new Error('temporary'));await tick();
     wire.owner!(':1.2');assert.equal(wire.scheduled.size,0);wire.take('Subscribe',':1.2');client.stop();
 });
+
+test('calendar context is sent before subscribe, serialized on change and refreshed at midnight',async()=>{
+ const wire=new Wire(),client=new DataClient(wire,new ProviderStore(),()=>{},()=>{});
+ const context={month:'2026-11',timeZone:'Asia/Seoul',weekStart:1};client.setCalendarContext(context,'2026-11-04');client.start(['calendar']);wire.owner!(':1.1');
+ const first=wire.take('SetCalendarContext');assert.deepEqual(first.args,[JSON.stringify(context)]);first.resolve([]);await tick();
+ wire.take('Subscribe').resolve(['calendar-token']);await tick();wire.take('GetSnapshot').resolve([JSON.stringify(fixture())]);await tick();
+ client.setCalendarContext(context,'2026-11-04');await tick();assert.equal(wire.pending.length,0);
+ client.setCalendarContext(context,'2026-11-05');wire.take('SetCalendarContext').resolve([]);await tick();wire.take('Refresh').resolve([]);await tick();
+ client.setCalendarContext({...context,timeZone:'UTC'},'2026-11-05');const old=wire.take('SetCalendarContext');
+ client.setCalendarContext({...context,timeZone:'America/New_York'},'2026-11-05');assert.equal(wire.pending.length,0);old.resolve([]);await tick();
+ const last=wire.take('SetCalendarContext');assert.ok(String(last.args[0]).includes('America/New_York'));last.resolve([]);await tick();client.stop();
+});

@@ -1,5 +1,5 @@
 use liquid_widgets_daemon::{
-    service::{CollectRequest, Collector, Runtime, Server},
+    service::{CollectRequest, Collected, Collector, Runtime, Server},
     state::Failure,
     types::ProviderName as P,
     validation::parse_snapshot,
@@ -19,11 +19,11 @@ impl Collector for Counter {
     fn collect(
         &self,
         _request: CollectRequest,
-    ) -> Pin<Box<dyn Future<Output = Result<Value, Failure>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = Result<Collected, Failure>> + Send + '_>> {
         Box::pin(async move {
             let n = self.0.fetch_add(1, Ordering::SeqCst) + 1;
             Ok(
-                json!({"cpuPercent":n,"memoryUsedBytes":100,"memoryTotalBytes":200,"temperatureC":null}),
+                json!({"cpuPercent":n,"memoryUsedBytes":100,"memoryTotalBytes":200,"temperatureC":null}).into(),
             )
         })
     }
@@ -166,11 +166,13 @@ impl Collector for Delayed {
     fn collect(
         &self,
         request: CollectRequest,
-    ) -> Pin<Box<dyn Future<Output = Result<Value, Failure>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = Result<Collected, Failure>> + Send + '_>> {
         Box::pin(async move {
             let (tx, rx) = tokio::sync::oneshot::channel();
             self.0.send((request, tx)).unwrap();
-            rx.await.unwrap_or(Err(Failure::Unavailable))
+            rx.await
+                .unwrap_or(Err(Failure::Unavailable))
+                .map(Into::into)
         })
     }
 }

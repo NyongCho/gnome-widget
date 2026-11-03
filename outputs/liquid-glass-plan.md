@@ -167,16 +167,18 @@ assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T10:00:00+09:00')), 
 
 **Interfaces:** `CalendarData={month:string,timeZone:string,weekStart:number,events:CalendarEvent[]}`; `CalendarEvent={uid:string,occurrenceKey:string,title:string,start:string,end:string,allDay:boolean}`. 종일 start/end는 YYYY-MM-DD이며 end는 exclusive다. `selectAgenda(events:CalendarEvent[],nowMs:number,today:string):CalendarEvent[]`는 진행 중 우선·종료 제외·최대 3개를 반환한다. `today`는 CalendarData.timeZone의 YYYY-MM-DD다. 동률은 start, uid, occurrenceKey 순으로 정렬한다. 별도 prefs 창에서 마스킹된 입력을 받고 `SetCalendarSecret` 요청 후 필드를 지운다. 같은 사용자 세션 D-Bus를 비밀 격리 경계로 설명하지 않는다.
 
-- [ ] Task 0에서 통과한 fixture와 라이브러리를 실제 provider에 연결한다. 지원 범위가 달라지면 적합성 검증을 다시 수행한다. shared CalendarServer 조회 범위나 date menu 내부 상태에 의존하지 않는다.
-- [ ] 설정된 Google Calendar HTTPS iCal URL만 읽고 응답 크기 5MiB·timeout 15초·반복 확장 건수 10000개 상한을 둔다. 미지원 데이터는 마지막 성공 결과를 보존하며 오류를 표시한다.
-- [ ] 키링 잠김·잘못된 URL·HTTP 실패 테스트와 비밀값 비노출 테스트를 통과시킨다.
-- [ ] `disconnect_removes_events_and_cache`를 작성한다. 연결 해제 후 snapshot은 unconfigured/data=null, 디스크의 해당 sourceId 캐시는 없음, 재시작 후에도 옛 일정은 없음이어야 한다. 지연된 이전 응답도 폐기되어야 한다. 키링 삭제 실패에는 calendarEnabled=false·캐시 없음은 유지하고 calendarSecretDeletionPending=true로 남긴다.
-- [ ] Secret Service 테스트 대역으로 저장·삭제 실패를 먼저 재현한 뒤 실제 adapter를 연결한다. URL 교체 시 옛 캐시를 비우고 새 sourceId 결과만 표시한다.
-- [ ] 현재 달력 그리드 및 30일 일정 범위를 계산해 오늘 표시·날짜 점·다음 3개 일정을 구현한다. GNOME의 주 시작 요일·시스템 시간대 변경을 반영한다. 첫 버전에는 다른 달 이동을 넣지 않는다.
-- [ ] `extension/src/shared/agenda.ts`와 `calendarFormat.ts`를 구현한다. 분 경계마다 진행 중·종료 여부를 다시 계산한다. `agenda_excludes_ended_and_caps_at_three`, `all_day_is_active_until_exclusive_end`, `month_grid_uses_week_start`를 검증한다. 종료·진행 중·미래 일정 4개 fixture의 반환 uid가 `['ongoing','next-1','next-2']`여야 한다.
-- [ ] 월·날짜·시간대·주 시작 요일 변경 시 `SetCalendarContext`로 재계산한다. 응답 컨텍스트가 현재 UI와 다르면 새 컨텍스트 결과로 표시하지 않는다. 원본 일정 캐시가 있으면 오프라인에서도 새 범위를 계산한다.
-- [ ] 카드 클릭은 Gio 기본 URI 실행으로 Google Calendar를 연다. 날짜 링크는 실제 브라우저에서 확인하고 불가하면 홈 링크로 폴백한다.
-- [ ] `cargo test --manifest-path daemon/Cargo.toml --test calendar` 및 GNOME 수동 클릭 검증 후 `feat: add read-only Google Calendar widgets`로 커밋한다.
+- [x] Task 0에서 통과한 fixture와 라이브러리를 실제 provider에 연결한다. 지원 범위가 달라지면 적합성 검증을 다시 수행한다. shared CalendarServer 조회 범위나 date menu 내부 상태에 의존하지 않는다.
+- [x] 설정된 Google Calendar HTTPS iCal URL만 읽고 응답 크기 5MiB·timeout 15초·반복 확장 건수 10000개 상한을 둔다. 미지원 데이터는 마지막 성공 결과를 보존하며 오류를 표시한다.
+- [x] 키링 잠김·잘못된 URL·HTTP 실패 테스트와 비밀값 비노출 테스트를 통과시킨다.
+- [x] `disconnect_removes_events_and_cache`를 작성한다. 연결 해제 후 snapshot은 unconfigured/data=null, 디스크의 해당 sourceId 캐시는 없음, 재시작 후에도 옛 일정은 없음이어야 한다. 지연된 이전 응답도 폐기되어야 한다. 키링 삭제 실패에는 calendarEnabled=false·캐시 없음은 유지하고 calendarSecretDeletionPending=true로 남긴다.
+- [x] Secret Service 테스트 대역으로 저장·삭제 실패를 먼저 재현한 뒤 실제 adapter를 연결한다. URL 교체 시 옛 캐시를 비우고 새 sourceId 결과만 표시한다.
+- [x] 현재 달력 그리드 및 30일 일정 범위를 계산해 오늘 표시·날짜 점·다음 3개 일정을 구현한다. GNOME의 주 시작 요일·시스템 시간대 변경을 반영한다. 첫 버전에는 다른 달 이동을 넣지 않는다.
+- [x] `extension/src/shared/agenda.ts`와 `calendarFormat.ts`를 구현한다. 분 경계마다 진행 중·종료 여부를 다시 계산한다. `agenda_excludes_ended_and_caps_at_three`, `all_day_is_active_until_exclusive_end`, `month_grid_uses_week_start`를 검증한다. 종료·진행 중·미래 일정 4개 fixture의 반환 uid가 `['ongoing','next-1','next-2']`여야 한다.
+- [x] 월·날짜·시간대·주 시작 요일 변경 시 `SetCalendarContext`로 재계산한다. 응답 컨텍스트가 현재 UI와 다르면 새 컨텍스트 결과로 표시하지 않는다. 원본 일정 캐시가 있으면 오프라인에서도 새 범위를 계산한다.
+- [x] 카드 클릭은 Gio 기본 URI 실행으로 Google Calendar를 연다. 날짜 링크는 실제 브라우저에서 확인하고 불가하면 홈 링크로 폴백한다.
+- [x] `cargo test --manifest-path daemon/Cargo.toml --test calendar` 및 GNOME 수동 클릭 검증 후 `feat: add read-only Google Calendar widgets`로 커밋한다.
+
+**검증 범위:** 개인 비공개 주소는 미입력이다. 실제 공개 Google 피드와 격리된 실제 GNOME keyring을 검증했다. 클릭 대상은 승인된 Google Calendar 홈이며 기본 URI 처리기 전달을 검증했다. 개인 브라우저 로그인과 비공개 피드 실사용은 사용자 인수로 남긴다.
 
 ## Task 5: 현재 날씨와 시간별 예보
 

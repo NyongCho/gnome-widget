@@ -1,4 +1,4 @@
-use liquid_widgets_daemon::service::{Runtime, Server, UnavailableCollector};
+use liquid_widgets_daemon::service::{Runtime, Server};
 use std::{path::PathBuf, sync::Arc};
 fn directory(variable: &str, fallback: &str) -> Result<PathBuf, Box<dyn std::error::Error>> {
     let root = if let Some(path) = std::env::var_os(variable) {
@@ -19,10 +19,20 @@ async fn main() {
     }
 }
 async fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let runtime = Runtime::new(
+    let secrets = Arc::new(liquid_widgets_daemon::secrets::SystemSecrets);
+    let fetcher =
+        Arc::new(liquid_widgets_daemon::http::Http::new().map_err(|_| "HTTP client unavailable")?);
+    let providers = liquid_widgets_daemon::providers::Providers {
+        calendar: liquid_widgets_daemon::providers::calendar_feed::CalendarFeed {
+            fetcher,
+            secrets: secrets.clone(),
+        },
+    };
+    let runtime = Runtime::new_with_secrets(
         directory("XDG_CONFIG_HOME", ".config")?,
         directory("XDG_CACHE_HOME", ".cache")?,
-        Arc::new(UnavailableCollector),
+        Arc::new(providers),
+        secrets,
     )
     .await?;
     let server = Server::start(runtime).await?;

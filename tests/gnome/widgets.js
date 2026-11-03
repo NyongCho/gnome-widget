@@ -50,6 +50,23 @@ export async function run(){
     try{
         await until(()=>host.connected,'GNOME did not connect to Rust');
         await capture('widgets-connected');
+        const now=Date.now();const today=GLib.DateTime.new_now_local().format('%Y-%m-%d');
+        const event=(uid,start,end,allDay=false)=>({uid,occurrenceKey:uid,title:uid,start,end,allDay});
+        const fixture={status:'ok',sourceId:'gui-fixture',updatedAt:new Date(now).toISOString(),errorCode:null,data:{month:today.slice(0,7),timeZone:host.zone,weekStart:host.weekStart,events:[
+            event('종료된 일정',new Date(now-7200000).toISOString(),new Date(now-3600000).toISOString()),
+            event('진행 중 · 디자인 작업',new Date(now-600000).toISOString(),new Date(now+600000).toISOString()),
+            event('프로젝트 리뷰',new Date(now+3600000).toISOString(),new Date(now+7200000).toISOString()),
+            event('저녁 약속',new Date(now+10800000).toISOString(),new Date(now+14400000).toISOString()),
+        ]}};
+        host.updateProvider('calendar',fixture);await Scripting.sleep(300);
+        const agenda=()=>host.cards.get('agenda').body.get_children().map(a=>a.get_text()).join(' / ');
+        check(agenda().includes('진행 중')&&!agenda().includes('종료된 일정'),'agenda selection did not reach the UI');
+        await capture('widgets-calendar-fixture');
+        const calendarButton=host.cards.get('calendar').button;const [cx,cy]=calendarButton.get_transformed_position();await click(cx+80,cy+60);
+        await until(()=>{const [ok,bytes]=GLib.file_get_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/opened-uris.jsonl`);return ok&&new TextDecoder().decode(bytes).includes('https://calendar.google.com/');},'calendar click did not launch default URI handler');
+        host.updateProvider('calendar',{...fixture,data:{...fixture.data,timeZone:'Etc/GMT+5'}});
+        check(!agenda().includes('프로젝트 리뷰'),'mismatched context exposed old events');
+        host.updateProvider('calendar',{status:'unconfigured',sourceId:'gui-fixture',updatedAt:null,data:null,errorCode:null});
         process.force_exit();await until(()=>!host.connected,'service loss not reflected');
         check(host.cards.get('clock').body.get_children()[0].get_text().length>0,'clock stopped with service');
     }finally{process.force_exit();}
@@ -81,6 +98,8 @@ export async function run(){
     check(host.cards.get('clock').body.get_children()[0]===clockLabel,'network update rebuilt clock');
     Gio.Subprocess.new(['gnome-extensions','prefs','liquid-widgets@local'],Gio.SubprocessFlags.NONE);
     let prefs;await until(()=>{prefs=global.get_window_actors().find(a=>a.mapped&&a.meta_window.get_title()==='Liquid Widgets');return !!prefs;},'preferences window did not map');
-    await Scripting.sleep(300);await capture('widgets-preferences');prefs.meta_window.delete(global.get_current_time());
+    await Scripting.sleep(300);await capture('widgets-preferences');
+    const prefsRect=prefs.meta_window.get_frame_rect();await click(prefsRect.x+370,prefsRect.y+22);await Scripting.sleep(300);await capture('widgets-calendar-preferences');
+    prefs.meta_window.delete(global.get_current_time());
     print('WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, owner loss, DING/BMS input, window overlap and 20-cycle cleanup passed');
 }

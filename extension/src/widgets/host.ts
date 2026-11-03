@@ -5,7 +5,8 @@ import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from 
 import {GlassCard,label} from './card.js';
 import {cardState} from '../shared/cardState.js';
 import {clockValues} from '../shared/clockValues.js';
-import {monthGrid} from '../shared/calendarFormat.js';
+import {monthGrid,eventDays} from '../shared/calendarFormat.js';
+import {selectAgenda} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
 export class WidgetHost {
     readonly actor=new Clutter.Actor({name:'liquid-widgets-host'});
@@ -87,14 +88,19 @@ export class WidgetHost {
             card.title.set_text(`${clock.weekday} · ${clock.date}`);card.body.add_child(label(clock.time,'liquid-clock-time'));card.status.set_text('');return;
         }
         const provider=(id==='agenda'?'calendar':id) as ProviderName;
-        const state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
+        let state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
+        const calendar=provider==='calendar'?state.data as CalendarData|null:null;
+        if(calendar&&(calendar.month!==clock.today.slice(0,7)||calendar.timeZone!==this.zone||calendar.weekStart!==this.weekStart)){
+            state={...state,status:'loading',data:null,updatedAt:null,errorCode:null};
+        }
         const view=cardState(state,this.connected);
-        const success=view.updatedAt?new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit'}).format(Date.parse(view.updatedAt)):'';
+        const success=view.updatedAt?new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit',hourCycle:this.hour12?'h12':'h23'}).format(Date.parse(view.updatedAt)):'';
         card.status.set_text(`${view.message}${view.kind==='stale'&&success?` · ${success}`:''}`);
         if(id==='calendar'){
             card.title.set_text(new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,year:'numeric',month:'long'}).format(this.now));
             const grid=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-calendar-grid'});
             const days=monthGrid(clock.today.slice(0,7),this.weekStart);
+            const dots=eventDays((view.data as CalendarData|null)?.events??[],days,this.zone);
             for(let row=0;row<7;row++){
                 const line=new St.BoxLayout({x_expand:true});
                 for(let column=0;column<7;column++){
@@ -102,7 +108,12 @@ export class WidgetHost {
                     const text=row===0?new Intl.DateTimeFormat(this.locale,{weekday:'narrow',timeZone:'UTC'}).format(Date.UTC(2026,10,1+(this.weekStart+column)%7)):String(day!.day);
                     const item=label(text,'liquid-calendar-day');item.set_size(27*this.scale,23*this.scale);
                     if(day?.iso===clock.today)item.add_style_class_name('liquid-calendar-today');else if(day&&!day.inMonth)item.add_style_class_name('liquid-calendar-muted');
-                    line.add_child(item);
+                    const cell=new St.Widget({layout_manager:new Clutter.BinLayout(),width:27*this.scale,height:23*this.scale,x_expand:true});cell.add_child(item);
+                    if(day&&dots.has(day.iso)){
+                        const dot=new St.Widget({style_class:day.iso===clock.today?'liquid-event-dot today':'liquid-event-dot',width:3*this.scale,height:3*this.scale,x_align:Clutter.ActorAlign.CENTER,y_align:Clutter.ActorAlign.END});
+                        cell.add_child(dot);item.accessible_name=`${day.iso} · 일정 있음`;
+                    }
+                    line.add_child(cell);
                 }
                 grid.add_child(line);
             }
@@ -120,8 +131,9 @@ export class WidgetHost {
         }
         if(id==='agenda'){
             const data=view.data as CalendarData;
-            if(!data.events.length)card.body.add_child(label('예정된 일정 없음'));
-            for(const event of data.events.slice(0,3)){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(event.allDay?'종일':new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit'}).format(Date.parse(event.start)),'liquid-agenda-time'));}
+            const events=selectAgenda(data.events,this.now,clock.today);
+            if(!events.length)card.body.add_child(label('예정된 일정 없음'));
+            for(const event of events){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(event.allDay?'종일':new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit',hourCycle:this.hour12?'h12':'h23'}).format(Date.parse(event.start)),'liquid-agenda-time'));}
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
             card.title.set_text(data.location);card.body.add_child(label(data.current.temperatureC===null?'—°':`${Math.round(data.current.temperatureC)}°`,'liquid-big'));

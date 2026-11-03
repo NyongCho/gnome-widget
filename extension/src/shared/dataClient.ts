@@ -1,4 +1,4 @@
-import type {ProviderName} from '../types.js';
+import type {ProviderName,CalendarContext} from '../types.js';
 import {ProviderStore,PROVIDERS} from './providerStore.js';
 import {parseSnapshot,parseProviderState} from './validation.js';
 export type ChangeHandler=(name:string,revision:number,payload:string)=>void;
@@ -16,6 +16,9 @@ export interface Transport {
     call(owner:string,method:string,args:readonly unknown[],cancel:Cancellation|null):Promise<readonly unknown[]>;
 }
 export class DataClient {
+    private desiredContext:{json:string;day:string;key:string}|null=null;
+    private appliedContext:{json:string;day:string;key:string}|null=null;
+    private contextPump:Promise<void>|null=null;
     private generation=0;
     private retryCancel:(()=>void)|null=null;
     private retryDelay=1000;
@@ -25,6 +28,32 @@ export class DataClient {
     private token:string|null=null;
     private cancel=new Cancellation();
     constructor(private wire:Transport,readonly store:ProviderStore,private changed:(provider?:ProviderName)=>void,private connection:(state:ConnectionState)=>void){}
+    setCalendarContext(context:CalendarContext,day:string):void{
+        const json=JSON.stringify(context);this.desiredContext={json,day,key:json+day};
+        // On failure leave the desired key unapplied; the next clock/resume tick retries.
+        void this.syncContext().catch(()=>{});
+    }
+    private syncContext():Promise<void>{
+        if(this.contextPump)return this.contextPump;
+        if(!this.owner||!this.desiredContext||this.appliedContext?.key===this.desiredContext.key)return Promise.resolve();
+        const owner=this.owner,generation=this.generation;
+        const current=()=>owner===this.owner&&generation===this.generation;
+        const pump=(async()=>{
+            while(current()&&this.desiredContext&&this.appliedContext?.key!==this.desiredContext.key){
+                const desired=this.desiredContext,previous=this.appliedContext;
+                await this.wire.call(owner,'SetCalendarContext',[desired.json],this.cancel);
+                if(!current())return;
+                if(previous&&previous.day!==desired.day&&this.token){
+                    await this.wire.call(owner,'Refresh',['calendar'],this.cancel).catch(()=>{});
+                    if(!current())return;
+                }
+                this.appliedContext=desired;
+            }
+        })();
+        this.contextPump=pump;
+        void pump.finally(()=>{if(this.contextPump===pump)this.contextPump=null;}).catch(()=>{});
+        return pump;
+    }
     start(providers:ProviderName[]):void {
         this.stop();
         if(!providers.length || providers.some(p=>!PROVIDERS.includes(p))) throw new Error('Invalid providers');
@@ -33,6 +62,7 @@ export class DataClient {
     private release(owner:string,token:string):void {void this.wire.call(owner,'Unsubscribe',[token],null).catch(()=>{});}
     private disconnect():void {
         this.retryCancel?.();this.retryCancel=null;
+        this.appliedContext=null;this.contextPump=null;
         this.generation++;this.cancel.cancel();this.cancel=new Cancellation();
         this.unsignal?.();this.unsignal=null;
         if(this.owner && this.token) this.release(this.owner,this.token);
@@ -54,6 +84,7 @@ export class DataClient {
             } catch {this.connection('invalid-data');}
         });
         try {
+            if(this.desiredContext){await this.syncContext();if(!current())return;}
             // Subscribe mutates server state. Let its reply arrive after disable so the
             // returned token can be released; cancelling would lose the cleanup handle.
             const [token]=await this.wire.call(owner,'Subscribe',[providers],null);

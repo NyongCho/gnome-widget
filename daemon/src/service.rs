@@ -31,12 +31,29 @@ pub struct CollectRequest {
     pub ticket: Ticket,
     pub config: Config,
     pub blocking: crate::worker::BlockingWorker,
+    pub calendar_cache: Option<crate::providers::calendar_feed::CalendarCache>,
+}
+pub struct Collected {
+    pub data: Value,
+    pub updated_at: Option<String>,
+    pub stale: Option<Failure>,
+    pub calendar_cache: Option<crate::providers::calendar_feed::CalendarCache>,
+}
+impl From<Value> for Collected {
+    fn from(data: Value) -> Self {
+        Self {
+            data,
+            updated_at: None,
+            stale: None,
+            calendar_cache: None,
+        }
+    }
 }
 pub trait Collector: Send + Sync {
     fn collect(
         &self,
         request: CollectRequest,
-    ) -> Pin<Box<dyn Future<Output = Result<Value, Failure>> + Send + '_>>;
+    ) -> Pin<Box<dyn Future<Output = Result<Collected, Failure>> + Send + '_>>;
 }
 /// Explicit unavailable states until the real provider implementations are installed.
 pub struct UnavailableCollector;
@@ -44,7 +61,7 @@ impl Collector for UnavailableCollector {
     fn collect(
         &self,
         _request: CollectRequest,
-    ) -> Pin<Box<dyn Future<Output = Result<Value, Failure>> + Send + '_>> {
+    ) -> Pin<Box<dyn Future<Output = Result<Collected, Failure>> + Send + '_>> {
         Box::pin(async { Err(Failure::Unavailable) })
     }
 }
@@ -74,6 +91,8 @@ pub struct Runtime {
     config_store: PrivateStore,
     cache: PrivateStore,
     collector: Arc<dyn Collector>,
+    secrets: Arc<dyn crate::secrets::SecretStore>,
+    calendar_admin: Mutex<()>,
     blocking: crate::worker::BlockingWorker,
     controls: BTreeMap<ProviderName, watch::Sender<Control>>,
     changes: broadcast::Sender<Change>,
@@ -89,10 +108,97 @@ impl Runtime {
         cache: PathBuf,
         collector: Arc<dyn Collector>,
     ) -> Result<Arc<Self>, ServiceError> {
+        Self::new_with_secrets(
+            config,
+            cache,
+            collector,
+            Arc::new(crate::secrets::NoSecrets),
+        )
+        .await
+    }
+    pub async fn set_calendar_secret(&self, url: String) -> Result<(), ServiceError> {
+        crate::secrets::validate_calendar_url(&url).map_err(|_| ServiceError)?;
+        let _admin = self.calendar_admin.lock().await;
+        let source = uuid::Uuid::new_v4().to_string();
+        self.secrets
+            .write(source.clone(), url)
+            .await
+            .map_err(|_| ServiceError)?;
+        let mut inner = self.inner.lock().await;
+        let mut next = inner.config.clone();
+        let old = next.sources[&ProviderName::Calendar].clone();
+        next.settings.calendar_enabled = true;
+        next.settings.calendar_secret_deletion_pending = false;
+        next.sources.insert(ProviderName::Calendar, source);
+        self.commit_calendar(&mut inner, next).await?;
+        drop(inner);
+        if self.secrets.delete(Some(old)).await.is_err() {
+            let mut inner = self.inner.lock().await;
+            let mut next = inner.config.clone();
+            next.settings.calendar_secret_deletion_pending = true;
+            self.persist(&next).await?;
+            inner.config = next;
+            return Err(ServiceError);
+        }
+        Ok(())
+    }
+    pub async fn clear_calendar_secret(&self) -> Result<(), ServiceError> {
+        let _admin = self.calendar_admin.lock().await;
+        let mut inner = self.inner.lock().await;
+        let mut next = inner.config.clone();
+        next.settings.calendar_enabled = false;
+        next.settings.calendar_secret_deletion_pending = true;
+        next.sources
+            .insert(ProviderName::Calendar, uuid::Uuid::new_v4().to_string());
+        // Disable durably and clear display/cache before touching a possibly locked keyring.
+        self.commit_calendar(&mut inner, next).await?;
+        drop(inner);
+        self.secrets.delete(None).await.map_err(|_| ServiceError)?;
+        let mut inner = self.inner.lock().await;
+        let mut next = inner.config.clone();
+        next.settings.calendar_secret_deletion_pending = false;
+        self.persist(&next).await?;
+        inner.config = next;
+        Ok(())
+    }
+    async fn persist(&self, next: &Config) -> Result<(), ServiceError> {
+        let store = self.config_store.clone();
+        let next = next.clone();
+        tokio::task::spawn_blocking(move || next.save(&store))
+            .await
+            .map_err(|_| ServiceError)?
+            .map_err(|_| ServiceError)
+    }
+    async fn commit_calendar(&self, inner: &mut Inner, next: Config) -> Result<(), ServiceError> {
+        self.persist(&next).await?;
+        let name = ProviderName::Calendar;
+        inner
+            .state
+            .set_source(name, next.sources[&name].clone(), next.enabled(name));
+        inner.config = next;
+        inner.state.bump(name).map_err(|_| ServiceError)?;
+        self.notify(inner, name);
+        self.reconcile(inner);
+        self.controls[&name].send_modify(|control| control.epoch += 1);
+        let cache = self.cache.clone();
+        tokio::task::spawn_blocking(move || cache.remove_provider(name))
+            .await
+            .map_err(|_| ServiceError)?
+            .map_err(|_| ServiceError)
+    }
+    pub async fn new_with_secrets(
+        config: PathBuf,
+        cache: PathBuf,
+        collector: Arc<dyn Collector>,
+        secrets: Arc<dyn crate::secrets::SecretStore>,
+    ) -> Result<Arc<Self>, ServiceError> {
         let (config_store, cache, config, state) = tokio::task::spawn_blocking(move || {
             let config_store = PrivateStore::new(&config)?;
             let cache = PrivateStore::new(&cache)?;
             let config = Config::load(&config_store)?;
+            if !config.settings.calendar_enabled {
+                cache.remove_provider(ProviderName::Calendar)?;
+            }
             let mut state = ServiceState::new();
             for provider in ProviderName::ALL {
                 let source = config.sources[&provider].clone();
@@ -123,6 +229,8 @@ impl Runtime {
             config_store,
             cache,
             collector,
+            secrets,
+            calendar_admin: Mutex::new(()),
             blocking: crate::worker::BlockingWorker::new(2),
             controls: ProviderName::ALL
                 .into_iter()
@@ -316,28 +424,61 @@ impl Runtime {
     }
     async fn request(&self, name: ProviderName) -> CollectRequest {
         let inner = self.inner.lock().await;
-        CollectRequest {
+        let mut request = CollectRequest {
             ticket: inner.state.begin(name),
             config: inner.config.clone(),
             blocking: self.blocking.clone(),
+            calendar_cache: None,
+        };
+        drop(inner);
+        if name == ProviderName::Calendar {
+            let cache = self.cache.clone();
+            let source = request.ticket.source_id.clone();
+            request.calendar_cache =
+                tokio::task::spawn_blocking(move || cache.read_calendar(&source))
+                    .await
+                    .ok()
+                    .and_then(Result::ok)
+                    .flatten();
         }
+        request
     }
     async fn complete(
         &self,
         request: &CollectRequest,
-        result: Result<Value, Failure>,
+        result: Result<Collected, Failure>,
     ) -> Result<(), ServiceError> {
         let mut inner = self.inner.lock().await;
         let name = request.ticket.provider;
+        let (result, updated_at, stale, raw) = match result {
+            Ok(value) => (
+                Ok(value.data),
+                value.updated_at,
+                value.stale,
+                value.calendar_cache,
+            ),
+            Err(error) => (Err(error), None, None, None),
+        };
         if !self.controls[&name].borrow().active
             || !inner
                 .state
-                .finish(&request.ticket, result)
+                .finish_report(&request.ticket, result, updated_at, stale)
                 .map_err(|_| ServiceError)?
         {
             return Ok(());
         }
-        if inner.state.provider(name)["status"] == "ok" {
+        let fresh = inner.state.provider(name)["status"] == "ok";
+        if fresh && let Some(raw) = raw {
+            let cache = self.cache.clone();
+            let source = request.ticket.source_id.clone();
+            if !matches!(
+                tokio::task::spawn_blocking(move || cache.write_calendar(&source, &raw)).await,
+                Ok(Ok(()))
+            ) {
+                eprintln!("calendar cache write failed");
+            }
+        }
+        if !inner.state.provider(name)["data"].is_null() {
             let bytes=json!({"context":inner.config.context_key(name),"state":inner.state.provider(name)}).to_string().into_bytes();
             let cache = self.cache.clone();
             let key = CacheKey::new(name, &request.ticket.source_id).map_err(|_| ServiceError)?;
@@ -452,15 +593,11 @@ impl Interface {
             .await
             .map_err(failed)
     }
-    async fn set_calendar_secret(&self, _url: String) -> zbus::fdo::Result<()> {
-        Err(zbus::fdo::Error::NotSupported(
-            "calendar secret storage is not installed".into(),
-        ))
+    async fn set_calendar_secret(&self, url: String) -> zbus::fdo::Result<()> {
+        self.0.set_calendar_secret(url).await.map_err(failed)
     }
     async fn clear_calendar_secret(&self) -> zbus::fdo::Result<()> {
-        Err(zbus::fdo::Error::NotSupported(
-            "calendar secret storage is not installed".into(),
-        ))
+        self.0.clear_calendar_secret().await.map_err(failed)
     }
     async fn search_locations(&self, _query: String) -> zbus::fdo::Result<String> {
         Err(zbus::fdo::Error::NotSupported(

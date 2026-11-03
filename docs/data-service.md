@@ -1,6 +1,6 @@
-# Rust 데이터 서비스 — Task 2
+# Rust 데이터 서비스
 
-2026-11-04. Task 1의 GNOME 렌더링 위에 로컬 데이터 서비스와 GJS 통신 경계를 연결했다. 실제 일정·날씨·시스템 측정 provider는 후속 task다. 현재 실행 파일은 미설정/사용 불가 상태를 반환하며 예시 수치를 실측값처럼 보내지 않는다.
+2026-11-04. Task 1의 GNOME 렌더링 위에 로컬 데이터 서비스와 GJS 통신 경계를 연결했다. Task 4에서 실제 Google iCal·키링·오프라인 캘린더 provider를 연결했다. 날씨·시스템 측정은 후속 task이며, 구현되지 않은 측정값을 예시 수치로 채우지 않는다.
 
 ## 실행과 소유권
 
@@ -22,14 +22,14 @@ GJS 요청은 비동기이며 snapshot 요청은 disable/owner 변경 때 취소
 
 설정은 `$XDG_CONFIG_HOME/liquid-widgets/settings.toml`, 캐시는 `$XDG_CACHE_HOME/liquid-widgets/`에 저장한다. XDG 값이 없으면 각각 `~/.config`, `~/.cache`를 사용한다. 앱 디렉터리는 0700, 파일은 0600이다. 임시 파일을 fsync한 후 rename하고 디렉터리도 fsync한다. 읽기는 symlink·일반 파일이 아닌 대상·과도한 크기·느슨한 파일 권한을 거부한다. 같은 사용자 프로세스에 대한 보안 격리 경계는 아니다.
 
-성공한 provider 데이터만 캐시에 저장한다. 재시작 시 일치하는 캐시는 stale 상태와 원래 성공 시각으로 복원한다. 같은 출처의 일시 실패도 마지막 성공 값을 유지한다. provider가 비정상 형식을 반환하거나 개별/전체 JSON이 512KiB 한도를 넘으면 정해진 오류 코드로 처리하며 공급자 오류 원문은 보내지 않는다. 새 응답이 너무 커도 기존 값이 예산 안에 있으면 stale로 유지하며 마지막 성공 시각을 바꾸지 않는다.
+유효한 마지막 성공 데이터와 오프라인 재계산 결과를 캐시에 저장한다. 재시작 시 일치하는 캐시는 stale 상태와 원래 성공 시각으로 복원한다. 같은 출처의 일시 실패도 마지막 성공 값을 유지한다. provider가 비정상 형식을 반환하거나 개별/전체 JSON이 512KiB 한도를 넘으면 정해진 오류 코드로 처리하며 공급자 오류 원문은 보내지 않는다. 새 응답이 너무 커도 기존 값이 예산 안에 있으면 stale로 유지하며 마지막 성공 시각을 바꾸지 않는다.
 
 ICS 계산에는 공용 bounded blocking worker를 제공한다. 최대 2개의 native 작업만 허용하고 대기열이 가득 차면 Busy로 거절한다. Tokio executor에서 ICS를 직접 계산하지 않는다. 기존 5MiB 입력·10000개 결과·100000회 반복 제한도 유지한다. 이미 시작한 native 작업을 강제로 중단하는 하드 시간 제한은 아니다.
 
 ## 현재 지원하는 설정 IPC
 
 - GetSettings, SetCalendarContext, SetWeatherLocation, SetNetworkInterface: 검증 및 원자적 저장을 구현했다.
-- SetCalendarSecret / ClearCalendarSecret: Task 4의 Secret Service 구현 전까지 명시적인 NotSupported를 반환한다. 비밀 URL을 저장하거나 응답·로그에 반사하지 않는다.
+- SetCalendarSecret / ClearCalendarSecret: Secret Service에 source UUID별로 저장하고 교체·연결 해제·캐시 제거를 처리한다. 비밀 URL을 응답·로그에 반사하지 않는다. [캘린더 설정과 검증](calendar.md).
 - SearchLocations: Task 5의 날씨 검색 구현 전까지 NotSupported를 반환한다.
 
 ## 검증

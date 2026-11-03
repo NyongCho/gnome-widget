@@ -124,3 +124,17 @@ fn aggregate_overflow_preserves_previous_provider_data() {
     assert_eq!(state.provider(P::Network)["data"], previous["data"]);
     parse_snapshot(&state.snapshot_json().unwrap()).unwrap();
 }
+
+#[test]
+fn offline_reexpansion_is_stale_with_original_success_time() {
+    use liquid_widgets_daemon::state::{Failure, ServiceState};
+    use liquid_widgets_daemon::types::ProviderName;
+    let mut state = ServiceState::new();
+    state.change_source(ProviderName::Calendar, true);
+    let ticket = state.begin(ProviderName::Calendar);
+    state.finish_report(&ticket,Ok(serde_json::json!({"month":"2026-12","timeZone":"Asia/Seoul","weekStart":1,"events":[]})),Some("2026-11-04T00:00:00Z".into()),Some(Failure::Network)).unwrap();
+    let value = state.provider(ProviderName::Calendar);
+    assert_eq!(value["status"], "stale");
+    assert_eq!(value["updatedAt"], "2026-11-04T00:00:00Z");
+    assert_eq!(value["data"]["month"], "2026-12");
+}

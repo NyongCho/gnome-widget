@@ -60,3 +60,11 @@ Task 2 리뷰에서 같은 owner의 일시적 IPC 실패 뒤 자동 재시도가
 재현: `./scripts/check.sh`, 전체 카드 `./scripts/test-gnome.py`, 단일 굴절 회귀 `./scripts/test-gnome.py --spike`. 개인 캡처는 ignored `.superpowers/sdd/liquid-glass-plan/screenshots/`에 보관한다. 실제 계정 데이터 연동과 최종 UI 세부 표현은 Tasks 4–7의 범위다.
 
 최종 Task 3 검증: Rust 46개 + TypeScript 40개, 타입 검사·빌드·실제 GJS IPC가 통과했다. 전체 카드 GUI와 `--spike` 굴절 회귀 모두 exit 0. 별도 GTK4/Adwaita 설정창이 실제 GNOME에 표시되는 캡처를 확인했다. 테스트용 D-Bus activation 환경을 임시 XDG 경로/개발 디스플레이로 명시해 바깥 세션과 분리했다.
+
+## Task 4 — 2026-11-04
+
+Rust 55개 + TypeScript 45개와 fmt/clippy/typecheck/build/GJS IPC가 통과했다. 별도의 실제 Google 공개 iCal 피드 조회·파싱 검사도 통과했다. 실제 private D-Bus와 임시 XDG 경로의 GNOME keyring에서 저장·조회·삭제·잠긴 항목 오류를 검증했다. 개인 비공개 주소와 사용자 키링은 사용하지 않았다.
+
+수집기·서비스 연결 검사는 설정 IPC → source UUID/키링 저장 → HTTP 대역 → 실제 libical 확장 → provider snapshot → 원본 캐시 → 오프라인 시간대 재계산 → 연결 해제·캐시 삭제 → 재시작 순서로 수행했다. HTTP 검사에는 실제 localhost 응답의 크기/403/429/리디렉션/timeout이 포함된다. 확장 한도와 미지원 규칙은 기존 27개 엔진 검사를 그대로 유지한다.
+
+GNOME 화면에서는 테스트 일정 세 개와 오늘의 일정 점, 종료 일정 제외, 현재 UI와 다른 시간대 응답 숨김을 확인했다. 별도 GTK 설정창은 비밀 입력을 마스킹하고 요청 시 즉시 지운다. 카드 클릭의 Google Calendar 홈 URI는 격리된 기본 처리기에 전달됨을 검사했다. 개인 브라우저 로그인/비공개 피드 실사용은 사용자 인수로 남긴다.
