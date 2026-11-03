@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/gnome.d.ts",
+    "src/extension.ts",
+    "src/effects/**/*.ts",
+    "src/platform/**/*.ts",
+    "src/glsl.d.ts"
+  ]
+}

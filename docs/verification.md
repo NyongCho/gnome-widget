@@ -18,7 +18,7 @@
 
 ## 아직 검증하지 않은 것
 
-- 실제 GNOME Shell actor, 배경화면 굴절 셰이더, GPU 성능, 분수 배율, DING 입력 공존.
+- 실제 사용자 세션 장시간 사용과 GPU 성능 예산. 단일 카드 렌더링·분수 배율·DING 입력 공존은 아래 Task 1에서 검증했다.
 - 설치/제거, 사용자 systemd 서비스, 살아 있는 D-Bus 호출·owner 변경·재연결.
 - Google Calendar 실제 비공개 피드, 키링·네트워크·날씨·시스템 측정.
 - native 파서의 하드 CPU/메모리 격리. 지금의 입력·회차·iterator 예산과 별개다.
@@ -32,3 +32,7 @@
 경미한 미해결 항목 한 건: `generatedAt` 등의 날짜와 시각 사이에 공백을 넣은 비표준 입력을 Ajv는 허용하고 Rust는 거부한다. 현재 생산하는 시간은 모두 `T` 구분자를 사용한다. 외부 protocol 입력을 넓히기 전에 공통 fixture에 추가해 두 검증기의 허용 범위를 맞출 필요가 있다.
 
 Task 1+ 기능과 native hard CPU/메모리 격리, sanitizer/fuzz 인증은 이번 리뷰의 완료 범위가 아니다.
+
+## Task 1 — 2026-11-03
+
+`./scripts/check.sh`와 `./scripts/test-gnome.py`를 실행했다. 실제 GPU를 사용하는 GNOME Devkit 창에서 굴절·배경 좌표·글자 보존, 카드 클릭, DING 아이콘 선택/드래그, 일반 창 겹침, 125% 배율, 배경 변경과 캐시 분리, overview/workspace, Blur my Shell 공존을 검증했다. 상세 재현 과정과 범위는 [셰이더 검증 기록](shader-spike.md)에 있다. 사용자 세션의 설치·장시간 동작 검증을 대신하지 않는다.

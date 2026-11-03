@@ -4,8 +4,7 @@ Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 �
 
 ## 현재 상태
 
-2026-11-03 기준 PRD v1.0과 기술 설계를 바탕으로 Task 0을 구현했다. Rust/libical 일정 엔진, Rust·TypeScript 공통 JSON 계약, 재현 가능한 개발 환경과 fixture 테스트가 있다. GJS에서 검증기 번들도 실행했다. 실제 GNOME 위젯·셰이더·서비스와 Google 계정 연결은 아직 구현하지 않았다. 다음 실행 단위는 Task 1의 실제 배경 굴절·DING 클릭 공존 검증이다.
-
+2026-11-03 기준 Task 0의 Rust/libical 일정 엔진·공통 계약과 Task 1의 실제 GNOME 배경 굴절 검증을 구현했다. NVIDIA GPU를 쓰는 별도 GNOME 50 세션에서 카드 렌더링, 125% 배율, DING 아이콘 입력과 일반 창·Blur my Shell 공존을 확인했다. 최종 위젯 UI·Rust 서비스·Google 계정 연결은 다음 단계다. [셰이더 검증 결과와 실행 방법](docs/shader-spike.md)을 참고한다.
 검증: `./scripts/check.sh`. 처음 준비하는 환경은 [개발 환경 안내](docs/setup.md)를 따른다. [캘린더 적합성 결과와 지원 범위](docs/calendar-feasibility.md), [데이터 계약](protocol/README.md)을 확인할 수 있다.
 
 ## 먼저 읽을 문서

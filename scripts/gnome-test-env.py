@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""Configure only the temporary XDG environment created by GNOME's test tool."""
+from pathlib import Path
+from configparser import ConfigParser
+import os, shutil, sys
+root=Path(__file__).resolve().parent.parent
+config=Path(os.environ['XDG_CONFIG_HOME'])
+data=Path(os.environ['XDG_DATA_HOME'])
+work=Path(os.environ['LIQUID_TEST_OUTPUT'])
+# Test-tool owns this temporary keyfile; never target the live dconf backend.
+if os.environ.get('GSETTINGS_BACKEND') != 'keyfile' or config == Path.home()/'.config':
+    raise SystemExit('Expected isolated GNOME test-tool environment')
+desktop=work/'desktop'; desktop.mkdir(exist_ok=True)
+(desktop/'Click and drag me.txt').write_text('Disposable Liquid Widgets desktop input fixture.\n')
+(config/'user-dirs.dirs').write_text(f'XDG_DESKTOP_DIR="{desktop}"\n')
+source=(root/'tests/gnome/refraction-grid.svg').read_text()
+(work/'background.svg').write_text(source)
+(work/'background-alternate.svg').write_text(source.replace('#ef9fbf','#40e89f').replace('#102b63','#2b142f'))
+settings_file=config/'glib-2.0/settings/keyfile'
+settings=ConfigParser();settings.read(settings_file)
+settings['org/gnome/desktop/background']={'picture-uri':repr((work/'background.svg').as_uri()),'picture-uri-dark':repr((work/'background.svg').as_uri()),'picture-options':"'zoom'"}
+settings['org/gnome/shell/extensions/ding']={'show-home':'false','show-trash':'false','show-volumes':'false','show-network-volumes':'false','start-corner':"'top-left'"}
+with settings_file.open('w') as f: settings.write(f)
+blur=Path.home()/'.local/share/gnome-shell/extensions/blur-my-shell@aunetx'
+if blur.is_dir():
+    target=data/'gnome-shell/extensions/blur-my-shell@aunetx'
+    if not target.exists(): shutil.copytree(blur,target)
+os.environ.pop('SHELL_BACKGROUND_IMAGE',None)
+os.execv(sys.argv[1],sys.argv[1:])

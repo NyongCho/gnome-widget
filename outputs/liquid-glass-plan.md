@@ -99,13 +99,13 @@ assert_eq!(events.iter().map(|e| e.start.as_str()).collect::<Vec<_>>(),
 
 **Interfaces:** `GlassSurface.setGeometry(rect: Rect, scale: number): void`, `setStrength(value: number): void`, `destroy(): void`. `Rect = {x:number,y:number,width:number,height:number}`. 구현 가능한 API를 검증한 후 클래스 내부 경로를 확정한다.
 
-- [ ] 검토 보고서의 로컬 API 결과를 기준으로 타입 정의·실행 버전을 고정한다. 없는 `ShaderEffect.new_with_snippet/set_uniform_float`를 사용하지 않는다. 다른 확장과 충돌하지 않는 GType namespace를 정한다.
-- [ ] 독립 BackgroundManager 배경 복제, 카드 영역과 blur padding, Cogl.Pipeline/Snippet/Offscreen 및 Clutter paint node 경로를 구현한다. 카드마다 전체 모니터 크기의 FBO를 무제한 유지하지 않는다. private API는 platform adapter에 격리한다.
-- [ ] `gnome-shell-test-tool --extension`을 이용하는 개발용 세션에서 단일 카드와 글자, 굴절 0/양수 비교 모드를 만든다. 실제 사용자 Wayland 세션을 강제 재시작하지 않는다.
-- [ ] 대비가 뚜렷한 테스트 배경으로 모서리 UV 왜곡이 보이고 글자는 변형되지 않는지 확인한다. 빈 텍스처·셰이더 오류를 실패로 기록한다.
-- [ ] DING 유무에 따라 카드가 아이콘 창 위·일반 창 아래에 표시되도록 DesktopLayerAdapter를 검증한다. 카드 클릭, 아이콘 클릭·드래그, 카드 외부 입력 통과를 확인한다.
-- [ ] 배경 변경, 100%/분수 배율, 일반 창 겹침, overview·workspace 전환, Blur my Shell 활성 상태를 확인한다. 배경·배치 변경만 효과 캐시를 무효화하고 텍스트 갱신은 분리한다. 사용할 API와 한계를 문서화한다.
-- [ ] 통과 시 `feat: prove wallpaper refraction on GNOME 50`로 커밋한다. 실패 시 실제 원인을 보고하고 후속 전체 구현을 멈춘다.
+- [x] 검토 보고서의 로컬 API 결과를 기준으로 타입 정의·실행 버전을 고정한다. 없는 `ShaderEffect.new_with_snippet/set_uniform_float`를 사용하지 않는다. 다른 확장과 충돌하지 않는 GType namespace를 정한다.
+- [x] 독립 BackgroundManager 배경 복제, 카드 영역과 blur padding, Cogl.Pipeline/Snippet/Offscreen 및 Clutter paint node 경로를 구현한다. 카드마다 전체 모니터 크기의 FBO를 무제한 유지하지 않는다. private API는 platform adapter에 격리한다.
+- [x] `gnome-shell-test-tool --extension`을 이용하는 개발용 세션에서 단일 카드와 글자, 굴절 0/양수 비교 모드를 만든다. 실제 사용자 Wayland 세션을 강제 재시작하지 않는다.
+- [x] 대비가 뚜렷한 테스트 배경으로 모서리 UV 왜곡이 보이고 글자는 변형되지 않는지 확인한다. 빈 텍스처·셰이더 오류를 실패로 기록한다.
+- [x] DING 유무에 따라 카드가 아이콘 창 위·일반 창 아래에 표시되도록 DesktopLayerAdapter를 검증한다. 카드 클릭, 아이콘 클릭·드래그, 카드 외부 입력 통과를 확인한다.
+- [x] 배경 변경, 100%/분수 배율, 일반 창 겹침, overview·workspace 전환, Blur my Shell 활성 상태를 확인한다. 배경·배치 변경만 효과 캐시를 무효화하고 텍스트 갱신은 분리한다. 사용할 API와 한계를 문서화한다.
+- [x] 통과 시 `feat: prove wallpaper refraction on GNOME 50`로 커밋한다. 실패 시 실제 원인을 보고하고 후속 전체 구현을 멈춘다.
 
 **완료 기준:** HTML이 아닌 GNOME 50에서 굴절 카드 한 개의 실행 증거, DING과 클릭 공존 결과, 동작 한계가 있다. headless 성공만으로 실제 GPU·바탕화면 동작을 통과 처리하지 않는다.
 
