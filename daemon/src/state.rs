@@ -132,7 +132,7 @@ impl ServiceState {
         };
         let raw = value.to_string();
         if raw.len() > MAX_PAYLOAD_BYTES {
-            value = failed(&old, Failure::TooLarge, false);
+            value = failed(&old, Failure::TooLarge, true);
         } else if validate_provider_state(job.provider, &raw).is_err() {
             value = failed(&old, Failure::Invalid, true);
         }
@@ -140,7 +140,13 @@ impl ServiceState {
         // The aggregate budget matters even when each individual provider fits.
         if self.snapshot_json().is_err() {
             self.slots.get_mut(&job.provider).unwrap().value =
-                failed(&old, Failure::TooLarge, false);
+                failed(&old, Failure::TooLarge, true);
+            // The stale/error metadata can itself push an exactly-full snapshot
+            // over the budget. Clear only if preserving the old data cannot fit.
+            if self.snapshot_json().is_err() {
+                self.slots.get_mut(&job.provider).unwrap().value =
+                    failed(&old, Failure::TooLarge, false);
+            }
         }
         self.snapshot_json()?;
         self.bump(job.provider)?;

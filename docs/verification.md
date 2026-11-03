@@ -39,8 +39,10 @@ Task 1+ 기능과 native hard CPU/메모리 격리, sanitizer/fuzz 인증은 이
 
 ## Task 2 — 2026-11-04
 
-`./scripts/check.sh`는 Rust 44개, TypeScript 28개 테스트와 fmt/clippy/typecheck/build, GJS validator smoke, 실제 Rust–GJS IPC를 검사한다. IPC 테스트는 별도 bus와 임시 XDG 경로를 사용한다. 구독 2개 중 하나 해제, sender 소실·지연 등록, 재시작, 원래 출처의 늦은 결과·이전 캐시 차단, 원자적 파일 교체·권한, native worker 실행 제한을 검증했다.
+`./scripts/check.sh`는 Rust 46개, TypeScript 31개 테스트와 fmt/clippy/typecheck/build, GJS validator smoke, 실제 Rust–GJS IPC를 검사한다. IPC 테스트는 별도 bus와 임시 XDG 경로를 사용한다. 구독 2개 중 하나 해제, sender 소실·지연 등록, 재시작, 원래 출처의 늦은 결과·이전 캐시 차단, 원자적 파일 교체·권한, native worker 실행 제한을 검증했다.
 
-실제 GJS에서 Rust 실행 파일을 시작하고 provider 신호, 설정 변경, owner 재시작, 마지막 상태 유지, disable 후 공유 bus 유지가 통과했다. GNOME 시각 회귀 검사에서는 한 차례 DING 활성화 직후 카드 클릭이 누락됐다. 재실행에서 actor pick과 클릭 횟수 진단을 추가한 상태로 통과했으며, 재현 원인은 확정하지 못했다. Task 3의 입력·수명 검증에서 계속 확인할 항목으로 남긴다. 서비스 부재 안내가 보이는 실제 캡처도 확인했다.
+실제 GJS에서 Rust 실행 파일을 시작하고 provider 신호, 설정 변경, owner 재시작, 마지막 상태 유지, disable 후 공유 bus 유지가 통과했다. GNOME 시각 회귀 검사에서는 한 차례 DING 활성화 직후 카드 클릭이 누락됐다. 재실행에서 actor pick과 클릭 횟수 진단을 추가한 상태로 통과했으며, 재현 원인은 확정하지 못했다. Task 3의 입력·수명 검증에서 계속 확인할 항목으로 남긴다. 서비스 부재 안내와 실제 Rust 서비스 연결 상태의 GNOME 캡처도 확인했다. 최종 실행에서도 DING 클릭·드래그와 GNOME–Rust 연결이 통과했다.
 
 아직 실제 provider 조회/키링 저장과 systemd 설치를 완료한 것은 아니다. 현재 범위와 한계는 [데이터 서비스](data-service.md)에 기록했다.
+
+Task 2 리뷰에서 같은 owner의 일시적 IPC 실패 뒤 자동 재시도가 없던 문제와 초과 응답이 이전 정상 데이터를 지우던 문제를 재현했다. 취소 가능한 최대 30초 backoff, 개별/전체 payload 초과 시 stale 데이터 보존으로 수정했고 회귀 테스트를 추가했다.

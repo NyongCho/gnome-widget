@@ -8,6 +8,10 @@ const signatures:Record<string,string>={Subscribe:'(as)',Unsubscribe:'(s)',Refre
 /** Owns watches/cancellables, never closes the shared GJS session connection. */
 export class SessionTransport implements Transport {
     constructor(private bus=Gio.DBus.session){}
+    schedule(delay:number,callback:()=>void):()=>void {
+        const id=GLib.timeout_add(GLib.PRIORITY_DEFAULT,delay,()=>{callback();return GLib.SOURCE_REMOVE;});
+        return()=>{GLib.source_remove(id);};
+    }
     watchOwner(callback:(owner:string|null)=>void):()=>void {
         const id=Gio.bus_watch_name_on_connection(this.bus,BUS_NAME,Gio.BusNameWatcherFlags.NONE,
             (_bus,_name,owner)=>callback(owner),()=>callback(null));

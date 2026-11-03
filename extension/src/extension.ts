@@ -24,7 +24,7 @@ export default class LiquidWidgets extends Extension {
         this.surface.actor.add_child(hint);
         this.client = new DataClient(new SessionTransport(),new ProviderStore(),()=>{},state=>{
             subtitle.set_text(state==='connected'?'데이터 서비스 연결됨':state==='connecting'?'데이터 서비스 연결 중…':state==='invalid-data'?'데이터 형식을 확인할 수 없어요':'데이터 서비스 연결 필요');
-            hint.set_text(state==='disconnected'||state==='unavailable'?'사용자 서비스를 설치·시작해 주세요':'');
+            hint.set_text(state==='disconnected'?'사용자 서비스를 설치·시작해 주세요':state==='unavailable'?'잠시 후 자동으로 다시 연결합니다':'');
         });
         this.client.start([...PROVIDERS]);
         this.button = new St.Button({label:'Refraction · on',can_focus:true,reactive:true,x:24,y:145,width:170,height:44,style:'background-color:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:14px;color:white;font-size:14px;'});

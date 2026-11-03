@@ -57,7 +57,7 @@ def main():
         raise SystemExit('A visible Wayland desktop is required')
     os.chdir(ROOT)
     SHOTS.mkdir(parents=True, exist_ok=True)
-    env = os.environ | {'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS)}
+    env = os.environ | {'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(ROOT / 'daemon/target/debug/liquid-widgets-daemon')}
     archive = WORK / 'liquid-widgets.shell-extension.zip'
     with zipfile.ZipFile(archive, 'w') as output:
         for file in (ROOT / 'extension/dist').glob('*.js'):

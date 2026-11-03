@@ -6,6 +6,9 @@ import {ProviderStore} from '../src/shared/providerStore.js';
 const fixture=()=>JSON.parse(readFileSync(new URL('../../tests/fixtures/protocol/snapshot-valid.json',import.meta.url),'utf8'));
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 class Wire implements Transport {
+    scheduled=new Map<number,{delay:number;callback:()=>void}>(); private nextTimer=0;
+    schedule(delay:number,callback:()=>void){const id=++this.nextTimer;this.scheduled.set(id,{delay,callback});return()=>{this.scheduled.delete(id);};}
+    retry(){const entry=this.scheduled.entries().next().value;assert.ok(entry,'missing recovery timer');const [id,timer]=entry;this.scheduled.delete(id);timer.callback();return timer.delay;}
     owner:((owner:string|null)=>void)|null=null; changes=new Map<string,ChangeHandler>();
     pending:{owner:string;method:string;args:readonly unknown[];cancel:Cancellation|null;resolve:(value:readonly unknown[])=>void;reject:(e:Error)=>void}[]=[];
     watchOwner(cb:(owner:string|null)=>void){this.owner=cb;return()=>{this.owner=null;};}
@@ -53,4 +56,30 @@ test('malformed signals cannot replace current data or leak error contents',asyn
     wire.take('Subscribe').resolve(['token']);await tick();wire.take('GetSnapshot').resolve([JSON.stringify(fixture())]);await tick();
     const old=store.get('system');wire.changes.get(':1.1')!('system',3,'private-secret');
     assert.equal(store.get('system'),old);assert.equal(status.at(-1),'invalid-data');assert.ok(status.every(s=>!s.includes('secret')));client.stop();
+});
+
+test('transient snapshot failure recovers without a bus owner change',async()=>{
+    const wire=new Wire(),store=new ProviderStore(),client=new DataClient(wire,store,()=>{},()=>{});
+    client.start(['system']);wire.owner!(':1.1');wire.take('Subscribe').resolve(['first']);await tick();
+    wire.take('GetSnapshot').reject(new Error('temporary failure'));await tick();
+    assert.deepEqual(wire.take('Unsubscribe').args,['first']);
+    assert.equal(wire.retry(),1000);
+    wire.take('Subscribe').resolve(['recovered']);await tick();
+    const data=fixture();data.system.data.cpuPercent=31;
+    wire.take('GetSnapshot').resolve([JSON.stringify(data)]);await tick();
+    assert.equal(store.get('system').data?.cpuPercent,31);assert.equal(wire.scheduled.size,0);client.stop();
+});
+test('failed subscribe retries with bounded backoff and disable cancels recovery',async()=>{
+    const wire=new Wire(),client=new DataClient(wire,new ProviderStore(),()=>{},()=>{});
+    client.start(['system']);wire.owner!(':1.1');
+    for(const delay of [1000,2000,4000,8000,16000,30000,30000]){
+        wire.take('Subscribe').reject(new Error('temporary'));await tick();assert.equal(wire.retry(),delay);
+    }
+    wire.take('Subscribe').reject(new Error('temporary'));await tick();assert.equal(wire.scheduled.size,1);
+    client.stop();assert.equal(wire.scheduled.size,0);
+});
+test('owner change cancels retry scheduled for a previous owner',async()=>{
+    const wire=new Wire(),client=new DataClient(wire,new ProviderStore(),()=>{},()=>{});
+    client.start(['system']);wire.owner!(':1.1');wire.take('Subscribe').reject(new Error('temporary'));await tick();
+    wire.owner!(':1.2');assert.equal(wire.scheduled.size,0);wire.take('Subscribe',':1.2');client.stop();
 });

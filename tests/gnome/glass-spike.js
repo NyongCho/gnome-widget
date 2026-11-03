@@ -149,6 +149,12 @@ export async function run() {
     await capture('blur-my-shell');
     await click(500,370);
     if (extension.stateObj.clickCount !== 5) throw new Error('Blur my Shell conflicts with card click');
+    const daemon=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
+    try {
+        for(let attempt=0;attempt<50 && !labels.some(label=>label.get_text()==='데이터 서비스 연결됨');attempt++) await Scripting.sleep(100);
+        if(!labels.some(label=>label.get_text()==='데이터 서비스 연결됨')) throw new Error('GNOME did not connect to the Rust service');
+        await capture('service-connected');
+    } finally {daemon.force_exit();}
     await Scripting.sleep(Number(GLib.getenv('LIQUID_HOLD_MS') || 0));
     print(`LIQUID_TEST: desktop coexistence passed ${JSON.stringify(extension.stateObj.diagnostics)}`);
 }
