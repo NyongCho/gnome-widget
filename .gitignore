@@ -1,0 +1,6 @@
+.tools/
+.superpowers/
+target/
+node_modules/
+extension/dist/
+*.log
