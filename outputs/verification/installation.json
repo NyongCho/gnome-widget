@@ -1,0 +1,8 @@
+{
+  "serviceActive": true,
+  "serviceEnabled": true,
+  "calendarUnconfigured": true,
+  "weatherUnconfigured": true,
+  "otherExtensionsPreserved": true,
+  "newExtensionNeedsLogin": true
+}

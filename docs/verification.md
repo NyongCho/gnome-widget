@@ -144,3 +144,9 @@ Tasks 3–7(`e482e8d..519b4f6`)을 별도 fresh-context 리뷰어가 한 번 읽
 | 같은 날 절전 복귀 시 원격 데이터 미갱신 | 활성·설정된 calendar/weather Refresh, loading+기존 성공 시각, 실패 시 취소 가능한60초 재시도; client/실제 resume signal 회귀 |
 
 수정 후 전체 검사 **Rust 76개 + TypeScript 55개 + Python 7개**, fmt/clippy/typecheck/build/GJS/IPC/schema 검사가 통과했다. 실제 전체 GUI도 exit 0로 날짜·fallback stale 안내·resume 연결·8/8 클릭·20회 cleanup을 통과했다. 물리 절전 인수는 여전히 사용자 단계다. 새 Minor는 없었으며 이전 Task0의 Ajv 날짜 구분자 허용 차이는 그대로 문서화했다. 결정과 리뷰 범위 판단은 [전체 결정 기록](implementation-decisions.md)에 보존했다.
+
+## 실제 사용자 영역 설치
+
+2026-11-04에 최종 release 배포본을 사용자 영역에 설치했다. systemd 서비스 active/enabled, 실제 세션 D-Bus GetSettings/GetSnapshot, 서비스 재시작, 설치한 JS/CSS/metadata/실행 파일과 배포본 일치, 개인 디렉터리0700을 확인했다. 다른 GNOME 확장의 활성/비활성 목록을 보존했다. 캘린더는 disabled/unconfigured, 날씨 지역은 null/unconfigured다. 제거 도구는 `~/.local/lib/liquid-widgets/uninstall.py`에 있다.
+
+새 확장 활성화 항목은 저장했으며 코드가 바깥 Wayland Shell에 로드되려면 사용자가 **로그아웃·로그인**해야 한다. 현재 세션을 종료하지 않았다. 실제 외형 확인은 로그인 후 진행한다. 최종 리뷰 수정 뒤 OFF/ON 측정도 exit0이며 [성능 기록](performance.md)의 최신 JSON을 갱신했다. [설치 확인 항목](../outputs/verification/installation.json)을 보존한다.

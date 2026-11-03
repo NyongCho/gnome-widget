@@ -78,6 +78,8 @@
 
 - Final: Ruling: resume refreshes subscribed configured calendar/weather, shows old data as updating, retries rejected refresh after60seconds with owner/source fencing. Preserve service rate limits. Cost: a rate-limited resume can wait up to60seconds rather than immediate network fetch.
 
+- Final: Ruling: preserve codex/complete-widgets and the requested project directory; do not merge/push/publish or forcelogout. User requested autonomous local implementation with personal steps left. Cost: integration into another branch and outer-shell visual acceptance are not claimed.
+
 ## 남은 경미한 사항
 
 - Final: minor (deferred): Ajv accepts a space separator in date-time while Rust rejects it; engine emits canonical T timestamps. Align this peripheral invalid-input syntax before broader protocol inputs are supported.

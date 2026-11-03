@@ -4,7 +4,7 @@ Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 �
 
 ## 현재 상태
 
-GNOME Shell 50용 Rust 서비스·TypeScript 확장·GLSL 굴절을 구현했다. 시계, Google iCal 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, MPRIS 음악을 표시한다. 개인 캘린더와 날씨 지역은 사용자가 설정한다.
+GNOME Shell 50용 Rust 서비스·TypeScript 확장·GLSL 굴절을 구현했다. 시계, Google iCal 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, MPRIS 음악을 표시한다. 사용자 영역 설치와 서비스 기동까지 완료했다. 로그아웃·로그인 후 개인 캘린더와 날씨 지역을 설정한다.
 
 빌드된 배포본 설치: `./dist/liquid-widgets/install.py`. 새 확장 코드는 로그아웃·로그인 후 적용될 수 있다. [설치·설정·제거 안내](docs/setup.md), [검증 결과와 남은 인수 항목](docs/verification.md)을 참고한다. extensions.gnome.org에는 게시하지 않았다.
 
