@@ -186,11 +186,11 @@ assert.equal(millisecondsToNextMinute(Date.parse('2026-11-03T10:00:00+09:00')), 
 
 **Interfaces:** `WeatherLocation={id:string,label:string,latitude:number,longitude:number,timeZone:string}`; `WeatherData={location:string,timeZone:string,current:{temperatureC:number|null,code:number|null},hourly:{at:string,temperatureC:number|null,precipitationProbability:number|null}[],attributionUrl:string}`. `SearchLocations`는 WeatherLocation 배열을 반환하며 `SetWeatherLocation`으로 선택한다. null 값은 화면에서 사용 불가 표시로 처리한다.
 
-- [ ] 지역 미설정, 자정·시간대 변환, 값 누락, timeout, HTTP 429 fixture를 만든다. 없는 값은 0으로 꾸미지 않는다.
-- [ ] Open-Meteo 현재·향후 6시간 예보를 조회한다. 좌표는 사용자가 선택하고 API 키 없는 비상업용 조건과 출처 표시를 확인한다.
-- [ ] 지역 검색과 선택 UI를 연결한다. `location_change_rejects_previous_response`를 재현한다: A 요청 대기 중 B 선택 → A 결과는 무시, B loading에는 A 기온 없음, B 성공 값만 표시. 검색 실패만으로 기존 선택 A의 데이터를 지우지는 않는다.
-- [ ] 15분 주기·재시도 backoff·수동 갱신 제한·마지막 성공 데이터 보존을 구현한다.
-- [ ] `cargo test --manifest-path daemon/Cargo.toml --test weather`와 카드 오프라인 상태를 확인하고 `feat: add weather widget`으로 커밋한다.
+- [x] 지역 미설정, 자정·시간대 변환, 값 누락, timeout, HTTP 429 fixture를 만든다. 없는 값은 0으로 꾸미지 않는다.
+- [x] Open-Meteo 현재·향후 6시간 예보를 조회한다. 좌표는 사용자가 선택하고 API 키 없는 비상업용 조건과 출처 표시를 확인한다.
+- [x] 지역 검색과 선택 UI를 연결한다. `location_change_rejects_previous_response`를 재현한다: A 요청 대기 중 B 선택 → A 결과는 무시, B loading에는 A 기온 없음, B 성공 값만 표시. 검색 실패만으로 기존 선택 A의 데이터를 지우지는 않는다.
+- [x] 15분 주기·재시도 backoff·수동 갱신 제한·마지막 성공 데이터 보존을 구현한다.
+- [x] `cargo test --manifest-path daemon/Cargo.toml --test weather`와 카드 오프라인 상태를 확인하고 `feat: add weather widget`으로 커밋한다.
 
 ## Task 6: 시스템 네트워크 음악
 

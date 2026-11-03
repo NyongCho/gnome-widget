@@ -24,3 +24,8 @@
 
 .liquid-event-dot { background-color: #e1f3ff; border-radius: 2px; }
 .liquid-event-dot.today { background-color: #172536; }
+
+.liquid-weather-hour { font-size: .714em; color: rgba(255,255,255,.7); }
+.liquid-weather-temperature { font-size: .929em; font-weight: 500; }
+.liquid-weather-rain { font-size: .643em; color: #d2eaff; }
+.liquid-weather-attribution { font-size: .643em; color: rgba(255,255,255,.65); }

@@ -4,7 +4,7 @@ Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 �
 
 ## 현재 상태
 
-2026-11-04 기준 Task 0의 일정 엔진·공통 계약, Task 1의 실제 GNOME 굴절 검증, Task 2의 Rust 서비스·GJS 통신을 구현했다. 서비스 재시작, 구독 수명, 출처 변경과 캐시 격리를 검증했다. Task 3의 반응형 카드 배치·독립 시계·기본 설정과 반복 활성화 정리도 구현했다. Task 4의 Google iCal·키링·오프라인 달력 연동도 구현했다. 개인 주소 입력은 [캘린더 설정 안내](docs/calendar.md)를 따른다. 날씨·측정 provider와 설치·성능 인수 검증은 후속 단계다. [데이터 서비스 구조와 실행 방법](docs/data-service.md), [셰이더 검증 결과](docs/shader-spike.md)를 참고한다.
+2026-11-04 기준 Task 0의 일정 엔진·공통 계약, Task 1의 실제 GNOME 굴절 검증, Task 2의 Rust 서비스·GJS 통신을 구현했다. 서비스 재시작, 구독 수명, 출처 변경과 캐시 격리를 검증했다. Task 3의 반응형 카드 배치·독립 시계·기본 설정과 반복 활성화 정리도 구현했다. Task 4의 Google iCal·키링·오프라인 달력 연동도 구현했다. 개인 주소 입력은 [캘린더 설정 안내](docs/calendar.md)를 따른다. Task 5의 현재·6시간 날씨와 지역 검색을 구현했으며 실제 지역은 미설정이다. [날씨 설정](docs/weather.md)을 참고한다. 시스템·네트워크·음악 provider와 설치·성능 인수 검증은 후속 단계다. [데이터 서비스 구조와 실행 방법](docs/data-service.md), [셰이더 검증 결과](docs/shader-spike.md)를 참고한다.
 
 검증: `./scripts/check.sh`. 처음 준비하는 환경은 [개발 환경 안내](docs/setup.md)를 따른다. [캘린더 적합성 결과와 지원 범위](docs/calendar-feasibility.md), [데이터 계약](protocol/README.md)을 확인할 수 있다.
 

@@ -23,8 +23,11 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let fetcher =
         Arc::new(liquid_widgets_daemon::http::Http::new().map_err(|_| "HTTP client unavailable")?);
     let providers = liquid_widgets_daemon::providers::Providers {
+        weather: liquid_widgets_daemon::providers::weather::Weather {
+            fetcher: fetcher.clone(),
+        },
         calendar: liquid_widgets_daemon::providers::calendar_feed::CalendarFeed {
-            fetcher,
+            fetcher: fetcher.clone(),
             secrets: secrets.clone(),
         },
     };

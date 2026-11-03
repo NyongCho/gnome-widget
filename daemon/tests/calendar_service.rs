@@ -90,6 +90,9 @@ fn calendar_ipc_connect_offline_context_disconnect_and_restart() {
         let secrets = Arc::new(Secrets::default());
         let fetcher = Arc::new(Fetch(AtomicBool::new(false)));
         let providers = Arc::new(Providers {
+            weather: liquid_widgets_daemon::providers::weather::Weather {
+                fetcher: fetcher.clone(),
+            },
             calendar: CalendarFeed {
                 fetcher: fetcher.clone(),
                 secrets: secrets.clone(),

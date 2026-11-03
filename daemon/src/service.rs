@@ -50,6 +50,12 @@ impl From<Value> for Collected {
     }
 }
 pub trait Collector: Send + Sync {
+    fn search_locations(
+        &self,
+        _query: String,
+    ) -> Pin<Box<dyn Future<Output = Result<Vec<WeatherLocation>, Failure>> + Send + '_>> {
+        Box::pin(async { Err(Failure::Unavailable) })
+    }
     fn collect(
         &self,
         request: CollectRequest,
@@ -93,6 +99,7 @@ pub struct Runtime {
     collector: Arc<dyn Collector>,
     secrets: Arc<dyn crate::secrets::SecretStore>,
     calendar_admin: Mutex<()>,
+    search_gate: Mutex<Option<Instant>>,
     blocking: crate::worker::BlockingWorker,
     controls: BTreeMap<ProviderName, watch::Sender<Control>>,
     changes: broadcast::Sender<Change>,
@@ -231,6 +238,7 @@ impl Runtime {
             collector,
             secrets,
             calendar_admin: Mutex::new(()),
+            search_gate: Mutex::new(None),
             blocking: crate::worker::BlockingWorker::new(2),
             controls: ProviderName::ALL
                 .into_iter()
@@ -358,11 +366,9 @@ impl Runtime {
         if !self.controls[&name].borrow().active {
             return Err(zbus::fdo::Error::Failed("provider inactive".into()));
         }
-        if inner
-            .refresh
-            .get(&name)
-            .is_some_and(|last| last.elapsed() < Duration::from_secs(5))
-        {
+        if inner.refresh.get(&name).is_some_and(|last| {
+            last.elapsed() < Duration::from_secs(if name == ProviderName::Weather { 60 } else { 5 })
+        }) {
             return Err(zbus::fdo::Error::LimitsExceeded(
                 "refresh rate limited".into(),
             ));
@@ -494,9 +500,12 @@ impl Runtime {
     }
     async fn worker(self: Arc<Self>, name: ProviderName) {
         let mut control = self.controls[&name].subscribe();
+        let mut failures = 0_u32;
+        let mut source = String::new();
         loop {
             let current = *control.borrow_and_update();
             if !current.active {
+                failures = 0;
                 if control.changed().await.is_err() {
                     return;
                 }
@@ -506,16 +515,26 @@ impl Runtime {
             if *control.borrow() != current {
                 continue;
             }
-            tokio::select! {
-                result=self.collector.collect(request.clone())=>{let _=self.complete(&request,result).await;},
-                changed=control.changed()=>{if changed.is_err(){return;}continue;}
+            if source != request.ticket.source_id {
+                source = request.ticket.source_id.clone();
+                failures = 0;
             }
-            let interval = match name {
-                ProviderName::Calendar => 300,
-                ProviderName::Weather => 900,
-                ProviderName::System | ProviderName::Network => 2,
-                ProviderName::Media => 30,
+            let result = tokio::select! {
+                result=self.collector.collect(request.clone())=>result,
+                changed=control.changed()=>{if changed.is_err(){return;}continue;}
             };
+            let error = match &result {
+                Err(error) => Some(*error),
+                Ok(value) => value.stale,
+            };
+            failures = if error.is_some() {
+                failures.saturating_add(1)
+            } else {
+                0
+            };
+            let interval =
+                crate::schedule::poll_seconds(name, failures, error == Some(Failure::RateLimited));
+            let _ = self.complete(&request, result).await;
             tokio::select! { _=tokio::time::sleep(Duration::from_secs(interval))=>{}, changed=control.changed()=>{if changed.is_err(){return;}} }
         }
     }
@@ -599,10 +618,30 @@ impl Interface {
     async fn clear_calendar_secret(&self) -> zbus::fdo::Result<()> {
         self.0.clear_calendar_secret().await.map_err(failed)
     }
-    async fn search_locations(&self, _query: String) -> zbus::fdo::Result<String> {
-        Err(zbus::fdo::Error::NotSupported(
-            "location search is not installed".into(),
-        ))
+    async fn search_locations(&self, query: String) -> zbus::fdo::Result<String> {
+        if !(2..=100).contains(&query.trim().chars().count()) {
+            return Err(invalid());
+        }
+        let mut gate = self
+            .0
+            .search_gate
+            .try_lock()
+            .map_err(|_| zbus::fdo::Error::LimitsExceeded("search busy".into()))?;
+        if gate.is_some_and(|last| last.elapsed() < Duration::from_secs(1)) {
+            return Err(zbus::fdo::Error::LimitsExceeded(
+                "search rate limited".into(),
+            ));
+        }
+        *gate = Some(Instant::now());
+        let locations = self
+            .0
+            .collector
+            .search_locations(query)
+            .await
+            .map_err(|_| zbus::fdo::Error::Failed("location search failed".into()))?;
+        let output = serde_json::to_string(&locations).map_err(|_| failed(ServiceError))?;
+        validation::parse_location_search_results(&output).map_err(|_| failed(ServiceError))?;
+        Ok(output)
     }
     #[zbus(signal)]
     async fn provider_changed(

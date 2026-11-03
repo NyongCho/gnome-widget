@@ -1,6 +1,6 @@
 # Rust 데이터 서비스
 
-2026-11-04. Task 1의 GNOME 렌더링 위에 로컬 데이터 서비스와 GJS 통신 경계를 연결했다. Task 4에서 실제 Google iCal·키링·오프라인 캘린더 provider를 연결했다. 날씨·시스템 측정은 후속 task이며, 구현되지 않은 측정값을 예시 수치로 채우지 않는다.
+2026-11-04. Task 1의 GNOME 렌더링 위에 로컬 데이터 서비스와 GJS 통신 경계를 연결했다. Task 4에서 실제 Google iCal·키링·오프라인 캘린더 provider를 연결했다. Task 5의 Open-Meteo 날씨·지역 검색도 연결했다. 시스템 측정은 후속 task이며, 구현되지 않은 측정값을 예시 수치로 채우지 않는다.
 
 ## 실행과 소유권
 
@@ -16,7 +16,7 @@ GJS 요청은 비동기이며 snapshot 요청은 disable/owner 변경 때 취소
 
 ## 수집·출처·캐시
 
-구독 수요와 설정 여부가 모두 있는 provider만 worker를 실행한다. 마지막 구독이 없어지면 수집 future를 취소하고 작업 세대를 바꾼다. 재구독하면 즉시 재개한다. 수동 Refresh는 활성 provider만 허용하고 provider별 5초 간격으로 제한한다.
+구독 수요와 설정 여부가 모두 있는 provider만 worker를 실행한다. 마지막 구독이 없어지면 수집 future를 취소하고 작업 세대를 바꾼다. 재구독하면 즉시 재개한다. 수동 Refresh는 활성 provider만 허용하고 날씨는 60초, 다른 provider는 5초 간격으로 제한한다.
 
 출처 ID는 임의 UUID이며 URL이나 URL 해시가 아니다. 날씨 위치·NIC 변경은 새 ID를 발급하고 이전 데이터를 즉시 비운다. 캘린더 조회 context 변경은 같은 출처의 작업 세대를 바꾸고 이전 범위 데이터를 비운다. 작업 결과는 source ID와 세대가 모두 현재일 때만 반영된다. 캐시는 provider+source ID 파일에 속하고 캘린더 context도 함께 대조한다.
 
@@ -30,7 +30,7 @@ ICS 계산에는 공용 bounded blocking worker를 제공한다. 최대 2개의 
 
 - GetSettings, SetCalendarContext, SetWeatherLocation, SetNetworkInterface: 검증 및 원자적 저장을 구현했다.
 - SetCalendarSecret / ClearCalendarSecret: Secret Service에 source UUID별로 저장하고 교체·연결 해제·캐시 제거를 처리한다. 비밀 URL을 응답·로그에 반사하지 않는다. [캘린더 설정과 검증](calendar.md).
-- SearchLocations: Task 5의 날씨 검색 구현 전까지 NotSupported를 반환한다.
+- SearchLocations: Open-Meteo 검색 결과를 검증해 최대 20개 반환한다. 한 번에 한 요청, 최소 1초 간격으로 제한한다. 검색은 선택된 위치를 바꾸지 않는다. [날씨 설정과 검증](weather.md).
 
 ## 검증
 

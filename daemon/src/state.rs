@@ -102,6 +102,10 @@ impl ServiceState {
         s.source = source;
         s.generation += 1;
         s.value = empty(&s.source, enabled);
+        if enabled && name == ProviderName::Weather {
+            s.value["status"] = json!("loading");
+            s.value["errorCode"] = Value::Null;
+        }
     }
     pub fn invalidate_jobs(&mut self, name: ProviderName) {
         self.slots.get_mut(&name).unwrap().generation += 1;

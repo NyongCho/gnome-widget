@@ -61,6 +61,14 @@ export async function run(){
         host.updateProvider('calendar',fixture);await Scripting.sleep(300);
         const agenda=()=>host.cards.get('agenda').body.get_children().map(a=>a.get_text()).join(' / ');
         check(agenda().includes('진행 중')&&!agenda().includes('종료된 일정'),'agenda selection did not reach the UI');
+        const hour=new Date(now).getTime();const weather={status:'ok',sourceId:'weather-fixture',updatedAt:new Date(now).toISOString(),errorCode:null,data:{location:'서울 · 대한민국',timeZone:'Asia/Seoul',current:{temperatureC:12,code:2},hourly:Array.from({length:6},(_,index)=>({at:new Date(hour+(index+1)*3600000).toISOString(),temperatureC:index===2?null:12-index,precipitationProbability:index===3?null:index*10})),attributionUrl:'https://open-meteo.com/'}};
+        host.updateProvider('weather',weather);await Scripting.sleep(250);
+        await capture('widgets-weather-fixture');
+        host.updateProvider('weather',{...weather,status:'stale',errorCode:'NETWORK_ERROR'});await capture('widgets-weather-offline');
+        check(host.cards.get('weather').status.get_text().includes('연결을 확인'),'weather stale message missing');
+        host.updateProvider('weather',{status:'loading',sourceId:'new-city',updatedAt:null,data:null,errorCode:null});
+        check(host.cards.get('weather').title.get_text()==='날씨','previous city name survived source change');
+        host.updateProvider('weather',weather);
         await capture('widgets-calendar-fixture');
         const calendarButton=host.cards.get('calendar').button;const [cx,cy]=calendarButton.get_transformed_position();await click(cx+80,cy+60);
         await until(()=>{const [ok,bytes]=GLib.file_get_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/opened-uris.jsonl`);return ok&&new TextDecoder().decode(bytes).includes('https://calendar.google.com/');},'calendar click did not launch default URI handler');

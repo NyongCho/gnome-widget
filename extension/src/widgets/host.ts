@@ -3,11 +3,13 @@ import Gio from 'gi://Gio';
 import St from 'gi://St';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
 import {GlassCard,label} from './card.js';
+import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
 import {clockValues} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
 import {selectAgenda} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
+const TITLES:Record<string,string>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
     readonly actor=new Clutter.Actor({name:'liquid-widgets-host'});
     private toolbar=new St.BoxLayout({style_class:'liquid-toolbar'});
@@ -41,8 +43,7 @@ export class WidgetHost {
         const wanted=this.visibleCards;
         for(const [id,card] of this.cards)if(!wanted.includes(id)){card.destroy();this.cards.delete(id);}
         for(const id of wanted)if(!this.cards.has(id)){
-            const titles:Record<string,string>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
-            const card=new GlassCard(id,monitor,titles[id]??id,()=>{
+            const card=new GlassCard(id,monitor,TITLES[id]??id,()=>{
                 if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text('브라우저를 열 수 없어요');}});
                 else this.preferences();
             });
@@ -82,7 +83,7 @@ export class WidgetHost {
     }
     private renderAll():void{for(const id of this.cards.keys())this.render(id);}
     private render(id:string):void{
-        const card=this.cards.get(id);if(!card)return;card.clear();
+        const card=this.cards.get(id);if(!card)return;card.clear();card.title.set_text(TITLES[id]??id);
         const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
         if(id==='clock'){
             card.title.set_text(`${clock.weekday} · ${clock.date}`);card.body.add_child(label(clock.time,'liquid-clock-time'));card.status.set_text('');return;
@@ -136,8 +137,7 @@ export class WidgetHost {
             for(const event of events){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(event.allDay?'종일':new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit',hourCycle:this.hour12?'h12':'h23'}).format(Date.parse(event.start)),'liquid-agenda-time'));}
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
-            card.title.set_text(data.location);card.body.add_child(label(data.current.temperatureC===null?'—°':`${Math.round(data.current.temperatureC)}°`,'liquid-big'));
-            card.body.add_child(label('Open-Meteo','liquid-caption'));
+            renderWeather(card,data,this.scale,this.locale,this.hour12);
         }else if(id==='system'){
             const data=view.data as NonNullable<ProviderMap['system']['data']>;
             card.body.add_child(label(data.cpuPercent===null?'CPU 측정 중':`CPU  ${Math.round(data.cpuPercent)}%`,'liquid-value'));

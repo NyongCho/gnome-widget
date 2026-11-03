@@ -223,3 +223,34 @@ fn ipc_old_source_response_is_discarded_and_new_source_never_reads_old_cache() {
   assert_eq!(restarted.snapshot().await.unwrap()["network"]["sourceId"],cleared["network"]["sourceId"]);
  });
 }
+
+#[test]
+fn location_change_rejects_previous_response() {
+    if std::env::var("LIQUID_PRIVATE_TEST").is_err() {
+        let result = std::process::Command::new("dbus-run-session")
+            .arg("--")
+            .arg(std::env::current_exe().unwrap())
+            .args(["--exact", "location_change_rejects_previous_response"])
+            .env("LIQUID_PRIVATE_TEST", "1")
+            .status()
+            .unwrap();
+        assert!(result.success());
+        return;
+    }
+    tokio::runtime::Runtime::new().unwrap().block_on(async{
+  let dir=tempfile::tempdir().unwrap();let (tx,mut jobs)=tokio::sync::mpsc::unbounded_channel();let runtime=Runtime::new(dir.path().join("config"),dir.path().join("cache"),Arc::new(Delayed(tx))).await.unwrap();let server=Server::start(runtime.clone()).await.unwrap();
+  let connection=zbus::Connection::session().await.unwrap();let proxy=zbus::Proxy::new(&connection,"org.local.LiquidWidgets","/org/local/LiquidWidgets","org.local.LiquidWidgets1").await.unwrap();
+  let location=|id:&str|json!({"id":id,"label":id,"latitude":37.5,"longitude":127,"timeZone":"Asia/Seoul"}).to_string();
+  let _:String=proxy.call("Subscribe",&(vec!["weather"],)).await.unwrap();
+  assert_eq!(runtime.snapshot().await.unwrap()["weather"]["status"],"unconfigured");
+  proxy.call::<_,_,()>("SetWeatherLocation",&location("A")).await.unwrap();let (_,late)=tokio::time::timeout(Duration::from_secs(2),jobs.recv()).await.unwrap().unwrap();
+  proxy.call::<_,_,()>("SetWeatherLocation",&location("B")).await.unwrap();let (_,reply)=tokio::time::timeout(Duration::from_secs(2),jobs.recv()).await.unwrap().unwrap();
+  let loading=runtime.snapshot().await.unwrap();assert_eq!(loading["weather"]["status"],"loading");assert!(loading["weather"]["data"].is_null());
+  let data=|name:&str,temp:i32|json!({"location":name,"timeZone":"Asia/Seoul","current":{"temperatureC":temp,"code":0},"hourly":[],"attributionUrl":"https://open-meteo.com/"});
+  let _=late.send(Ok(data("A",99)));reply.send(Ok(data("B",12))).unwrap();until(async||runtime.snapshot().await.unwrap()["weather"]["status"]=="ok").await;
+  assert_eq!(runtime.snapshot().await.unwrap()["weather"]["data"]["location"],"B");
+  let before=runtime.snapshot().await.unwrap()["weather"].clone();assert!(proxy.call::<_,_,String>("SearchLocations",&"query").await.is_err());assert_eq!(before,runtime.snapshot().await.unwrap()["weather"]);
+  proxy.call::<_,_,()>("SetWeatherLocation",&"null").await.unwrap();assert_eq!(runtime.snapshot().await.unwrap()["weather"]["status"],"unconfigured");
+  server.shutdown().await.unwrap();
+ });
+}
