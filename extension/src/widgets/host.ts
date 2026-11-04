@@ -5,7 +5,8 @@ import Pango from 'gi://Pango';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
 import {translate,language,localeFor,type Message} from '../shared/i18n.js';
 import {GlassCard,label,clockLabel,fitClockLabel} from './card.js';
-import {renderNetwork,renderSystem,renderMedia} from './live.js';
+import {renderNetwork,renderMedia} from './live.js';
+import {renderSystem} from './system.js';
 import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
 import {clockValues} from '../shared/clockValues.js';
@@ -177,7 +178,7 @@ export class WidgetHost {
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
             renderWeather(card,data,this.scale,this.locale,this.hour12,this.language);
-        }else if(id==='system')renderSystem(card,view.data as NonNullable<ProviderMap['system']['data']>,this.language);
+        }else if(id==='system')renderSystem(card,view.data as NonNullable<ProviderMap['system']['data']>,this.scale,this.language);
         else if(id==='network')renderNetwork(card,view.data as NonNullable<ProviderMap['network']['data']>,this.scale,this.language);
         else if(id==='media')renderMedia(card,view.data as NonNullable<ProviderMap['media']['data']>,this.scale,this.language);
     }

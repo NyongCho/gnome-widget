@@ -1,0 +1,184 @@
+[
+  {
+    "name": "system-prefer-dark",
+    "quadrants": [
+      [
+        true,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "25%",
+      "CPU",
+      "50%",
+      "RAM",
+      "RAM  16.0 / 32.0 GiB",
+      "CPU 온도  43°C"
+    ],
+    "height": 221
+  },
+  {
+    "name": "system-prefer-light",
+    "quadrants": [
+      [
+        true,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "25%",
+      "CPU",
+      "50%",
+      "RAM",
+      "RAM  16.0 / 32.0 GiB",
+      "CPU 온도  43°C"
+    ],
+    "height": 221
+  },
+  {
+    "name": "system-zero-full",
+    "quadrants": [
+      [
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        true,
+        true
+      ]
+    ],
+    "text": [
+      "0%",
+      "CPU",
+      "100%",
+      "RAM",
+      "RAM  32.0 / 32.0 GiB",
+      "CPU 온도  43°C"
+    ],
+    "height": 221
+  },
+  {
+    "name": "system-unknown",
+    "quadrants": [
+      [
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "—",
+      "CPU",
+      "—",
+      "RAM",
+      "RAM  0.0 / 0.0 GiB",
+      "CPU 온도 센서 없음"
+    ],
+    "height": 221
+  },
+  {
+    "name": "system-english",
+    "quadrants": [
+      [
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "—",
+      "CPU",
+      "50%",
+      "RAM",
+      "RAM  16.0 / 32.0 GiB",
+      "CPU temperature sensor unavailable"
+    ],
+    "height": 214
+  },
+  {
+    "name": "system-large",
+    "quadrants": [
+      [
+        true,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "25%",
+      "CPU",
+      "50%",
+      "RAM",
+      "RAM  16.0 / 32.0 GiB",
+      "CPU temperature  43°C"
+    ],
+    "height": 319
+  },
+  {
+    "name": "system-125",
+    "quadrants": [
+      [
+        true,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "text": [
+      "25%",
+      "CPU",
+      "50%",
+      "RAM",
+      "RAM  16.0 / 32.0 GiB",
+      "CPU 온도  43°C"
+    ],
+    "height": 221
+  }
+]

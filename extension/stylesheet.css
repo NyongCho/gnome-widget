@@ -30,6 +30,10 @@
 .liquid-weather-attribution { font-size: .643em; color: #e6e4eb; }
 .liquid-network-rate { font-size: 1.571em; font-weight: 400; }
 .liquid-network-graph { color: #e1efff; }
+.liquid-system-row { spacing: 1.143em; }
+.liquid-system-gauge { spacing: .286em; }
+.liquid-system-percent { font-family: "Noto Sans Display"; font-size: 1.571em; font-weight: 500; }
+.liquid-system-name { font-size: .929em; font-weight: 600; }
 .liquid-media-row { spacing: .714em; }
 .liquid-media-title { font-size: 1.071em; font-weight: 500; }
 

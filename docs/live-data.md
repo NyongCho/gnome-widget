@@ -4,6 +4,8 @@
 
 CPU는 `/proc/stat`의 전체 CPU tick 차이를 사용한다. user/nice에 이미 포함된 guest는 합산하지 않고, idle+iowait를 유휴 시간으로 계산한다. RAM은 `(MemTotal - MemAvailable) × 1024` 바이트다. `free` 열이나 프로세스 RSS 합계와는 정의가 다르다. 표시는 GiB다. [Linux proc 문서](https://docs.kernel.org/filesystems/proc.html)
 
+시스템 카드는 CPU·RAM 사용률을 두 개의 도넛으로 표시한다. 12시부터 시계 방향으로 채워지며 가운데 숫자는 반올림한 백분율이다. RAM 비율은 사용 바이트/전체 바이트다. CPU 첫 표본이나 전체 메모리를 알 수 없는 경우에는 빈 링과 `—`를 보여 실제 `0%`와 구분한다. 기존 메모리 용량과 CPU 온도는 링 아래에 유지한다. 링과 숫자는 표시 배율과 라이트/다크 모드를 따른다.
+
 온도는 hwmon `coretemp`의 Package id(없으면 Core), `k10temp`의 Tdie(없으면 Tctl)만 사용한다. 같은 우선순위의 센서가 여럿이면 가장 높은 값을 표시한다. 디스크·랜카드·종류를 알 수 없는 센서를 CPU 온도로 추정하지 않는다. 지원 센서가 없거나 읽을 수 없으면 `CPU 온도 센서 없음`이다. 값의 나이가 5초 이상일 때 다시 읽으므로 2초 수집 주기에서는 보통 6초마다 갱신한다. root 권한은 필요 없다. [hwmon 인터페이스](https://docs.kernel.org/hwmon/sysfs-interface.html)
 
 네트워크 자동 선택은 IPv4 기본 경로의 최저 metric 인터페이스 하나이며, 없으면 IPv6 기본 경로를 사용한다. loopback과 Tailscale은 자동 선택에서 제외한다. 명시적으로 `tailscale0`을 선택하면 VPN 인터페이스만 측정한다. 물리 NIC와 VPN 카운터를 더하지 않는다. 속도는 단조 시계로 측정한 실제 경과 시간에 대한 RX/TX 바이트 차이이며 B/s, KiB/s, MiB/s, GiB/s로 자동 표시한다. 최근 60초의 표본을 최대 60개 유지한다. 다운로드는 실선, 업로드는 점선이다. 임의 정책 라우팅·복수 네임스페이스의 최적 경로 탐지는 지원하지 않는다.

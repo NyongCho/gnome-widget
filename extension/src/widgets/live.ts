@@ -1,6 +1,6 @@
 import {translate,type Language} from '../shared/i18n.js';
 import Clutter from 'gi://Clutter';import St from 'gi://St';
-import type {NetworkData,SystemData,MediaData} from '../types.js';
+import type {NetworkData,MediaData} from '../types.js';
 import {rateLabel} from '../shared/liveData.js';import {GlassCard,label} from './card.js';
 import {mediaArtwork} from './artwork.js';
 export function renderNetwork(card:GlassCard,data:NetworkData,scale:number,language:Language):void{
@@ -18,11 +18,6 @@ export function renderNetwork(card:GlassCard,data:NetworkData,scale:number,langu
    }
   }finally{cr.$dispose();}
  });card.body.add_child(graph);
-}
-export function renderSystem(card:GlassCard,data:SystemData,language:Language):void{
- card.body.add_child(label(data.cpuPercent===null?translate(language,'CPU 측정 중'):`CPU  ${Math.round(data.cpuPercent)}%`,'liquid-value'));
- card.body.add_child(label(`RAM  ${(data.memoryUsedBytes/2**30).toFixed(1)} / ${(data.memoryTotalBytes/2**30).toFixed(1)} GiB`,'liquid-caption'));
- card.body.add_child(label(data.temperatureC===null?translate(language,'CPU 온도 센서 없음'):translate(language,'CPU 온도  {value}°C',{value:Math.round(data.temperatureC)}),'liquid-caption'));
 }
 export function renderMedia(card:GlassCard,data:MediaData,scale:number,language:Language):void{
  const row=new St.BoxLayout({style_class:'liquid-media-row',x_expand:true});
