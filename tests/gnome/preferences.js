@@ -28,6 +28,10 @@ export async function run(){
   await focus('비공개 iCal 주소');await type('invalid');await key(Clutter.KEY_Tab);const forward=(await state()).focus;await key(Clutter.KEY_ISO_Left_Tab);check(JSON.stringify((await state()).focus)!==JSON.stringify(forward),'Shift+Tab did not return focus');
   await focus('연결');await key(Clutter.KEY_Return);await waitFor(async()=>(await state()).messages.some(t=>t.includes('처리하지 못했어요')),'calendar error is not readable');check((await state()).calendarEmpty,'calendar input was not cleared');
   await focus('비공개 iCal 주소');await type('https://calendar.google.com/calendar/ical/test/public/basic.ics');await focus('연결');await key(Clutter.KEY_Return);await waitFor(async()=>(await state()).current.calendarEnabled,'calendar keyboard connect failed');check((await state()).calendarEmpty,'saved calendar input leaked');
+  await waitFor(async()=>(await state()).messages.some(t=>t.includes('데이터를 읽을 수 없어요')),'actual sync failure not shown');
+  await call('CalendarStatus',new GLib.Variant('(s)',['ok']));
+  await waitFor(async()=>(await state()).messages.some(t=>t.includes('동기화 완료')),'sync completion did not replace waiting text');
+  await capture('widgets-calendar-sync-state');
   await focus('연결 해제');await key(Clutter.KEY_Return);await waitFor(async()=>!(await state()).current.calendarEnabled,'keyboard calendar clear failed');
   await capture('widgets-keyboard-preferences');
   print('PREFERENCES_TEST: actual GTK keyboard search/select/clear, secret submit/clear, error, Tab/Shift+Tab and placement/NIC controls passed');

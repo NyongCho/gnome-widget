@@ -10,11 +10,50 @@ typedef struct {
     int64_t epoch;
 } lw_time;
 
+/* Libical drops empty optional TEXT fields and records X-LIC-ERROR warnings.
+ * Google feeds can also carry these historical warnings from imported events.
+ * Only these exact, harmless diagnostic prefixes are ignored; event dates, recurrence,
+ * timezone and other parsing errors remain fatal. Missing SUMMARY uses the
+ * existing untitled-event fallback. Never expose the warning's raw contents. */
+static int empty_text_warning(const char *message) {
+    static const char *allowed[] = {
+        "No value for DESCRIPTION property. Removing entire property",
+        "No value for LOCATION property. Removing entire property",
+        "No value for SUMMARY property. Removing entire property"
+    };
+    if (!message) return 0;
+    for (size_t i = 0; i < sizeof(allowed) / sizeof(allowed[0]); i++) {
+        size_t length = strlen(allowed[i]);
+        /* Libical appends ':' followed by optional parser context. Imported
+         * warnings may omit the suffix. Do not accept other message variants. */
+        if (!strncmp(message, allowed[i], length) &&
+            (message[length] == '\0' || message[length] == ':')) return 1;
+    }
+    return 0;
+}
+static void discard_empty_text_warnings(icalcomponent *component) {
+    icalproperty *property = icalcomponent_get_first_property(component, ICAL_XLICERROR_PROPERTY);
+    while (property) {
+        icalproperty *next = icalcomponent_get_next_property(component, ICAL_XLICERROR_PROPERTY);
+        const char *message = icalproperty_get_xlicerror(property);
+        if (empty_text_warning(message)) {
+            icalcomponent_remove_property(component, property);
+            icalproperty_free(property);
+        }
+        property = next;
+    }
+    for (icalcomponent *child = icalcomponent_get_first_component(component, ICAL_ANY_COMPONENT);
+         child; child = icalcomponent_get_next_component(component, ICAL_ANY_COMPONENT)) {
+        discard_empty_text_warnings(child);
+    }
+}
+
 void *lw_parse(const char *input) {
     icalerror_set_errors_are_fatal(0);
     icalerror_clear_errno();
     icalcomponent *root = icalparser_parse_string(input);
     if (!root) return NULL;
+    discard_empty_text_warnings(root);
     if (icalcomponent_isa(root) != ICAL_VCALENDAR_COMPONENT || icalcomponent_count_errors(root)) {
         icalcomponent_free(root);
         return NULL;

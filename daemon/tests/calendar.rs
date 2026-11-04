@@ -321,3 +321,72 @@ fn explicit_gap_start_consumes_count_once() {
     .unwrap();
     assert_eq!(events.len(), 3);
 }
+
+#[test]
+fn empty_optional_google_text_does_not_reject_calendar() {
+    for optional in [
+        "DESCRIPTION:\r\n",
+        "LOCATION: \r\n",
+        "DESCRIPTION;LANGUAGE=ko:\r\n",
+        "SUMMARY:\r\n",
+    ] {
+        let input = format!(
+            "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:empty-text\r\nDTSTART:20261104T090000Z\r\nDTEND:20261104T100000Z\r\n{optional}END:VEVENT\r\nEND:VCALENDAR\r\n"
+        );
+        let events = expand_ics(&input, &seoul_november(), "2026-11-04T00:00:00Z").unwrap();
+        assert_eq!(events.len(), 1);
+        assert_eq!(events[0].start, "2026-11-04T09:00:00+00:00");
+    }
+}
+#[test]
+fn folded_nonempty_text_is_preserved_and_invalid_event_dates_still_fail() {
+    let input = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:folded\r\nDTSTART:20261104T090000Z\r\nDTEND:20261104T100000Z\r\nSUMMARY:\r\n Folded title\r\nDESCRIPTION:\r\nLOCATION: \r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+    assert_eq!(
+        expand_ics(input, &seoul_november(), "2026-11-04T00:00:00Z").unwrap()[0].title,
+        "Folded title"
+    );
+    assert!(
+        expand_ics(
+            &input.replace("20261104T090000Z", ""),
+            &seoul_november(),
+            "2026-11-04T00:00:00Z"
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn historical_empty_text_warning_is_not_a_fatal_event_error() {
+    let input = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:historical-warning\r\nDTSTART:20261104T090000Z\r\nDTEND:20261104T100000Z\r\nSUMMARY:Retained title\r\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for LOCATION property. Removing entire property\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
+    let events = expand_ics(input, &seoul_november(), "2026-11-04T00:00:00Z").unwrap();
+    assert_eq!(events[0].title, "Retained title");
+    for suffix in [":", ": synthetic parser context"] {
+        let suffixed = input.replace(
+            "Removing entire property\r\n",
+            &format!("Removing entire property{suffix}\r\n"),
+        );
+        assert_eq!(
+            expand_ics(&suffixed, &seoul_november(), "2026-11-04T00:00:00Z").unwrap()[0].title,
+            "Retained title"
+        );
+    }
+    assert!(
+        expand_ics(
+            &input.replace("No value for LOCATION", "No value for DTSTART"),
+            &seoul_november(),
+            "2026-11-04T00:00:00Z"
+        )
+        .is_err()
+    );
+    assert!(
+        expand_ics(
+            &input.replace(
+                "Removing entire property",
+                "Removing entire property unexpectedly"
+            ),
+            &seoul_november(),
+            "2026-11-04T00:00:00Z"
+        )
+        .is_err()
+    );
+}

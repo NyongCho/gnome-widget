@@ -150,3 +150,13 @@ Tasks 3–7(`e482e8d..519b4f6`)을 별도 fresh-context 리뷰어가 한 번 읽
 2026-11-04에 최종 release 배포본을 사용자 영역에 설치했다. systemd 서비스 active/enabled, 실제 세션 D-Bus GetSettings/GetSnapshot, 서비스 재시작, 설치한 JS/CSS/metadata/실행 파일과 배포본 일치, 개인 디렉터리0700을 확인했다. 다른 GNOME 확장의 활성/비활성 목록을 보존했다. 캘린더는 disabled/unconfigured, 날씨 지역은 null/unconfigured다. 제거 도구는 `~/.local/lib/liquid-widgets/uninstall.py`에 있다.
 
 새 확장 활성화 항목은 저장했으며 코드가 바깥 Wayland Shell에 로드되려면 사용자가 **로그아웃·로그인**해야 한다. 현재 세션을 종료하지 않았다. 실제 외형 확인은 로그인 후 진행한다. 최종 리뷰 수정 뒤 OFF/ON 측정도 exit0이며 [성능 기록](performance.md)의 최신 JSON을 갱신했다. [설치 확인 항목](../outputs/verification/installation.json)을 보존한다.
+
+## 개인 iCal 연결 후 동기화 오류 수정 — 2026-11-04
+
+사용자가 재로그인하고 비공개 iCal을 연결한 뒤 서비스는 `unavailable / INVALID_DATA`였지만 설정창은 저장 직후의 대기 안내만 보여 주었다. HTTP 수신은 정상이었으며, libical이 빈 DESCRIPTION·LOCATION을 제거하며 남긴 진단과 가져온 일정에 이미 들어 있던 같은 X-LIC-ERROR 때문에 달력 전체를 거부했다.
+
+DESCRIPTION·LOCATION·SUMMARY의 정확한 ‘No value’ 진단과 콜론 뒤 문맥만 허용해 해당 경고를 제거한다. 날짜·시간대·반복 규칙 등 다른 오류는 계속 거부한다. 빈 필드, 연속 경고, 접힌 제목, 접미사가 있는 기존 경고, 잘못된 날짜에 대한 합성 회귀 3개를 추가했다. 설정창은 실제 calendar provider를 구독해 동기화 성공·오류·마지막 데이터 표시를 반영하며 닫을 때 구독을 해제한다.
+
+전체 `./scripts/check.sh`가 exit 0: Rust 79개(격리 subprocess 재실행 중복 제외), TypeScript 56개, Python 7개와 fmt/clippy/build/typecheck/GJS/IPC 검사를 통과했다. 실제 GTK `--preferences` 검사도 오류→동기화 완료 전환을 통과했다. 회귀에는 공개 fixture/합성 일정만 사용했다.
+
+release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실제 비공개 피드의 `status=ok`, `errorCode=null`과 연결 설정 유지, service active/enabled, extension ACTIVE, 설치 파일 일치를 확인했다. Shell의 `extension.js`는 기존 파일과 같아 재로그인하지 않았다. 새 설정 화면은 창을 닫고 다시 열면 적용된다. 주소·일정 내용은 로그나 저장소 증거에 포함하지 않았고 일회성 진단 코드는 제거했다. [비식별 상태 확인](../outputs/verification/calendar-sync.json)을 보존한다.

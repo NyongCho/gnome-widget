@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-04",
+  "before": {
+    "status": "unavailable",
+    "errorCode": "INVALID_DATA"
+  },
+  "after": {
+    "status": "ok",
+    "errorCode": null
+  },
+  "calendarEnabled": true,
+  "calendarSecretDeletionPending": false,
+  "service": "active",
+  "serviceInstallation": "enabled",
+  "extension": "ACTIVE",
+  "installedArtifactsMatch": true,
+  "checks": {
+    "fullCheckExit": 0,
+    "rustUniquePassed": 79,
+    "typescriptPassed": 56,
+    "pythonPassed": 7,
+    "calendarEnginePassed": 30,
+    "gtkPreferencesExit": 0
+  },
+  "privacy": "No private URL, event fields, counts or raw feed are recorded in this evidence."
+}
