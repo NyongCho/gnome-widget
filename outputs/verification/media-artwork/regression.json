@@ -1,0 +1,51 @@
+{
+  "before": {
+    "wideSourceRatio": 1.7777777777777777,
+    "actualRatio": 1.0,
+    "failedAssertion": "wide: artwork is stretched (1.000 instead of 1.778)"
+  },
+  "after": [
+    {
+      "name": "art-wide-1",
+      "displayScale": 1,
+      "width": 78,
+      "height": 44,
+      "ratio": 1.7727272727272727
+    },
+    {
+      "name": "art-square-1",
+      "displayScale": 1,
+      "width": 44,
+      "height": 44,
+      "ratio": 1
+    },
+    {
+      "name": "art-portrait-1",
+      "displayScale": 1,
+      "width": 25,
+      "height": 44,
+      "ratio": 0.5681818181818182
+    },
+    {
+      "name": "art-wide-1.25",
+      "displayScale": 1.25,
+      "width": 77.6,
+      "height": 44,
+      "ratio": 1.7636363636363634
+    },
+    {
+      "name": "art-square-1.25",
+      "displayScale": 1.25,
+      "width": 44,
+      "height": 44,
+      "ratio": 1
+    },
+    {
+      "name": "art-portrait-1.25",
+      "displayScale": 1.25,
+      "width": 24.8,
+      "height": 44,
+      "ratio": 0.5636363636363636
+    }
+  ]
+}

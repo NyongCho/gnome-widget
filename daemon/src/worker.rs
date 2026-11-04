@@ -37,6 +37,25 @@ impl BlockingWorker {
         .await
         .map_err(|_| WorkerError::Unavailable)
     }
+    /// Wait without spawning a blocking task until a worker slot is available.
+    /// Dropping a queued future drops its task and cancels its permit request.
+    pub async fn run_when_available<T: Send + 'static>(
+        &self,
+        task: impl FnOnce() -> T + Send + 'static,
+    ) -> Result<T, WorkerError> {
+        let permit = self
+            .slots
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(|_| WorkerError::Unavailable)?;
+        tokio::task::spawn_blocking(move || {
+            let _permit = permit;
+            task()
+        })
+        .await
+        .map_err(|_| WorkerError::Unavailable)
+    }
     pub async fn expand(
         &self,
         ics: String,

@@ -1,7 +1,8 @@
 import {translate,type Language} from '../shared/i18n.js';
-import Clutter from 'gi://Clutter';import Gio from 'gi://Gio';import St from 'gi://St';
+import Clutter from 'gi://Clutter';import St from 'gi://St';
 import type {NetworkData,SystemData,MediaData} from '../types.js';
 import {rateLabel} from '../shared/liveData.js';import {GlassCard,label} from './card.js';
+import {mediaArtwork} from './artwork.js';
 export function renderNetwork(card:GlassCard,data:NetworkData,scale:number,language:Language):void{
  card.title.set_text(`${translate(language,'네트워크')} · ${data.interface}`);
  card.body.add_child(label(`↓ ${rateLabel(data.rxBytesPerSec,language)}`,'liquid-network-rate'));
@@ -25,9 +26,7 @@ export function renderSystem(card:GlassCard,data:SystemData,language:Language):v
 }
 export function renderMedia(card:GlassCard,data:MediaData,scale:number,language:Language):void{
  const row=new St.BoxLayout({style_class:'liquid-media-row',x_expand:true});
- const icon=new St.Icon({icon_name:'audio-x-generic-symbolic',icon_size:Math.round(44*scale),y_align:Clutter.ActorAlign.CENTER});
- // The service permits only readable bounded local files; never fetch artwork in Shell.
- if(data.artUri?.startsWith('file:///')){try{icon.gicon=new Gio.FileIcon({file:Gio.File.new_for_uri(data.artUri)});icon.fallback_icon_name='audio-x-generic-symbolic';}catch{}}
+ const icon=mediaArtwork(data.artUri,scale,card.button.get_resource_scale());
  row.add_child(icon);const details=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,x_expand:true,y_align:Clutter.ActorAlign.CENTER});
  details.add_child(label(data.title||translate(language,'제목 없는 곡'),'liquid-media-title'));details.add_child(label(data.artist||translate(language,'아티스트 정보 없음'),'liquid-caption'));row.add_child(details);card.body.add_child(row);
 }

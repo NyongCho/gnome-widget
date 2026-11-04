@@ -29,6 +29,12 @@ impl CacheKey {
     pub fn settings() -> Self {
         Self("settings.toml".into())
     }
+    pub(crate) fn artwork(uri: &str) -> Self {
+        use sha2::{Digest, Sha256};
+        let digest = Sha256::digest(uri.as_bytes());
+        let name: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        Self(format!("{name}.art"))
+    }
 }
 #[derive(Clone)]
 pub struct PrivateStore(PathBuf);
@@ -49,7 +55,7 @@ impl PrivateStore {
     pub fn write(&self, key: &CacheKey, bytes: &[u8]) -> io::Result<()> {
         self.write_limit(key, bytes, LIMIT)
     }
-    fn write_limit(&self, key: &CacheKey, bytes: &[u8], limit: usize) -> io::Result<()> {
+    pub(crate) fn write_limit(&self, key: &CacheKey, bytes: &[u8], limit: usize) -> io::Result<()> {
         if bytes.len() > limit {
             return Err(io::Error::other("cache too large"));
         }
@@ -74,7 +80,7 @@ impl PrivateStore {
     pub fn read(&self, key: &CacheKey) -> io::Result<Option<Vec<u8>>> {
         self.read_limit(key, LIMIT)
     }
-    fn read_limit(&self, key: &CacheKey, limit: usize) -> io::Result<Option<Vec<u8>>> {
+    pub(crate) fn read_limit(&self, key: &CacheKey, limit: usize) -> io::Result<Option<Vec<u8>>> {
         let file = match OpenOptions::new()
             .read(true)
             .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)

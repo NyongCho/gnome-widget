@@ -57,3 +57,51 @@ async fn calendar_expansion_runs_on_bounded_worker() {
         .unwrap();
     assert_eq!(events.len(), 2);
 }
+
+#[tokio::test]
+async fn queued_work_waits_for_capacity_and_drops_cancelled_tasks() {
+    let worker = BlockingWorker::new(1);
+    let (release, wait) = std::sync::mpsc::channel();
+    let (started, ready) = tokio::sync::oneshot::channel();
+    let busy = tokio::spawn({
+        let worker = worker.clone();
+        async move {
+            worker
+                .run(move || {
+                    started.send(()).unwrap();
+                    wait.recv_timeout(Duration::from_secs(3)).unwrap();
+                })
+                .await
+                .unwrap();
+        }
+    });
+    ready.await.unwrap();
+    let cancelled_ran = Arc::new(AtomicBool::new(false));
+    let ran = cancelled_ran.clone();
+    let mut cancelled =
+        Box::pin(worker.run_when_available(move || ran.store(true, Ordering::SeqCst)));
+    assert!(futures_util::poll!(cancelled.as_mut()).is_pending());
+    let queued_ran = Arc::new(AtomicBool::new(false));
+    let ran = queued_ran.clone();
+    let mut queued = Box::pin(worker.run_when_available(move || {
+        ran.store(true, Ordering::SeqCst);
+        42
+    }));
+    assert!(futures_util::poll!(queued.as_mut()).is_pending());
+    assert!(!cancelled_ran.load(Ordering::SeqCst));
+    assert!(!queued_ran.load(Ordering::SeqCst));
+    assert!(matches!(worker.run(|| ()).await, Err(WorkerError::Busy)));
+    drop(cancelled);
+    release.send(()).unwrap();
+    busy.await.unwrap();
+    assert_eq!(
+        tokio::time::timeout(Duration::from_secs(1), queued)
+            .await
+            .unwrap()
+            .unwrap(),
+        42
+    );
+    assert!(queued_ran.load(Ordering::SeqCst));
+    assert!(!cancelled_ran.load(Ordering::SeqCst));
+    assert_eq!(worker.run(|| 9).await.unwrap(), 9);
+}

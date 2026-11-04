@@ -58,6 +58,10 @@ fn weather_search_select_failure_and_clear_over_real_dbus() {
         let fetch = Arc::new(Fetch(AtomicBool::new(false)));
         let secrets = Arc::new(NoSecrets);
         let providers = Arc::new(Providers {
+            media: liquid_widgets_daemon::providers::media::Media::new(
+                dir.path().join("cache/artwork"),
+                fetch.clone(),
+            ),
             system: Default::default(),
             network: Default::default(),
             calendar: CalendarFeed {

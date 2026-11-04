@@ -240,3 +240,13 @@ release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실�
 [라이트 모드](../outputs/verification/appearance/widgets-light-wallpaper.png), [다크 모드](../outputs/verification/appearance/widgets-dark-wallpaper.png), [흰 배경](../outputs/verification/appearance/widgets-light-bright.png), [좁은 시계](../outputs/verification/appearance/clock-narrow-ko.png), [대비 측정값](../outputs/verification/appearance/contrast.json)을 보존한다. 캡처는 격리된 GNOME 세션의 합성 날씨·네트워크 데이터이며 개인 일정을 포함하지 않는다.
 
 수정 release를 사용자 영역에 설치하고 JS/CSS/prefs 파일 일치, 서비스 active와 기존 캘린더 동기화 `ok`를 확인했다. 현재 세션은 종료하지 않았으며 새 Shell 코드는 다음 로그아웃·로그인에 적용된다. [설치 확인](../outputs/verification/appearance/installation.json)을 보존한다.
+
+## 재생 중 썸네일 비율과 Spotify 표지 — 2026-11-04
+
+정사각형 `St.Icon`이 16:9 이미지를 1:1로 늘리는 실패를 실제 GNOME 픽셀 검사로 재현했다. 비동기 파일 읽기·축소 해석과 원본 비율을 유지하는 `St.ImageContent`로 교체했다. 가로형·정사각형·세로형 이미지, 125% 화면, 없는 파일·깨진 이미지, 빠른 교체와 로딩 중 카드 해제를 검증했다.
+
+Spotify가 제공하는 HTTPS 표지는 Rust 서비스에서 제한된 사용자 전용 캐시로 받아 Shell에는 로컬 URI만 전달한다. 곡·플레이어·소유자 변경으로 다운로드를 취소하고 완료 시 현재 메타데이터를 다시 검사한다. 리뷰에서 발견한 작업 풀 경합 시 표지 유실도 실패 회귀를 추가해 수정했으며 재검토에서 남은 지적은 없었다.
+
+최종 전체 검사는 Rust 94개(격리 subprocess 중복 제외), TypeScript 61개, Python 7개와 fmt/clippy/typecheck/build/GJS/IPC를 통과했다. 실제 GNOME 표지 검사와 전체 기능·20회 재활성화 검사도 통과했다. 실제 Spotify의 HTTPS 이미지가 새 코드로 다운로드·캐시 재사용되고 640×640으로 해석되는 것을 읽기 전용으로 확인했다. URL·재생 제목·실제 표지는 저장소 증거에 포함하지 않았다.
+
+[검증 자료](../outputs/verification/media-artwork/README.md)에 합성 화면과 측정값을 보존한다. release를 설치하고 확장 8개 파일·서비스 실행 파일 일치, 설정 보존과 service active/enabled를 확인했다. 새 Shell 코드는 다음 로그아웃·로그인에 적용된다.

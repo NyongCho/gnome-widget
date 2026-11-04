@@ -12,6 +12,7 @@ pub struct Providers {
     pub network: network::Network,
     pub calendar: calendar_feed::CalendarFeed,
     pub weather: weather::Weather,
+    pub media: media::Media,
 }
 impl Collector for Providers {
     fn search_locations(
@@ -78,7 +79,9 @@ impl Collector for Providers {
                 .map_err(|_| Failure::Invalid)?
                 .into()),
                 ProviderName::Media => Ok(serde_json::to_value(
-                    media::collect(request.previous, request.blocking).await?,
+                    self.media
+                        .collect(request.previous, request.blocking)
+                        .await?,
                 )
                 .map_err(|_| Failure::Invalid)?
                 .into()),
@@ -87,6 +90,7 @@ impl Collector for Providers {
     }
 }
 pub mod media;
+pub mod media_art;
 pub mod network;
 pub mod system;
 pub mod weather;

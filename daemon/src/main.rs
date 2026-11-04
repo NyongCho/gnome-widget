@@ -59,7 +59,12 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let secrets = Arc::new(liquid_widgets_daemon::secrets::SystemSecrets);
     let fetcher =
         Arc::new(liquid_widgets_daemon::http::Http::new().map_err(|_| "HTTP client unavailable")?);
+    let cache_root = directory("XDG_CACHE_HOME", ".cache")?;
     let providers = liquid_widgets_daemon::providers::Providers {
+        media: liquid_widgets_daemon::providers::media::Media::new(
+            cache_root.join("artwork"),
+            fetcher.clone(),
+        ),
         system: Default::default(),
         network: Default::default(),
         weather: liquid_widgets_daemon::providers::weather::Weather {
@@ -72,7 +77,7 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     };
     let runtime = Runtime::new_with_secrets(
         directory("XDG_CONFIG_HOME", ".config")?,
-        directory("XDG_CACHE_HOME", ".cache")?,
+        cache_root,
         Arc::new(providers),
         secrets,
     )
