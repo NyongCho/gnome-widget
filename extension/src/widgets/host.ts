@@ -143,11 +143,14 @@ export class WidgetHost {
                 for(let column=0;column<7;column++){
                     const day=days[(row-1)*7+column];
                     const text=row===0?new Intl.DateTimeFormat(this.locale,{weekday:'narrow',timeZone:'UTC'}).format(Date.UTC(2026,10,1+(this.weekStart+column)%7)):String(day!.day);
-                    const item=label(text,'liquid-calendar-day');item.set_size(27*this.scale,23*this.scale);
-                    if(day?.iso===clock.today)item.add_style_class_name('liquid-calendar-today');else if(day&&!day.inMonth)item.add_style_class_name('liquid-calendar-muted');
-                    const cell=new St.Widget({layout_manager:new Clutter.BinLayout(),width:27*this.scale,height:23*this.scale,x_expand:true});cell.add_child(item);
+                    const item=label(text,'liquid-calendar-day');item.x_expand=false;item.x_align=Clutter.ActorAlign.CENTER;item.y_align=Clutter.ActorAlign.CENTER;
+                    // The fixed cell owns the highlight; the label keeps its
+                    // natural line height so BinLayout can center the numeral.
+                    const cell=new St.Widget({style_class:'liquid-calendar-cell',layout_manager:new Clutter.BinLayout(),width:27*this.scale,height:23*this.scale,x_expand:true});
+                    if(day?.iso===clock.today)cell.add_style_class_name('liquid-calendar-today');else if(day&&!day.inMonth)item.add_style_class_name('liquid-calendar-muted');
+                    cell.add_child(item);
                     if(day&&dots.has(day.iso)){
-                        const dot=new St.Widget({style_class:day.iso===clock.today?'liquid-event-dot today':'liquid-event-dot',width:3*this.scale,height:3*this.scale,x_align:Clutter.ActorAlign.CENTER,y_align:Clutter.ActorAlign.END});
+                        const dot=new St.Widget({style_class:day.iso===clock.today?'liquid-event-dot today':'liquid-event-dot',width:3*this.scale,height:3*this.scale,x_align:Clutter.ActorAlign.CENTER,y_align:Clutter.ActorAlign.END,y_expand:true});
                         cell.add_child(dot);item.accessible_name=this.t('{date} · 일정 있음',{date:day.iso});
                     }
                     line.add_child(cell);

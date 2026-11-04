@@ -15,7 +15,9 @@
 .liquid-clock-time { font-family: "Noto Sans Display"; font-size: 4em; font-weight: 500; letter-spacing: -1.5px; text-shadow: none; }
 .liquid-clock-date { font-size: 1em; color: #f7f9fd; }
 .liquid-calendar-grid { spacing: 3px; }
-.liquid-calendar-day { font-size: .857em; text-align: center; border-radius: 15px; }
+.liquid-calendar-cell { border-radius: 15px; }
+/* Balance numeral ink within the centered font line (about 1px at scale 1). */
+.liquid-calendar-day { font-size: .857em; text-align: center; padding-top: .167em; }
 .liquid-calendar-today { background-color: #e6f0ff; color: #172536; font-weight: 700; }
 .liquid-calendar-muted { color: #e6e4eb; }
 .liquid-agenda-title { font-size: .929em; font-weight: 500; }

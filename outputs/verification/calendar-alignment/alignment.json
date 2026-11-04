@@ -1,0 +1,27 @@
+[
+  {
+    "case": "calendar-pixels-dark",
+    "horizontalOffset": -0.5,
+    "verticalOffset": 0.0
+  },
+  {
+    "case": "calendar-pixels-light",
+    "horizontalOffset": -0.5,
+    "verticalOffset": -1.0
+  },
+  {
+    "case": "calendar-pixels-ko-large",
+    "horizontalOffset": -0.25,
+    "verticalOffset": 1.0
+  },
+  {
+    "case": "calendar-pixels-en-large",
+    "horizontalOffset": -0.25,
+    "verticalOffset": 1.0
+  },
+  {
+    "case": "calendar-pixels-125",
+    "horizontalOffset": -0.8,
+    "verticalOffset": 0.9
+  }
+]
