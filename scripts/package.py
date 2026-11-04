@@ -17,7 +17,8 @@ def main():
             bundle.write(extension/name,name)
         for file in sorted((extension/'schemas').iterdir()):
             if file.is_file():bundle.write(file,str(file.relative_to(extension)))
-        bundle.write(ROOT/'extension/shaders/glass.glsl','shaders/glass.glsl')
+        for file in sorted((ROOT/'extension/shaders').glob('*.glsl')):
+            bundle.write(file,f'shaders/{file.name}')
     shutil.copy2(ROOT/'daemon/target/release/liquid-widgets-daemon',OUT/'liquid-widgets-daemon')
     shutil.copy2(ROOT/'packaging/liquid-widgets.service',OUT/'liquid-widgets.service')
     for file in ['install.py','uninstall.py','install_lib.py']:shutil.copy2(ROOT/'scripts'/file,OUT/file)

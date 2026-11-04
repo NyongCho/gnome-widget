@@ -162,7 +162,7 @@ export async function run(){
         check(!GObject.signal_handler_is_connected(St.Settings.get(),schemeSignal),'orphan color scheme signal');
         check(rootCount()===0,'orphan layer after disable');check(!GLib.MainContext.default().find_source_by_id(timer),'orphan minute timer');check(!GObject.signal_handler_is_connected(global.display,signal),'orphan display signal');
         Main.extensionManager.enableExtension('liquid-widgets@local');await until(()=>extension.state===1,'extension enable failed');await Scripting.sleep(50);
-        check(rootCount()===1,'duplicate layer after enable');
+        check(rootCount()===1,`unexpected layers after enable: cycle=${i} roots=${rootCount()} state=${extension.state} liveLayer=${!!extension.stateObj.layer}`);
     }
     host=extension.stateObj.host;await capture('widgets-lifecycle');
     check(host.cards.get('agenda').title.get_text()==='Upcoming events','language did not survive reactivation');

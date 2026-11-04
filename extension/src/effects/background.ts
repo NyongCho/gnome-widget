@@ -31,6 +31,7 @@ export class GlassSurface {
     get fallback():boolean{return this.effect.failed;}
     setEnabled(enabled:boolean):void { this.source.visible=enabled&&!this.fallback; if(!enabled)this.effect.release(); }
     setStrength(value:number):void { this.effect.setStrength(value); }
-    get diagnostics():object { return {inputPaints:this.effect.inputPaints,outputPaints:this.effect.outputPaints,textureBytes:this.effect.textureBytes}; }
+    setMaterial(opacity:number,dark:boolean):void { this.effect.setMaterial(opacity,dark); }
+    get diagnostics():object { return {inputPaints:this.effect.inputPaints,blurPaints:this.effect.blurPaints,outputPaints:this.effect.outputPaints,textureBytes:this.effect.textureBytes}; }
     destroy():void { if(this.fallbackIdle)GLib.Source.remove(this.fallbackIdle);this.fallbackIdle=0;this.wallpaper.destroy(); this.source.remove_effect(this.effect); this.effect.release(); this.actor.destroy(); }
 }

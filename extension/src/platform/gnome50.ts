@@ -25,6 +25,9 @@ export class WallpaperClone {
         this.wallpaper.set_position(monitor.x-this.rect.x+this.padding, monitor.y-this.rect.y+this.padding);
         this.wallpaper.set_size(monitor.width,monitor.height);
     }
-    setGeometry(rect:Rect):void { this.rect=rect; this.position(); this.invalidate(); }
+    setGeometry(rect:Rect):void {
+        if(rect.x===this.rect.x&&rect.y===this.rect.y&&rect.width===this.rect.width&&rect.height===this.rect.height)return;
+        this.rect={...rect}; this.position(); this.invalidate();
+    }
     destroy():void { Main.layoutManager.disconnect(this.monitorsChanged); this.manager.disconnect(this.changed); this.manager.disconnect(this.loaded); this.manager.destroy(); this.wallpaper.destroy(); }
 }

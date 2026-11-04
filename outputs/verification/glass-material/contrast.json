@@ -1,0 +1,74 @@
+[
+  {
+    "mode": "light",
+    "background": "bright",
+    "opacity": 0.05,
+    "minimum": 9.888287919240359
+  },
+  {
+    "mode": "light",
+    "background": "bright",
+    "opacity": 0.24,
+    "minimum": 9.888287919240359
+  },
+  {
+    "mode": "light",
+    "background": "dark",
+    "opacity": 0.05,
+    "minimum": 5.481865687537956
+  },
+  {
+    "mode": "light",
+    "background": "dark",
+    "opacity": 0.24,
+    "minimum": 5.722092772218867
+  },
+  {
+    "mode": "dark",
+    "background": "bright",
+    "opacity": 0.05,
+    "minimum": 4.766669989387377
+  },
+  {
+    "mode": "dark",
+    "background": "bright",
+    "opacity": 0.24,
+    "minimum": 4.9893768105626135
+  },
+  {
+    "mode": "dark",
+    "background": "dark",
+    "opacity": 0.05,
+    "minimum": 12.316018720327342
+  },
+  {
+    "mode": "dark",
+    "background": "dark",
+    "opacity": 0.24,
+    "minimum": 12.316018720327342
+  },
+  {
+    "mode": "explicit-light",
+    "background": "bright",
+    "opacity": 0.05,
+    "minimum": 9.888287919240359
+  },
+  {
+    "mode": "explicit-light",
+    "background": "bright",
+    "opacity": 0.24,
+    "minimum": 9.888287919240359
+  },
+  {
+    "mode": "explicit-light",
+    "background": "dark",
+    "opacity": 0.05,
+    "minimum": 5.481865687537956
+  },
+  {
+    "mode": "explicit-light",
+    "background": "dark",
+    "opacity": 0.24,
+    "minimum": 5.722092772218867
+  }
+]

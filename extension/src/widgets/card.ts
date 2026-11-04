@@ -50,11 +50,10 @@ export class GlassCard {
     }
     private applyAppearance():void{
         this.mode.visible=this.surface.fallback;
-        // Keep a readable baseline over either black or white wallpaper; the
-        // stored glass-tint slider still changes density throughout its range.
-        const density=Math.max(0,Math.min(1,(this.opacity-.05)/.75));
-        const minimum=this.dark ? .68 : .72;
-        const alpha=(this.lowPower||this.surface.fallback) ? .96 : minimum+(.94-minimum)*density;
+        // The GPU material owns background tone and tint. Keep the content
+        // layer clear so it cannot cover the lens; fallback needs its own fill.
+        this.surface.setMaterial(this.opacity,this.dark);
+        const alpha=(this.lowPower||this.surface.fallback) ? .96 : 0;
         const color=this.dark?'12,24,42':'248,250,253';
         this.button.set_style(`font-size:${14*this.scale}px;background-color:rgba(${color},${alpha});`);
     }
