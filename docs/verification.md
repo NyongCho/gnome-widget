@@ -184,3 +184,5 @@ release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실�
 시각 검사는 `default`, `prefer-light`, `prefer-dark` × 흰색/검은색 배경 × 최소/기본 농도에서 실제 St 테마 색과 바탕 합성을 계산했다. 표시 중인 글자들의 최소 대비는 **4.59:1**, 라이트 모드의 최솟값은 **5.03:1**이었다. 이는 균일한 배경에 대한 색상 계산이며 화면의 모든 안티앨리어싱 픽셀에 대한 인증을 의미하지 않는다. 숫자 폭, 한국어/영어 12시간 좁은 시계, 125% 화면도 통과했다. 테스트용 GTK helper의 Yaru 리소스 경고는 제품 Shell CSS 오류와 구분한다.
 
 [라이트 모드](../outputs/verification/appearance/widgets-light-wallpaper.png), [다크 모드](../outputs/verification/appearance/widgets-dark-wallpaper.png), [흰 배경](../outputs/verification/appearance/widgets-light-bright.png), [좁은 시계](../outputs/verification/appearance/clock-narrow-ko.png), [대비 측정값](../outputs/verification/appearance/contrast.json)을 보존한다. 캡처는 격리된 GNOME 세션의 합성 날씨·네트워크 데이터이며 개인 일정을 포함하지 않는다.
+
+수정 release를 사용자 영역에 설치하고 JS/CSS/prefs 파일 일치, 서비스 active와 기존 캘린더 동기화 `ok`를 확인했다. 현재 세션은 종료하지 않았으며 새 Shell 코드는 다음 로그아웃·로그인에 적용된다. [설치 확인](../outputs/verification/appearance/installation.json)을 보존한다.
