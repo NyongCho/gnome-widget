@@ -1,6 +1,7 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as LoginManager from 'resource:///org/gnome/shell/misc/loginManager.js';
@@ -155,9 +156,10 @@ export async function run(){
     Main.sessionMode.popMode('unlock-dialog');await until(()=>extension.state===1&&rootCount()===1,'widgets did not recover from locked mode');host=extension.stateObj.host;
     settings.set_string('language','en');await Scripting.sleep(150);
     for(let i=0;i<20;i++){
-        const oldClock=extension.stateObj.clock;const timer=oldClock.timer;
+        const oldClock=extension.stateObj.clock;const timer=oldClock.timer;const schemeSignal=extension.stateObj.host.schemeSignal;
         const layer=extension.stateObj.layer;const signal=layer.restacked;
         Main.extensionManager.disableExtension('liquid-widgets@local');await until(()=>extension.state===2,'extension disable failed');
+        check(!GObject.signal_handler_is_connected(St.Settings.get(),schemeSignal),'orphan color scheme signal');
         check(rootCount()===0,'orphan layer after disable');check(!GLib.MainContext.default().find_source_by_id(timer),'orphan minute timer');check(!GObject.signal_handler_is_connected(global.display,signal),'orphan display signal');
         Main.extensionManager.enableExtension('liquid-widgets@local');await until(()=>extension.state===1,'extension enable failed');await Scripting.sleep(50);
         check(rootCount()===1,'duplicate layer after enable');

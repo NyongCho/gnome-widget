@@ -6,12 +6,13 @@ export function renderNetwork(card:GlassCard,data:NetworkData,scale:number,langu
  card.title.set_text(`${translate(language,'네트워크')} · ${data.interface}`);
  card.body.add_child(label(`↓ ${rateLabel(data.rxBytesPerSec,language)}`,'liquid-network-rate'));
  card.body.add_child(label(`↑ ${rateLabel(data.txBytesPerSec,language)}`,'liquid-caption'));
- const graph=new St.DrawingArea({height:40*scale,x_expand:true,accessible_name:translate(language,'최근 60초 네트워크 속도 · 실선 다운로드, 점선 업로드')});
+ const graph=new St.DrawingArea({style_class:'liquid-network-graph',height:40*scale,x_expand:true,accessible_name:translate(language,'최근 60초 네트워크 속도 · 실선 다운로드, 점선 업로드')});
  graph.connect('repaint',()=>{
   const cr=graph.get_context();try{
    const [width,height]=graph.get_surface_size();const samples=data.history;if(samples.length<2)return;
    const maximum=Math.max(1,...samples.flatMap(s=>[s.rx,s.tx]));const end=Date.parse(samples.at(-1)!.at);
-   for(const key of ['rx','tx'] as const){cr.setSourceRGBA(key==='rx'?.72:.95,key==='rx'?.88:.78,1,.9);cr.setLineWidth(1.5*scale);cr.setDash(key==='tx'?[3*scale,3*scale]:[],0);
+   const ink=graph.get_theme_node().get_foreground_color();
+   for(const key of ['rx','tx'] as const){cr.setSourceRGBA(ink.red/255,ink.green/255,ink.blue/255,1);cr.setLineWidth(1.5*scale);cr.setDash(key==='tx'?[3*scale,3*scale]:[],0);
     samples.forEach((sample,i)=>{const x=Math.max(0,Math.min(1,(Date.parse(sample.at)-end+60000)/60000))*width;const y=height-2-(sample[key]/maximum)*(height-4);if(i===0)cr.moveTo(x,y);else cr.lineTo(x,y);});cr.stroke();
    }
   }finally{cr.$dispose();}

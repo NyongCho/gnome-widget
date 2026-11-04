@@ -17,8 +17,8 @@ export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Set
   const row=ui.bind(new Adw.SwitchRow({active:settings.get_strv('visible').includes(id)}),{title});
   row.connect('notify::active',()=>{const current=settings.get_strv('visible').filter(value=>value!==id);if(row.active)current.push(id);settings.set_strv('visible',current);});group.add(row);
  }
- const appearance=ui.bind(new Adw.PreferencesGroup(),{title:'유리와 크기',description:'밝은 배경에서는 불투명도를 0.5 이상으로 높이면 작은 글자가 더 잘 보입니다.'});page.add(appearance);
- for(const [key,title,min,max,step] of [['scale','전체 크기',.75,1.5,.05],['strength','굴절 강도',0,20,1],['opacity','불투명도',.05,.8,.05]] as const){
+ const appearance=ui.bind(new Adw.PreferencesGroup(),{title:'유리와 크기',description:'유리 농도를 높이면 배경이 더 차분해집니다. 글자 대비는 자동으로 유지합니다.'});page.add(appearance);
+ for(const [key,title,min,max,step] of [['scale','전체 크기',.75,1.5,.05],['strength','굴절 강도',0,20,1],['opacity','유리 농도',.05,.8,.05]] as const){
   const row=ui.bind(new Adw.SpinRow({adjustment:new Gtk.Adjustment({lower:min,upper:max,step_increment:step,page_increment:step*2}),digits:2}),{title});
   settings.bind(key,row,'value',Gio.SettingsBindFlags.DEFAULT);appearance.add(row);
  }

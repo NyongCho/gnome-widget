@@ -172,3 +172,15 @@ release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실�
 [한국어 설정](../outputs/verification/language/preferences-korean.png), [영어 설정](../outputs/verification/language/preferences-english.png), [영어 데이터 화면](../outputs/verification/language/preferences-english-data.png), [영어 위젯](../outputs/verification/language/widgets-english-data.png), [영어 fallback](../outputs/verification/language/widgets-english-fallback.png)은 격리된 GNOME 세션의 합성 데이터 캡처다.
 
 별도 fresh-context 리뷰어가 `c906d1b..f65ef11`을 읽기 전용으로 검토했으며 Critical/Important/Minor 모두 없었다. release 배포본을 사용자 영역에 설치하고 JS·실행 파일·컴파일된 schema 일치, `ko`/`en` 선택지, 기본 한국어, 기존 캘린더 동기화 `ok`와 서비스 active를 확인했다. 이번에는 Shell JS가 변경되어 **다음 로그아웃·로그인에 새 위젯 코드가 로드된다**. 현재 사용자 세션은 종료하지 않았다. 새 코드가 로드된 뒤의 언어 변경은 재로그인 없이 반영된다. [설치 검증](../outputs/verification/language/installation.json)을 보존한다.
+
+## 라이트 모드 가독성과 시계 글꼴 — 2026-11-04
+
+기존 위젯은 색상 모드와 무관하게 반투명 흰 글자와 24% 어두운 바탕을 사용했다. `./scripts/test-gnome.py --visual`에서 흰 배경의 제목 대비가 **1.48:1**인 실패를 재현했다. 같은 장면에서 글자만 어둡게 바꾸면 9.22:1, 바탕만 진하게 바꾸면 4.81:1로 개선되는 것을 확인했다. 라이트/다크 모드에 따라 CSS 전경과 유리 바탕을 바꾸고 최소 농도를 유지하도록 수정했다. 설정의 `opacity` 키와 값은 보존하며 UI에서는 실제 동작에 맞게 **유리 농도 / Glass tint**로 표시한다.
+
+`St.Settings`의 색상 모드 신호를 구독해 즉시 적용하고, 확장 해제 시 구독을 정리한다. 네트워크 그래프·오늘 표시·일정 점·설정 버튼에도 모드별 색상을 적용한다. 기존의 강한 글자 그림자를 없애고 시계는 **Noto Sans Display Medium 56px**(기본 배율)로 바꿨다. 숫자 폭을 일정하게 유지하며 좁은 카드에서는 실측한 글자 폭에 맞춰 크기를 줄인다. 좁은 한국어 12시간 시계의 245px > 216px 실패를 확인한 뒤 오전/오후까지 들어오는 것을 검증했다.
+
+최종 전체 검사는 Rust 79개, TypeScript 59개, Python 7개와 fmt/clippy/typecheck/build/GJS/IPC를 통과했다. 실제 GNOME 전체 검사도 8/8 클릭, 시계/언어/구독 유지와 20회 재활성화, 색상 모드 신호 정리를 통과했다. 마지막 브랜드 표시 정리 뒤에는 전체 정적·단위·IPC 검사와 실제 시각 검사를 다시 실행했다.
+
+시각 검사는 `default`, `prefer-light`, `prefer-dark` × 흰색/검은색 배경 × 최소/기본 농도에서 실제 St 테마 색과 바탕 합성을 계산했다. 표시 중인 글자들의 최소 대비는 **4.59:1**, 라이트 모드의 최솟값은 **5.03:1**이었다. 이는 균일한 배경에 대한 색상 계산이며 화면의 모든 안티앨리어싱 픽셀에 대한 인증을 의미하지 않는다. 숫자 폭, 한국어/영어 12시간 좁은 시계, 125% 화면도 통과했다. 테스트용 GTK helper의 Yaru 리소스 경고는 제품 Shell CSS 오류와 구분한다.
+
+[라이트 모드](../outputs/verification/appearance/widgets-light-wallpaper.png), [다크 모드](../outputs/verification/appearance/widgets-dark-wallpaper.png), [흰 배경](../outputs/verification/appearance/widgets-light-bright.png), [좁은 시계](../outputs/verification/appearance/clock-narrow-ko.png), [대비 측정값](../outputs/verification/appearance/contrast.json)을 보존한다. 캡처는 격리된 GNOME 세션의 합성 날씨·네트워크 데이터이며 개인 일정을 포함하지 않는다.

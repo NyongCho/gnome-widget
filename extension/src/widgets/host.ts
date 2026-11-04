@@ -1,9 +1,10 @@
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
+import Pango from 'gi://Pango';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
 import {translate,language,localeFor,type Message} from '../shared/i18n.js';
-import {GlassCard,label} from './card.js';
+import {GlassCard,label,clockLabel,fitClockLabel} from './card.js';
 import {renderNetwork,renderSystem,renderMedia} from './live.js';
 import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
@@ -13,7 +14,10 @@ import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
 const TITLES:Record<string,Message>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
-    readonly actor=new Clutter.Actor({name:'liquid-widgets-host'});
+    readonly actor=new St.Widget({name:'liquid-widgets-host',style_class:'liquid-widgets'});
+    private scheme=St.Settings.get();
+    private schemeSignal:number;
+    private get dark():boolean{return this.scheme.color_scheme===St.SystemColorScheme.PREFER_DARK;}
     private toolbar=new St.BoxLayout({style_class:'liquid-toolbar'});
     private scroll=new St.ScrollView({overlay_scrollbars:true,reactive:false});
     private content=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL});
@@ -32,13 +36,20 @@ export class WidgetHost {
     private get locale():string{return localeFor(this.language);}
     private t(message:Message,values?:Readonly<Record<string,string|number>>):string{return translate(this.language,message,values);}
     constructor(private settings:Gio.Settings,private preferences:()=>void){
-        const name=label('LIQUID','liquid-brand');this.toolbar.add_child(name);
-        this.settingsButton=new St.Button({child:new St.Icon({icon_name:'emblem-system-symbolic',icon_size:15}),style_class:'liquid-settings',can_focus:true,reactive:true,accessible_name:this.t('위젯 설정')});
+        const name=label('LIQUID','liquid-brand');name.clutter_text.ellipsize=Pango.EllipsizeMode.NONE;name.x_expand=false;name.y_align=Clutter.ActorAlign.CENTER;this.toolbar.add_child(name);
+        this.toolbar.add_child(new St.Widget({x_expand:true}));
+        this.settingsButton=new St.Button({child:new St.Icon({icon_name:'emblem-system-symbolic',icon_size:15}),style_class:'liquid-settings',y_align:Clutter.ActorAlign.CENTER,can_focus:true,reactive:true,accessible_name:this.t('위젯 설정')});
         this.settingsButton.connect('clicked',preferences);this.toolbar.add_child(this.settingsButton);
         this.actor.add_child(this.toolbar);this.actor.add_child(this.scroll);
         this.content.add_child(this.canvas);this.scroll.set_child(this.content);
         this.scroll.set_policy(St.PolicyType.NEVER,St.PolicyType.AUTOMATIC);
         this.adjustmentSignal=this.scroll.vadjustment.connect('notify::value',()=>this.placeCards());
+        this.schemeSignal=this.scheme.connect('notify::color-scheme',()=>this.refreshAppearance());
+        this.refreshAppearance();
+    }
+    private refreshAppearance():void{
+        this.actor.set_style_class_name(`liquid-widgets ${this.dark?'liquid-dark':'liquid-light'}`);
+        this.placeCards();this.renderAll();
     }
     get visibleCards():string[]{
         return this.settings.get_strv('visible').filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
@@ -75,7 +86,7 @@ export class WidgetHost {
         for(const {id,rect} of this.current.cards){
             const card=this.cards.get(id)!;
             card.setGeometry(rect,{...rect,x:viewport.x+rect.x,y:viewport.y+toolbarHeight+rect.y-this.scroll.vadjustment.value},this.scale);
-            card.setStyle(this.settings.get_double('strength'),this.settings.get_double('opacity'),this.settings.get_boolean('low-power'));
+            card.setStyle(this.settings.get_double('strength'),this.settings.get_double('opacity'),this.settings.get_boolean('low-power'),this.dark);
         }
     }
     update(snapshot:Snapshot):void{for(const name of ['calendar','weather','system','network','media'] as const)this.updateProvider(name,snapshot[name]);}
@@ -92,7 +103,8 @@ export class WidgetHost {
         const card=this.cards.get(id);if(!card)return;card.clear();card.title.set_text(TITLES[id]?this.t(TITLES[id]):id);card.button.accessible_name=TITLES[id]?this.t(TITLES[id]):id;card.mode.set_text(this.t('굴절 불가 · 반투명'));
         const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
         if(id==='clock'){
-            card.title.set_text(`${clock.weekday} · ${clock.date}`);card.body.add_child(label(clock.time,'liquid-clock-time'));card.status.set_text('');return;
+            card.title.set_text(`${clock.weekday} · ${clock.date}`);
+            const time=clockLabel(clock.time);card.body.add_child(time);fitClockLabel(time,card.button.width-36*this.scale);card.status.set_text('');return;
         }
         const provider=(id==='agenda'?'calendar':id) as ProviderName;
         let state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
@@ -150,5 +162,5 @@ export class WidgetHost {
     }
 
     get diagnostics():object{return{cards:this.cards.size,layout:this.current,scroll:this.scroll.vadjustment.value};}
-    destroy():void{this.scroll.vadjustment.disconnect(this.adjustmentSignal);for(const card of this.cards.values())card.destroy();this.cards.clear();this.actor.destroy();}
+    destroy():void{this.scheme.disconnect(this.schemeSignal);this.scroll.vadjustment.disconnect(this.adjustmentSignal);for(const card of this.cards.values())card.destroy();this.cards.clear();this.actor.destroy();}
 }

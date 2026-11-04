@@ -1,35 +1,46 @@
-.liquid-toolbar { color: rgba(255,255,255,.88); spacing: .571em; }
-.liquid-brand { font-size: .786em; font-weight: 600; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
-.liquid-settings { border-radius: 14px; padding: 7px; background-color: rgba(20,30,45,.3); color: white; }
-.liquid-settings:hover, .liquid-settings:focus { background-color: rgba(255,255,255,.28); }
-.liquid-card { color: #fff; border-radius: 28px; text-align: left; }
-.liquid-card:focus { box-shadow: inset 0 0 0 2px rgba(210,240,255,.95); }
-.liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); }
-.liquid-content { text-shadow: 0 1px 2px rgba(0,0,0,.65); padding: 1.286em; spacing: .571em; }
-.liquid-title { font-size: .786em; font-weight: 600; color: rgba(255,255,255,.74); letter-spacing: 1px; }
+.liquid-toolbar { color: #f7f9fd; spacing: .571em; }
+.liquid-brand { font-size: .786em; font-weight: 600; letter-spacing: 2px; padding: 4px 8px; border-radius: 10px; background-color: rgba(12,24,42,.85); }
+.liquid-settings { border-radius: 14px; padding: 7px; background-color: rgba(12,24,42,.85); color: #f7f9fd; }
+.liquid-settings:hover, .liquid-settings:focus { background-color: #26384e; }
+.liquid-card { color: #f7f9fd; border-radius: 28px; text-align: left; box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+.liquid-card:focus { box-shadow: inset 0 0 0 2px #d2f0ff; }
+.liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.45); }
+.liquid-content { text-shadow: none; padding: 1.286em; spacing: .571em; }
+.liquid-title { font-size: .786em; font-weight: 600; color: #d9e2ef; letter-spacing: .2px; }
 .liquid-body { spacing: .571em; }
-.liquid-big { font-size: 3.714em; font-weight: 300; letter-spacing: -2px; }
+.liquid-big { font-size: 3.714em; font-weight: 400; letter-spacing: -2px; }
 .liquid-value { font-size: 1.929em; font-weight: 400; }
-.liquid-caption { font-size: .857em; color: rgba(255,255,255,.83); }
-.liquid-status { font-size: .714em; color: rgba(255,255,255,.72); }
-.liquid-clock-time { font-size: 4.143em; font-weight: 300; letter-spacing: -2px; }
-.liquid-clock-date { font-size: 1em; color: rgba(255,255,255,.92); }
+.liquid-caption { font-size: .857em; color: #d9e2ef; }
+.liquid-status { font-size: .714em; color: #d9e2ef; }
+.liquid-clock-time { font-family: "Noto Sans Display"; font-size: 4em; font-weight: 500; letter-spacing: -1.5px; text-shadow: none; }
+.liquid-clock-date { font-size: 1em; color: #f7f9fd; }
 .liquid-calendar-grid { spacing: 3px; }
 .liquid-calendar-day { font-size: .857em; text-align: center; border-radius: 15px; }
-.liquid-calendar-today { text-shadow: none; background-color: rgba(255,255,255,.88); color: #172536; font-weight: 700; }
-.liquid-calendar-muted { color: rgba(255,255,255,.35); }
-.liquid-calendar-dot { font-size: .571em; color: #d0ecff; }
+.liquid-calendar-today { background-color: #e6f0ff; color: #172536; font-weight: 700; }
+.liquid-calendar-muted { color: #d5deeb; }
 .liquid-agenda-title { font-size: .929em; font-weight: 500; }
-.liquid-agenda-time { font-size: .786em; color: rgba(255,255,255,.7); }
-
+.liquid-agenda-time { font-size: .786em; color: #d9e2ef; }
 .liquid-event-dot { background-color: #e1f3ff; border-radius: 2px; }
 .liquid-event-dot.today { background-color: #172536; }
-
-.liquid-weather-hour { font-size: .714em; color: rgba(255,255,255,.7); }
+.liquid-weather-hour { font-size: .714em; color: #d9e2ef; }
 .liquid-weather-temperature { font-size: .929em; font-weight: 500; }
-.liquid-weather-rain { font-size: .643em; color: #d2eaff; }
-.liquid-weather-attribution { font-size: .643em; color: rgba(255,255,255,.65); }
-
+.liquid-weather-rain { font-size: .643em; color: #e1efff; }
+.liquid-weather-attribution { font-size: .643em; color: #d9e2ef; }
 .liquid-network-rate { font-size: 1.571em; font-weight: 400; }
+.liquid-network-graph { color: #e1efff; }
 .liquid-media-row { spacing: .714em; }
 .liquid-media-title { font-size: 1.071em; font-weight: 500; }
+
+.liquid-light .liquid-brand, .liquid-light .liquid-settings { background-color: rgba(248,250,253,.9); color: #142235; }
+.liquid-light .liquid-settings:hover, .liquid-light .liquid-settings:focus { background-color: #ffffff; }
+.liquid-light .liquid-card { color: #142235; box-shadow: inset 0 0 0 1px rgba(29,65,94,.16); }
+.liquid-light .liquid-card:focus { box-shadow: inset 0 0 0 2px #234a6d; }
+.liquid-light .liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(29,65,94,.45); }
+.liquid-light .liquid-title, .liquid-light .liquid-caption, .liquid-light .liquid-status,
+.liquid-light .liquid-agenda-time, .liquid-light .liquid-weather-hour,
+.liquid-light .liquid-weather-attribution, .liquid-light .liquid-calendar-muted { color: #2e4158; }
+.liquid-light .liquid-clock-date { color: #142235; }
+.liquid-light .liquid-calendar-today { background-color: #1d415e; color: #ffffff; }
+.liquid-light .liquid-event-dot { background-color: #1d415e; }
+.liquid-light .liquid-event-dot.today { background-color: #ffffff; }
+.liquid-light .liquid-weather-rain, .liquid-light .liquid-network-graph { color: #164363; }

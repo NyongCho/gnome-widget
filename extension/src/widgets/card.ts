@@ -8,9 +8,22 @@ export function label(text:string,styleClass='liquid-caption'):St.Label{
     actor.clutter_text.ellipsize=Pango.EllipsizeMode.END;
     return actor;
 }
+export function clockLabel(text:string):St.Label{
+    const actor=label(text,'liquid-clock-time');
+    const attributes=new Pango.AttrList();
+    attributes.insert(Pango.attr_font_features_new('tnum=1'));
+    actor.clutter_text.set_attributes(attributes);
+    return actor;
+}
+export function fitClockLabel(actor:St.Label,availableWidth:number):void{
+    const naturalWidth=actor.get_preferred_width(-1)[1];
+    if(naturalWidth<=availableWidth)return;
+    const size=actor.get_theme_node().get_font().get_size()/Pango.SCALE;
+    actor.set_style(`font-size:${Math.max(1,Math.floor(size*(availableWidth-2)/naturalWidth))}px;`);
+}
 export class GlassCard {
     private scale=1;
-    private opacity=.24;private lowPower=false;
+    private opacity=.24;private lowPower=false;private dark=true;
     readonly surface:GlassSurface;
     readonly button:St.Button;
     readonly content=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-content',x_expand:true,y_expand:true,x_align:Clutter.ActorAlign.FILL,y_align:Clutter.ActorAlign.FILL});
@@ -31,13 +44,19 @@ export class GlassCard {
         this.surface.setGeometry(local,scale,world);
         this.scale=scale;this.button.set_size(local.width,local.height);
     }
-    setStyle(strength:number,opacity:number,lowPower:boolean):void{
-        this.opacity=opacity;this.lowPower=lowPower;
+    setStyle(strength:number,opacity:number,lowPower:boolean,dark:boolean):void{
+        this.opacity=opacity;this.lowPower=lowPower;this.dark=dark;
         this.surface.setStrength(strength);this.surface.setEnabled(!lowPower);this.applyAppearance();
     }
     private applyAppearance():void{
         this.mode.visible=this.surface.fallback;
-        this.button.set_style(`font-size:${14*this.scale}px;background-color:rgba(12,24,42,${this.lowPower||this.surface.fallback?Math.max(.72,this.opacity):this.opacity});`);
+        // Keep a readable baseline over either black or white wallpaper; the
+        // stored glass-tint slider still changes density throughout its range.
+        const density=Math.max(0,Math.min(1,(this.opacity-.05)/.75));
+        const minimum=this.dark ? .68 : .72;
+        const alpha=(this.lowPower||this.surface.fallback) ? .96 : minimum+(.94-minimum)*density;
+        const color=this.dark?'12,24,42':'248,250,253';
+        this.button.set_style(`font-size:${14*this.scale}px;background-color:rgba(${color},${alpha});`);
     }
     clear():void{this.body.destroy_all_children();}
     destroy():void{this.surface.destroy();}
