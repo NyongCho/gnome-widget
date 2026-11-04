@@ -45,7 +45,7 @@
 
 **Interfaces:** Consume Task 1's actual screenshots and diagnostics; the user's service/settings remain intact.
 
-- [ ] Verify light/dark, black/white, colorful/detailed wallpaper, 125% scaling, narrow clock and fallback. Confirm blur/foreground changes do not break clicks, wallpaper updates or repeated enable/disable.
-- [ ] Run the project's existing build/test checks and a focused lifecycle/benchmark run for the added GPU targets.
-- [ ] Request one independent review of the change and fix material findings.
-- [ ] Record evidence, package and update the existing user installation with backup; verify installed artifact hashes and service health. Explain any required logout/login without restarting the user's session.
+- [x] Verify light/dark, black/white, colorful/detailed wallpaper, 125% scaling, narrow clock and fallback. Confirm blur/foreground changes do not break clicks, wallpaper updates or repeated enable/disable.
+- [x] Run the project's existing build/test checks and a focused lifecycle/benchmark run for the added GPU targets.
+- [x] Request one independent review of the change and fix material findings.
+- [x] Record evidence, package and update the existing user installation with backup; verify installed artifact hashes and service health. Explain any required logout/login without restarting the user's session.

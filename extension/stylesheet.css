@@ -38,9 +38,9 @@
 .liquid-light .liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(29,65,94,.45); }
 .liquid-light .liquid-title, .liquid-light .liquid-caption, .liquid-light .liquid-status,
 .liquid-light .liquid-agenda-time, .liquid-light .liquid-weather-hour,
-.liquid-light .liquid-weather-attribution, .liquid-light .liquid-calendar-muted { color: #2e4158; }
+.liquid-light .liquid-weather-attribution, .liquid-light .liquid-calendar-muted { color: #172336; }
 .liquid-light .liquid-clock-date { color: #142235; }
 .liquid-light .liquid-calendar-today { background-color: #1d415e; color: #ffffff; }
 .liquid-light .liquid-event-dot { background-color: #1d415e; }
 .liquid-light .liquid-event-dot.today { background-color: #ffffff; }
-.liquid-light .liquid-weather-rain, .liquid-light .liquid-network-graph { color: #164363; }
+.liquid-light .liquid-weather-rain, .liquid-light .liquid-network-graph { color: #172336; }

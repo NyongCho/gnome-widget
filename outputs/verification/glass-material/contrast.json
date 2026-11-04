@@ -3,25 +3,25 @@
     "mode": "light",
     "background": "bright",
     "opacity": 0.05,
-    "minimum": 9.888287919240359
+    "minimum": 10.65994572014469
   },
   {
     "mode": "light",
     "background": "bright",
     "opacity": 0.24,
-    "minimum": 9.888287919240359
+    "minimum": 10.65994572014469
   },
   {
     "mode": "light",
     "background": "dark",
     "opacity": 0.05,
-    "minimum": 5.481865687537956
+    "minimum": 4.945359197983529
   },
   {
     "mode": "light",
     "background": "dark",
     "opacity": 0.24,
-    "minimum": 5.722092772218867
+    "minimum": 5.473050556206229
   },
   {
     "mode": "dark",
@@ -51,24 +51,24 @@
     "mode": "explicit-light",
     "background": "bright",
     "opacity": 0.05,
-    "minimum": 9.888287919240359
+    "minimum": 10.65994572014469
   },
   {
     "mode": "explicit-light",
     "background": "bright",
     "opacity": 0.24,
-    "minimum": 9.888287919240359
+    "minimum": 10.65994572014469
   },
   {
     "mode": "explicit-light",
     "background": "dark",
     "opacity": 0.05,
-    "minimum": 5.481865687537956
+    "minimum": 4.945359197983529
   },
   {
     "mode": "explicit-light",
     "background": "dark",
     "opacity": 0.24,
-    "minimum": 5.722092772218867
+    "minimum": 5.473050556206229
   }
 ]

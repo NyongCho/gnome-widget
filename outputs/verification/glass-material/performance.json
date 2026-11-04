@@ -1,0 +1,98 @@
+{
+  "trials": [
+    {
+      "mode": "OFF",
+      "seconds": 20.000226,
+      "shellCpuPercent": 11.249872876436495,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 455240,
+      "serviceRssKiB": 31252,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1390, 34",
+      "frames": 2825,
+      "paintP95Ms": 0.843
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000285,
+      "shellCpuPercent": 15.249782690596655,
+      "serviceCpuPercent": 0.09999857502030596,
+      "shellRssKiB": 457924,
+      "serviceRssKiB": 31640,
+      "offscreenBytes": 3547512,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1423, 40",
+      "frames": 2704,
+      "paintP95Ms": 1.486
+    },
+    {
+      "mode": "OFF",
+      "seconds": 20.00018,
+      "shellCpuPercent": 10.449905950846441,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 447160,
+      "serviceRssKiB": 31640,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1425, 39",
+      "frames": 2868,
+      "paintP95Ms": 0.818
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000181,
+      "shellCpuPercent": 14.449869228683479,
+      "serviceCpuPercent": 0.14999864251228526,
+      "shellRssKiB": 448136,
+      "serviceRssKiB": 31808,
+      "offscreenBytes": 3547512,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1424, 40",
+      "frames": 2239,
+      "paintP95Ms": 1.668
+    },
+    {
+      "mode": "OFF",
+      "seconds": 20.00015,
+      "shellCpuPercent": 10.599920500596244,
+      "serviceCpuPercent": 0,
+      "shellRssKiB": 447572,
+      "serviceRssKiB": 31808,
+      "offscreenBytes": 0,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1397, 53",
+      "frames": 2471,
+      "paintP95Ms": 0.929
+    },
+    {
+      "mode": "ON",
+      "seconds": 20.000207,
+      "shellCpuPercent": 14.099854066510412,
+      "serviceCpuPercent": 0.09999896501071215,
+      "shellRssKiB": 447868,
+      "serviceRssKiB": 31872,
+      "offscreenBytes": 3547512,
+      "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1376, 35",
+      "frames": 2146,
+      "paintP95Ms": 1.688
+    }
+  ],
+  "soak": [],
+  "method": "GNOME 50 stagePaintStart → stagePaintDone (includes swap, no forced glFinish); foreground window follows the same 16ms motion in each trial",
+  "clockTicks": 100,
+  "gpu": "NVIDIA GeForce RTX 3080, 595.99.02, 1378, 11",
+  "stage": {
+    "width": 1280,
+    "height": 800
+  },
+  "pairs": [
+    {
+      "trial": 1,
+      "p95IncreaseMs": 0.643
+    },
+    {
+      "trial": 2,
+      "p95IncreaseMs": 0.85
+    },
+    {
+      "trial": 3,
+      "p95IncreaseMs": 0.7589999999999999
+    }
+  ]
+}

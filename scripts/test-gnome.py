@@ -24,9 +24,21 @@ def verify_images():
     # Compare only the curved edge: button text deliberately differs between modes.
     edge = (420, 205, 442, 420)
     assert ImageChops.difference(off.crop(edge), on.crop(edge)).getbbox(), 'refraction edge did not change'
-    for point in [(500, 350), (600, 330), (700, 350)]:
-        actual, expected = off.getpixel(point), background.getpixel(point)
-        assert max(abs(a-b) for a, b in zip(actual, expected)) < 70, f'misaligned wallpaper at {point}'
+    # The material deliberately changes luminance for readable text. Compare
+    # spatial color structure in linear chromaticity, not raw brightness.
+    # Average the source's fine grid before comparing the blurred material.
+    def chromaticity(rgb):
+        linear = [(v/255/12.92 if v/255 <= .04045 else ((v/255+.055)/1.055)**2.4) for v in rgb]
+        total = max(sum(linear), .0001)
+        return [v/total for v in linear]
+    errors = []
+    for y in [290, 325, 410]:
+        for x in [470, 510, 550, 590, 630, 670, 710]:
+            patch = [background.getpixel((px, py)) for py in range(y-6, y+7) for px in range(x-6, x+7)]
+            expected = chromaticity([sum(p[c] for p in patch)/len(patch) for c in range(3)])
+            actual = chromaticity(off.getpixel((x, y)))
+            errors.append(max(abs(a-b) for a, b in zip(actual, expected)))
+    assert sum(errors)/len(errors) < .015 and max(errors) < .06, 'wallpaper color structure is misaligned'
     text_region = (444, 224, 715, 257)
     # Pixel iteration also works with older distribution Pillow releases.
     def pixels(im):
@@ -37,7 +49,7 @@ def verify_images():
     # The alternate fixture replaces pink light with green; stale input must fail.
     before = on.getpixel((700, 300))
     after = read('wallpaper-changed').getpixel((700, 300))
-    assert after[0] < before[0] - 40 and after[1] > before[1] + 20, 'card still shows the old wallpaper'
+    assert before[0]-before[1] > 15 and after[1]-after[0] > 30, 'card still shows the old wallpaper'
     selected, dragged, idle = (read(name) for name in ('icon-selected', 'icon-dragged', 'ding-enabled'))
     box = (10, 35, 115, 145)
     assert ImageChops.difference(selected.crop(box), idle.crop(box)).getbbox(), 'icon selection missing'

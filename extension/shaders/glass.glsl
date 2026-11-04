@@ -20,7 +20,7 @@ vec3 lw_material(vec3 color) {
     color = mix(color, vec3(lw_dark > 0.5 ? 0.16 : 0.96), 0.025 + density * 0.10);
     vec3 linear = lw_linear(clamp(color, 0.0, 1.0));
     float luma = dot(linear, vec3(0.2126, 0.7152, 0.0722));
-    float low = lw_dark > 0.5 ? 0.018 : 0.50 + density * 0.12;
+    float low = lw_dark > 0.5 ? 0.018 : 0.28 + density * 0.14;
     float high = lw_dark > 0.5 ? 0.125 - density * 0.035 : 0.95;
     if (luma > high) linear *= high / max(luma, 0.0001);
     if (luma < low) linear = mix(linear, vec3(1.0), (low - luma) / max(1.0 - luma, 0.0001));

@@ -1,0 +1,30 @@
+[
+  {
+    "cycles": 0,
+    "rssKiB": 447120,
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 3547512
+  },
+  {
+    "cycles": 20,
+    "rssKiB": 498296,
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 3547512
+  },
+  {
+    "cycles": 40,
+    "rssKiB": 493464,
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 3547512
+  },
+  {
+    "cycles": 60,
+    "rssKiB": 502588,
+    "roots": 1,
+    "cards": 6,
+    "offscreenBytes": 3547512
+  }
+]
