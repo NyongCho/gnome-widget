@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {cardState} from '../src/shared/cardState.js';
+import {calendarConnectionStatus} from '../src/shared/calendarStatus.js';
+import {formatAgendaWhen} from '../src/shared/agenda.js';
+import {weatherView} from '../src/shared/weatherFormat.js';
+import {rateLabel} from '../src/shared/liveData.js';
+import type {ProviderMap,Settings,WeatherData} from '../src/types.js';
+const settings:Settings={calendarEnabled:true,calendarSecretDeletionPending:false,weatherLocation:null,networkInterface:'auto'};
+const unavailable:ProviderMap['calendar']={status:'unavailable',sourceId:'fixture',updatedAt:null,data:null,errorCode:'INVALID_DATA'};
+test('selected English reaches provider errors and calendar sync states without changing data',()=>{
+ assert.match(cardState(unavailable,true,'en').message,/read/i);
+ const cached:ProviderMap['calendar']={...unavailable,updatedAt:'2026-11-04T00:00:00Z',data:{month:'2026-11',timeZone:'Asia/Seoul',weekStart:1,events:[]}};
+ assert.match(calendarConnectionStatus(settings,cached,true,'en'),/last synced/i);
+ assert.match(calendarConnectionStatus(settings,{...cached,status:'ok',errorCode:null},true,'en'),/synced/i);
+ assert.match(calendarConnectionStatus(settings,{...cached,status:'loading',errorCode:null},true,'en'),/refresh/i);
+ assert.equal(cardState(cached,true,'en').data,cached.data);
+ assert.match(cardState(unavailable,true,'ko').message,/읽을 수/);
+});
+test('selected English reaches all-day, weather and first network measurement labels',()=>{
+ const event={uid:'fixture',occurrenceKey:'fixture',title:'원문 제목',start:'2026-11-04',end:'2026-11-05',allDay:true};
+ assert.match(formatAgendaWhen(event,'Asia/Seoul','en-US',false,'en'),/Nov.*4.*All day/);
+ assert.match(formatAgendaWhen(event,'Asia/Seoul','ko-KR',false,'ko'),/11월.*4.*종일/);
+ const data:WeatherData={location:'서울',timeZone:'Asia/Seoul',current:{temperatureC:0,code:3},hourly:[],attributionUrl:'https://open-meteo.com/'};
+ assert.equal(weatherView(data,'en-US',false,'en')?.description,'Overcast');
+ assert.equal(weatherView({...data,current:{temperatureC:null,code:null}},'en-US',false,'en')?.description,'Weather unavailable');
+ assert.equal(rateLabel(null,'en'),'Measuring…');
+ assert.equal(rateLabel(0,'en'),'0 B/s');
+ assert.equal(event.title,'원문 제목');
+});
+test('switching bound text preserves drafts and uses the latest status, and disposal releases targets',async()=>{
+ const {TextBindings,language,localeFor,translate}=await import('../src/shared/i18n.js');
+ assert.equal(language('unknown'),'ko');assert.equal(localeFor('en'),'en-US');assert.equal(localeFor('ko'),'ko-KR');
+ const ui=new TextBindings('ko');const row={title:'',subtitle:'',text:'private draft never translated'};
+ ui.bind(row,{title:'비공개 iCal 주소',subtitle:'확인 중…'});
+ ui.setLanguage('en');assert.equal(row.title,'Private iCal address');assert.equal(row.text,'private draft never translated');
+ ui.bind(row,{subtitle:'저장하는 중…'});ui.setLanguage('ko');assert.equal(row.subtitle,'저장하는 중…');
+ ui.setLanguage('en');assert.equal(row.subtitle,'Saving…');
+ assert.equal(translate('en','사용 중: {value}',{value:'원문 {count}'}),'In use: 원문 {count}');
+ ui.unbind(row);ui.setLanguage('ko');assert.equal(row.title,'Private iCal address');
+ ui.bind(row,{title:'위젯'});ui.destroy();ui.setLanguage('en');assert.equal(row.title,'위젯');
+});

@@ -1,3 +1,4 @@
+import {translate,type Language} from './i18n.js';
 import type {CalendarEvent} from '../types.js';
 function localStart(event:CalendarEvent,timeZone:string):string{
     if(event.allDay)return `${event.start}T00:00:00`;
@@ -15,9 +16,9 @@ export function selectAgenda(events:CalendarEvent[],nowMs:number,today:string,ti
             (a.allDay||b.allDay?localStart(a,timeZone).localeCompare(localStart(b,timeZone)):Date.parse(a.start)-Date.parse(b.start))||
             a.uid.localeCompare(b.uid)||a.occurrenceKey.localeCompare(b.occurrenceKey)).slice(0,3);
 }
-export function formatAgendaWhen(event:CalendarEvent,timeZone:string,locale:string,hour12:boolean):string{
+export function formatAgendaWhen(event:CalendarEvent,timeZone:string,locale:string,hour12:boolean,language:Language='ko'):string{
     const at=event.allDay?Date.parse(`${event.start}T12:00:00Z`):Date.parse(event.start);
     const date=new Intl.DateTimeFormat(locale,{timeZone:event.allDay?'UTC':timeZone,month:'short',day:'numeric',weekday:'short'}).format(at);
-    const time=event.allDay?'종일':new Intl.DateTimeFormat(locale,{timeZone,hour:'2-digit',minute:'2-digit',hourCycle:hour12?'h12':'h23'}).format(at);
+    const time=event.allDay?translate(language,'종일'):new Intl.DateTimeFormat(locale,{timeZone,hour:'2-digit',minute:'2-digit',hourCycle:hour12?'h12':'h23'}).format(at);
     return `${date} · ${time}`;
 }
