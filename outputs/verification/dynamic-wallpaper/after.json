@@ -1,0 +1,2887 @@
+{
+  "initial": {
+    "desktop": [
+      160,
+      48,
+      80
+    ],
+    "cards": {
+      "clock": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 121,
+        "blurPaints": 242,
+        "outputPaints": 168,
+        "textureBytes": 374904
+      },
+      "calendar": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 121,
+        "blurPaints": 242,
+        "outputPaints": 168,
+        "textureBytes": 441960
+      },
+      "agenda": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 121,
+        "blurPaints": 242,
+        "outputPaints": 168,
+        "textureBytes": 252984
+      },
+      "weather": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 121,
+        "blurPaints": 242,
+        "outputPaints": 168,
+        "textureBytes": 335280
+      },
+      "network": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 121,
+        "blurPaints": 242,
+        "outputPaints": 168,
+        "textureBytes": 326136
+      },
+      "system": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 118,
+        "blurPaints": 236,
+        "outputPaints": 119,
+        "textureBytes": 301752
+      },
+      "media": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 118,
+        "blurPaints": 236,
+        "outputPaints": 119,
+        "textureBytes": 251968
+      }
+    }
+  },
+  "final": {
+    "desktop": [
+      32,
+      144,
+      128
+    ],
+    "cards": {
+      "clock": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 128,
+        "blurPaints": 256,
+        "outputPaints": 203,
+        "textureBytes": 374904
+      },
+      "calendar": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 128,
+        "blurPaints": 256,
+        "outputPaints": 203,
+        "textureBytes": 441960
+      },
+      "agenda": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 128,
+        "blurPaints": 256,
+        "outputPaints": 203,
+        "textureBytes": 252984
+      },
+      "weather": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 128,
+        "blurPaints": 256,
+        "outputPaints": 203,
+        "textureBytes": 335280
+      },
+      "network": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 128,
+        "blurPaints": 256,
+        "outputPaints": 203,
+        "textureBytes": 326136
+      },
+      "system": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 125,
+        "blurPaints": 250,
+        "outputPaints": 154,
+        "textureBytes": 301752
+      },
+      "media": {
+        "rgb": [
+          23,
+          111,
+          99
+        ],
+        "active": true,
+        "inputPaints": 125,
+        "blurPaints": 250,
+        "outputPaints": 154,
+        "textureBytes": 251968
+      }
+    }
+  },
+  "transition": [
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 169,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 169,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 169,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 169,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 169,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 118,
+          "blurPaints": 236,
+          "outputPaints": 120,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 118,
+          "blurPaints": 236,
+          "outputPaints": 120,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 170,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 170,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 170,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 170,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 170,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 118,
+          "blurPaints": 236,
+          "outputPaints": 121,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 118,
+          "blurPaints": 236,
+          "outputPaints": 121,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 172,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 172,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 172,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 172,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 172,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 123,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 123,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 173,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 173,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 173,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 173,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 173,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 124,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 124,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 174,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 174,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 174,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 174,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 174,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 125,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 125,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 175,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 175,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 175,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 175,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 175,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 126,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 119,
+          "blurPaints": 238,
+          "outputPaints": 126,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 177,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 177,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 177,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 177,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 177,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 128,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 128,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 178,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 178,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 178,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 178,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 178,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 129,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 129,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 179,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 179,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 179,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 179,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 179,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 130,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 130,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        160,
+        48,
+        80
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 180,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 180,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 180,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 180,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 180,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 131,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            157,
+            48,
+            79
+          ],
+          "active": true,
+          "inputPaints": 120,
+          "blurPaints": 240,
+          "outputPaints": 131,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        150,
+        56,
+        84
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 182,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 182,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 182,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 182,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 182,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 133,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 133,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        150,
+        56,
+        84
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 183,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 183,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 183,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 183,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 183,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 134,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 134,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        150,
+        56,
+        84
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 184,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 184,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 184,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 184,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 184,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 135,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 135,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        150,
+        56,
+        84
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 185,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 185,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 185,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 185,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 185,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 136,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            146,
+            56,
+            83
+          ],
+          "active": true,
+          "inputPaints": 121,
+          "blurPaints": 242,
+          "outputPaints": 136,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        116,
+        81,
+        96
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 187,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 187,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 187,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 187,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 187,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 138,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 138,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        116,
+        81,
+        96
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 188,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 188,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 188,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 188,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 188,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 139,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 139,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        116,
+        81,
+        96
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 189,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 189,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 189,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 189,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 189,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 140,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 140,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        116,
+        81,
+        96
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 190,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 190,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 190,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 190,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 190,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 141,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 141,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        116,
+        81,
+        96
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 191,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 191,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 191,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 191,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 191,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 142,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            114,
+            80,
+            95
+          ],
+          "active": true,
+          "inputPaints": 122,
+          "blurPaints": 244,
+          "outputPaints": 142,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        84,
+        105,
+        108
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 193,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 193,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 193,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 193,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 193,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 144,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 144,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        84,
+        105,
+        108
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 194,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 194,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 194,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 194,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 194,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 145,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 145,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        84,
+        105,
+        108
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 195,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 195,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 195,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 195,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 195,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 146,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 146,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        84,
+        105,
+        108
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 196,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 196,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 196,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 196,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 126,
+          "blurPaints": 252,
+          "outputPaints": 196,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 147,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            82,
+            103,
+            106
+          ],
+          "active": true,
+          "inputPaints": 123,
+          "blurPaints": 246,
+          "outputPaints": 147,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        52,
+        129,
+        120
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 198,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 198,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 198,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 198,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 198,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 149,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 149,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        52,
+        129,
+        120
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 199,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 199,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 199,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 199,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 199,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 150,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 150,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        52,
+        129,
+        120
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 200,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 200,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 200,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 200,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 200,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 151,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 151,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        52,
+        129,
+        120
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 201,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 201,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 201,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 201,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 127,
+          "blurPaints": 254,
+          "outputPaints": 201,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 152,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            44,
+            109,
+            102
+          ],
+          "active": true,
+          "inputPaints": 124,
+          "blurPaints": 248,
+          "outputPaints": 152,
+          "textureBytes": 251968
+        }
+      }
+    },
+    {
+      "desktop": [
+        32,
+        144,
+        128
+      ],
+      "cards": {
+        "clock": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 128,
+          "blurPaints": 256,
+          "outputPaints": 203,
+          "textureBytes": 374904
+        },
+        "calendar": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 128,
+          "blurPaints": 256,
+          "outputPaints": 203,
+          "textureBytes": 441960
+        },
+        "agenda": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 128,
+          "blurPaints": 256,
+          "outputPaints": 203,
+          "textureBytes": 252984
+        },
+        "weather": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 128,
+          "blurPaints": 256,
+          "outputPaints": 203,
+          "textureBytes": 335280
+        },
+        "network": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 128,
+          "blurPaints": 256,
+          "outputPaints": 203,
+          "textureBytes": 326136
+        },
+        "system": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 154,
+          "textureBytes": 301752
+        },
+        "media": {
+          "rgb": [
+            23,
+            111,
+            99
+          ],
+          "active": true,
+          "inputPaints": 125,
+          "blurPaints": 250,
+          "outputPaints": 154,
+          "textureBytes": 251968
+        }
+      }
+    }
+  ],
+  "remapped": {
+    "desktop": [
+      160,
+      48,
+      80
+    ],
+    "cards": {
+      "clock": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 129,
+        "blurPaints": 258,
+        "outputPaints": 210,
+        "textureBytes": 374904
+      },
+      "calendar": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 129,
+        "blurPaints": 258,
+        "outputPaints": 210,
+        "textureBytes": 441960
+      },
+      "agenda": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 129,
+        "blurPaints": 258,
+        "outputPaints": 210,
+        "textureBytes": 252984
+      },
+      "weather": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 129,
+        "blurPaints": 258,
+        "outputPaints": 210,
+        "textureBytes": 335280
+      },
+      "network": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 129,
+        "blurPaints": 258,
+        "outputPaints": 210,
+        "textureBytes": 326136
+      },
+      "system": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 126,
+        "blurPaints": 252,
+        "outputPaints": 161,
+        "textureBytes": 301752
+      },
+      "media": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "active": true,
+        "inputPaints": 126,
+        "blurPaints": 252,
+        "outputPaints": 161,
+        "textureBytes": 251968
+      }
+    }
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "initial": {
+    "desktop": [
+      160,
+      48,
+      80
+    ],
+    "cards": {
+      "clock": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 175,
+        "textureBytes": 374904
+      },
+      "calendar": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 175,
+        "textureBytes": 411480
+      },
+      "agenda": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 175,
+        "textureBytes": 252984
+      },
+      "weather": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 175,
+        "textureBytes": 335280
+      },
+      "network": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 175,
+        "textureBytes": 326136
+      },
+      "system": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 4,
+        "blurPaints": 8,
+        "outputPaints": 155,
+        "textureBytes": 301752
+      },
+      "media": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 4,
+        "blurPaints": 8,
+        "outputPaints": 155,
+        "textureBytes": 251968
+      }
+    }
+  },
+  "final": {
+    "desktop": [
+      43,
+      135,
+      123
+    ],
+    "cards": {
+      "clock": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 205,
+        "textureBytes": 374904
+      },
+      "calendar": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 205,
+        "textureBytes": 411480
+      },
+      "agenda": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 205,
+        "textureBytes": 252984
+      },
+      "weather": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 205,
+        "textureBytes": 335280
+      },
+      "network": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 6,
+        "blurPaints": 12,
+        "outputPaints": 205,
+        "textureBytes": 326136
+      },
+      "system": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 4,
+        "blurPaints": 8,
+        "outputPaints": 185,
+        "textureBytes": 301752
+      },
+      "media": {
+        "rgb": [
+          157,
+          48,
+          79
+        ],
+        "inputPaints": 4,
+        "blurPaints": 8,
+        "outputPaints": 185,
+        "textureBytes": 251968
+      }
+    }
+  }
+}

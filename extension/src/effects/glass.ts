@@ -130,7 +130,10 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
         if (flags & Clutter.EffectPaintFlags.BYPASS_EFFECT) { node.add_child(Clutter.ActorNode.new(actor,-1)); return; }
         try {
             const target = this.ensureTarget(context.get_framebuffer().get_context(), actor.width, actor.height, actor.get_resource_scale());
-            if (this.dirty) {
+            // Timed wallpaper blends and BackgroundManager fades change the
+            // actor without changing its URI or geometry. Honor native damage;
+            // effect-only strength/tint repaints can still reuse the input.
+            if (this.dirty || (flags & Clutter.EffectPaintFlags.ACTOR_DIRTY)) {
                 // These sibling nodes execute in source -> horizontal -> vertical order.
                 // Layer nodes have no rectangle, so only their children write to the FBO.
                 const input = Clutter.LayerNode.new_to_framebuffer(target.source.framebuffer, target.copy);

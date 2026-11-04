@@ -1,5 +1,17 @@
 # 검증 기록
 
+## 시간에 따른 배경 변경이 일부 카드에 남는 문제 — 2026-11-05
+
+같은 XML 주소 안에서 빨간 장면이 초록 장면으로 바뀌는 실제 GNOME slideshow를 만들었다. `--dynamic-wallpaper`의 첫 실행에서 바탕화면은 초록색이 됐지만 일곱 카드 모두 빨간색을 유지했고 input/blur paint 횟수가 멈췄다. 시계 한 장으로 줄여도 재현됐다. [수정 전 화면](../outputs/verification/dynamic-wallpaper/before.png)과 [측정](../outputs/verification/dynamic-wallpaper/before.json)을 저장했다. 테스트는 개인 데이터 없이 별도 D-Bus/XDG 세션에서 실행하고 픽셀 측정을 위해 글자만 숨긴다.
+
+유리 효과가 자체 dirty 플래그만 확인하면서 Clutter의 `ACTOR_DIRTY`를 무시한 것이 원인이었다. [GNOME Shell의 timed wallpaper](https://github.com/GNOME/gnome-shell/blob/50.1/js/ui/background.js#L363-L379)는 기존 배경의 파일/혼합 비율을 갱신한다. URI·geometry·BackgroundManager 교체 알림에만 의존하면 이런 내용 갱신을 놓친다. [Mutter의 effect 캐시 계약](https://github.com/GNOME/mutter/blob/50.1/clutter/clutter/clutter-effect.c#L326-L364)에 맞춰 `ACTOR_DIRTY` 때도 배경 입력과 두 blur pass를 다시 그리도록 수정했다. 강도·농도의 effect-only repaint는 캐시를 재사용하며 새 타이머나 신호 연결을 추가하지 않았다.
+
+수정 후 일곱 카드가 모든 관측 crossfade 단계와 최종 장면을 따라오고, 숨긴 동안 장면이 바뀌어도 다시 표시하면 현재 배경을 그린다. 색상 비교 외에도 각 표면이 표시 중이고 fallback 없이 GPU texture를 소유하며 실제 input/blur paint 횟수가 증가하는지 검사한다. 정지한 장면에서는 굴절 강도와 시계 foreground 변경이 캐시를 다시 만들지 않는 것도 확인했다. [수정 후 화면](../outputs/verification/dynamic-wallpaper/after.png), [숨김 후 복귀](../outputs/verification/dynamic-wallpaper/remapped.png), [측정](../outputs/verification/dynamic-wallpaper/after.json).
+
+`./scripts/check.sh`(TypeScript 68개 및 Rust/GJS/IPC/설치 검사), `--visual`(밝기·테마·굴절·125% 및 정적 캐시), `--clock-styles`(초침과 배경 캐시 분리·타이머 정리)이 통과했다. 별도 리뷰에서 제품 코드 문제는 없었고 테스트에 표면 표시 여부·실제 GPU 갱신 검사를 보강했다. 캐시 검사 초기의 실패는 테스트가 주 시작 요일을 바꿔 달력 높이를 20px 늘린 데 따른 정당한 재생성이었으며, 처음부터 동일한 날짜/시간대/주 시작일을 쓰도록 검사를 수정했다.
+
+최종 `--dynamic-wallpaper`도 28개 전환 관측과 숨김 후 복귀까지 통과했다. 배포물을 설치하고 확장 8개 파일·daemon 일치, 모든 기존 위젯 설정 보존, 서비스 active/enabled를 [확인했다](../outputs/verification/dynamic-wallpaper/installation.json). 사용자 세션은 재시작하지 않았으며 다음 로그아웃/로그인에 새 코드가 적용된다. 이 검증은 가속한 XML 전환과 실제 GPU 출력에 대한 검사이며 장시간 사용자 세션의 성능 측정은 아니다.
+
 ## 설정 변경 시 시계 날짜 위치 흔들림 — 2026-11-04
 
 `./scripts/test-gnome.py --clock-footer`에서 시계 스타일·굴절 강도·유리 농도를 바꾸면 카드 높이는 230px로 고정인데 날짜 y가 194↔184px로 번갈아 이동하는 현상을 재현했다. 날짜 좌표를 갱신하는 시점의 `actor.height`가 배정된 높이 194와 재배치 중 preferred height 184를 번갈아 반환했다. 최종 배정 높이가 그대로이면 height 알림만으로 날짜 위치를 다시 바로잡을 수 없었다.
