@@ -32,9 +32,9 @@ export const messages = {
  '검색하지 못했어요. 기존 선택은 유지됩니다. 잠시 후 다시 시도해 주세요.':'Search failed. Your previous selection is saved. Please try again shortly.',
  '날씨 데이터':'Weather data', '무료 API는 개인 비상업용으로 사용합니다. 데이터: CC BY 4.0.':'The free API is for personal, non-commercial use. Data: CC BY 4.0.', '출처':'Sources',
  '오늘':'Today', '달력':'Calendar', '시스템':'System', '지금 재생 중':'Now playing', '위젯 설정':'Widget settings',
- '브라우저를 열 수 없어요':'Could not open the browser', '굴절 불가 · 반투명':'Refraction unavailable · Translucent',
+ '브라우저를 열 수 없어요':'Could not open the browser', '굴절 불가 · 반투명':'Translucent mode',
  '{date} · 일정 있음':'{date} · Has events', '↓ 다운로드':'↓ Download', '↑ 업로드':'↑ Upload',
- '표시할 도시를 선택하세요':'Select a city to display', '설정에서 캘린더를 연결하세요':'Connect a calendar in settings', '연결되면 정보를 표시해요':'Information appears when connected',
+ '표시할 도시를 선택하세요':'Select a city to display', '설정에서 캘린더를 연결하세요':'Connect a calendar', '연결되면 정보를 표시해요':'Waiting for connection',
  '예정된 일정 없음':'No upcoming events', '제목 없는 일정':'Untitled event', '종일':'All day',
  '날씨 시간대를 확인해 주세요':'Check the weather time zone', '날씨 정보 없음':'Weather unavailable', '맑음':'Clear', '구름 조금':'Partly cloudy', '흐림':'Overcast', '안개':'Fog', '이슬비':'Drizzle', '비':'Rain', '눈':'Snow', '뇌우':'Thunderstorm',
  '최근 60초 네트워크 속도 · 실선 다운로드, 점선 업로드':'Network speed over the last 60 seconds · Solid: download, dashed: upload',
@@ -62,6 +62,7 @@ type Binding=Message|(()=>string);
 /** Bind only app-owned text properties, leaving input values and async state intact. */
 export class TextBindings {
  private targets=new Map<object,Map<PropertyKey,()=>string>>();
+ private listeners=new Set<()=>void>();
  language:Language;
  constructor(value:string){this.language=language(value);}
  t(message:Message,values?:Readonly<Record<string,string|number>>):string{return translate(this.language,message,values);}
@@ -73,10 +74,12 @@ export class TextBindings {
   }
   return target;
  }
+ onChange(callback:()=>void):void{this.listeners.add(callback);}
  setLanguage(value:string):void{
   this.language=language(value);
   for(const [target,properties] of this.targets)for(const [property,read] of properties)Reflect.set(target,property,read());
+  for(const listener of this.listeners)listener();
  }
  unbind(target:object):void{this.targets.delete(target);}
- destroy():void{this.targets.clear();}
+ destroy():void{this.targets.clear();this.listeners.clear();}
 }

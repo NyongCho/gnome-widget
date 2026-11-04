@@ -2,6 +2,7 @@ import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
+import {translate,language,localeFor,type Message} from '../shared/i18n.js';
 import {GlassCard,label} from './card.js';
 import {renderNetwork,renderSystem,renderMedia} from './live.js';
 import {renderWeather} from './weather.js';
@@ -10,7 +11,7 @@ import {clockValues} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
 import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
-const TITLES:Record<string,string>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
+const TITLES:Record<string,Message>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
     readonly actor=new Clutter.Actor({name:'liquid-widgets-host'});
     private toolbar=new St.BoxLayout({style_class:'liquid-toolbar'});
@@ -25,11 +26,15 @@ export class WidgetHost {
     private connected=false;
     private states=new Map<ProviderName,ProviderState<unknown>>();
     private adjustmentSignal:number;
-    private now=Date.now();private zone='UTC';private hour12=false;private locale='en-US';private weekStart=1;
+    private now=Date.now();private zone='UTC';private hour12=false;private weekStart=1;
+    private settingsButton:St.Button;
+    private get language(){return language(this.settings.get_string('language'));}
+    private get locale():string{return localeFor(this.language);}
+    private t(message:Message,values?:Readonly<Record<string,string|number>>):string{return translate(this.language,message,values);}
     constructor(private settings:Gio.Settings,private preferences:()=>void){
         const name=label('LIQUID','liquid-brand');this.toolbar.add_child(name);
-        const settingsButton=new St.Button({child:new St.Icon({icon_name:'emblem-system-symbolic',icon_size:15}),style_class:'liquid-settings',can_focus:true,reactive:true,accessible_name:'위젯 설정'});
-        settingsButton.connect('clicked',preferences);this.toolbar.add_child(settingsButton);
+        this.settingsButton=new St.Button({child:new St.Icon({icon_name:'emblem-system-symbolic',icon_size:15}),style_class:'liquid-settings',can_focus:true,reactive:true,accessible_name:this.t('위젯 설정')});
+        this.settingsButton.connect('clicked',preferences);this.toolbar.add_child(this.settingsButton);
         this.actor.add_child(this.toolbar);this.actor.add_child(this.scroll);
         this.content.add_child(this.canvas);this.scroll.set_child(this.content);
         this.scroll.set_policy(St.PolicyType.NEVER,St.PolicyType.AUTOMATIC);
@@ -44,8 +49,8 @@ export class WidgetHost {
         const wanted=this.visibleCards;
         for(const [id,card] of this.cards)if(!wanted.includes(id)){card.destroy();this.cards.delete(id);}
         for(const id of wanted)if(!this.cards.has(id)){
-            const card=new GlassCard(id,monitor,TITLES[id]??id,()=>{
-                if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text('브라우저를 열 수 없어요');}});
+            const card=new GlassCard(id,monitor,TITLES[id]?this.t(TITLES[id]):id,()=>{
+                if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text(this.t('브라우저를 열 수 없어요'));}});
                 else this.preferences();
             });
             this.cards.set(id,card);this.canvas.add_child(card.surface.actor);
@@ -78,13 +83,13 @@ export class WidgetHost {
         this.states.set(name,state);for(const id of name==='calendar'?['calendar','agenda']:[name])this.render(id);
     }
     setConnected(value:boolean):void{this.connected=value;this.renderAll();}
-    tick(now:number,zone:string,hour12:boolean,locale:string,weekStart:number):void{
-        this.now=now;this.zone=zone;this.hour12=hour12;this.locale=locale;this.weekStart=weekStart;
+    tick(now:number,zone:string,hour12:boolean,_systemLocale:string,weekStart:number):void{
+        this.now=now;this.zone=zone;this.hour12=hour12;this.weekStart=weekStart;
         for(const id of ['clock','calendar','agenda'])this.render(id);
     }
-    private renderAll():void{for(const id of this.cards.keys())this.render(id);}
+    private renderAll():void{this.settingsButton.accessible_name=this.t('위젯 설정');for(const id of this.cards.keys())this.render(id);}
     private render(id:string):void{
-        const card=this.cards.get(id);if(!card)return;card.clear();card.title.set_text(TITLES[id]??id);
+        const card=this.cards.get(id);if(!card)return;card.clear();card.title.set_text(TITLES[id]?this.t(TITLES[id]):id);card.button.accessible_name=TITLES[id]?this.t(TITLES[id]):id;card.mode.set_text(this.t('굴절 불가 · 반투명'));
         const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
         if(id==='clock'){
             card.title.set_text(`${clock.weekday} · ${clock.date}`);card.body.add_child(label(clock.time,'liquid-clock-time'));card.status.set_text('');return;
@@ -95,7 +100,7 @@ export class WidgetHost {
         if(calendar&&(calendar.month!==clock.today.slice(0,7)||calendar.timeZone!==this.zone||calendar.weekStart!==this.weekStart)){
             state={...state,status:'loading',data:null,updatedAt:null,errorCode:null};
         }
-        const view=cardState(state,this.connected);
+        const view=cardState(state,this.connected,this.language);
         const success=view.updatedAt?new Intl.DateTimeFormat(this.locale,{timeZone:this.zone,hour:'2-digit',minute:'2-digit',hourCycle:this.hour12?'h12':'h23'}).format(Date.parse(view.updatedAt)):'';
         card.status.set_text(`${view.message}${view.kind==='stale'&&success?` · ${success}`:''}`);
         if(id==='calendar'){
@@ -113,7 +118,7 @@ export class WidgetHost {
                     const cell=new St.Widget({layout_manager:new Clutter.BinLayout(),width:27*this.scale,height:23*this.scale,x_expand:true});cell.add_child(item);
                     if(day&&dots.has(day.iso)){
                         const dot=new St.Widget({style_class:day.iso===clock.today?'liquid-event-dot today':'liquid-event-dot',width:3*this.scale,height:3*this.scale,x_align:Clutter.ActorAlign.CENTER,y_align:Clutter.ActorAlign.END});
-                        cell.add_child(dot);item.accessible_name=`${day.iso} · 일정 있음`;
+                        cell.add_child(dot);item.accessible_name=this.t('{date} · 일정 있음',{date:day.iso});
                     }
                     line.add_child(cell);
                 }
@@ -124,24 +129,24 @@ export class WidgetHost {
         if(view.data===null){
             if(id==='network'){
                 const row=new St.BoxLayout({x_expand:true});
-                for(const title of ['↓ 다운로드','↑ 업로드']){const column=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,x_expand:true});column.add_child(label(title));column.add_child(label('—','liquid-value'));row.add_child(column);}
+                for(const title of [this.t('↓ 다운로드'),this.t('↑ 업로드')]){const column=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,x_expand:true});column.add_child(label(title));column.add_child(label('—','liquid-value'));row.add_child(column);}
                 card.body.add_child(row);
             }else if(id==='weather')card.body.add_child(label('—°','liquid-big'));
             else if(id==='system')card.body.add_child(label('— %','liquid-value'));
-            const prompt=view.kind==='unconfigured'?(id==='weather'?'표시할 도시를 선택하세요':'설정에서 캘린더를 연결하세요'):'연결되면 정보를 표시해요';
+            const prompt=this.t(view.kind==='unconfigured'?(id==='weather'?'표시할 도시를 선택하세요':'설정에서 캘린더를 연결하세요'):'연결되면 정보를 표시해요');
             card.body.add_child(label(prompt));return;
         }
         if(id==='agenda'){
             const data=view.data as CalendarData;
             const events=selectAgenda(data.events,this.now,clock.today,this.zone);
-            if(!events.length)card.body.add_child(label('예정된 일정 없음'));
-            for(const event of events){card.body.add_child(label(event.title||'제목 없는 일정','liquid-agenda-title'));card.body.add_child(label(formatAgendaWhen(event,this.zone,this.locale,this.hour12),'liquid-agenda-time'));}
+            if(!events.length)card.body.add_child(label(this.t('예정된 일정 없음')));
+            for(const event of events){card.body.add_child(label(event.title||this.t('제목 없는 일정'),'liquid-agenda-title'));card.body.add_child(label(formatAgendaWhen(event,this.zone,this.locale,this.hour12,this.language),'liquid-agenda-time'));}
         }else if(id==='weather'){
             const data=view.data as ProviderMap['weather']['data'];if(!data)return;
-            renderWeather(card,data,this.scale,this.locale,this.hour12);
-        }else if(id==='system')renderSystem(card,view.data as NonNullable<ProviderMap['system']['data']>);
-        else if(id==='network')renderNetwork(card,view.data as NonNullable<ProviderMap['network']['data']>,this.scale);
-        else if(id==='media')renderMedia(card,view.data as NonNullable<ProviderMap['media']['data']>,this.scale);
+            renderWeather(card,data,this.scale,this.locale,this.hour12,this.language);
+        }else if(id==='system')renderSystem(card,view.data as NonNullable<ProviderMap['system']['data']>,this.language);
+        else if(id==='network')renderNetwork(card,view.data as NonNullable<ProviderMap['network']['data']>,this.scale,this.language);
+        else if(id==='media')renderMedia(card,view.data as NonNullable<ProviderMap['media']['data']>,this.scale,this.language);
     }
 
     get diagnostics():object{return{cards:this.cards.size,layout:this.current,scroll:this.scroll.vadjustment.value};}

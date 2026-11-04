@@ -1,11 +1,12 @@
+import {translate,type Language} from '../shared/i18n.js';
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 import type {WeatherData} from '../types.js';
 import {weatherView} from '../shared/weatherFormat.js';
 import {GlassCard,label} from './card.js';
-export function renderWeather(card:GlassCard,data:WeatherData,scale:number,locale:string,hour12:boolean):void{
-    card.title.set_text(data.location);const view=weatherView(data,locale,hour12);
-    if(!view){card.body.add_child(label('날씨 시간대를 확인해 주세요'));return;}
+export function renderWeather(card:GlassCard,data:WeatherData,scale:number,locale:string,hour12:boolean,language:Language):void{
+    card.title.set_text(data.location);const view=weatherView(data,locale,hour12,language);
+    if(!view){card.body.add_child(label(translate(language,'날씨 시간대를 확인해 주세요')));return;}
     const current=new St.BoxLayout({x_expand:true});current.add_child(label(view.temperature,'liquid-big'));
     current.add_child(new St.Icon({icon_name:view.icon,icon_size:Math.round(32*scale),y_align:Clutter.ActorAlign.CENTER}));card.body.add_child(current);
     card.body.add_child(label(view.description));

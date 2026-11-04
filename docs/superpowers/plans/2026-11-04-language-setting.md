@@ -28,18 +28,18 @@
 **Files:** Create `extension/src/shared/i18n.ts`, `extension/tests/i18n.test.ts`; modify `cardState.ts`, `calendarStatus.ts`, `agenda.ts`, `weatherFormat.ts`, `liveData.ts` in shared.
 **Interfaces:** `Language = 'ko'|'en'`; `language(value:string):Language`; `localeFor(language):string`; `translate(language,message,values?):string`; `TextBindings` with `language`, `setLanguage`, `bind`, `unbind`, `destroy`. Existing presentation helpers take an optional final language argument defaulting to `ko`.
 
-- [ ] Write tests for English error/loading/cached/calendar status, all-day and weather/rate labels, invalid preference fallback, locale mapping, and property updates preserving unrelated input; verify the existing Korean-only helpers fail English expectations.
-- [ ] Implement the catalog, bounded property binding ownership and language-aware helpers. Values interpolate without reinterpreting user text.
-- [ ] Run `./scripts/dev npm --prefix extension test`; expect all tests pass.
-- [ ] Commit shared presentation changes.
+- [x] Write tests for English error/loading/cached/calendar status, all-day and weather/rate labels, invalid preference fallback, locale mapping, and property updates preserving unrelated input; verify the existing Korean-only helpers fail English expectations.
+- [x] Implement the catalog, bounded property binding ownership and language-aware helpers. Values interpolate without reinterpreting user text.
+- [x] Run `./scripts/dev npm --prefix extension test`; expect all tests pass.
+- [x] Commit shared presentation changes.
 
 ### Task 2: Persisted selection and actual GNOME UI
 
 **Files:** Modify schema, `extension/src/prefs/{pages,placement,calendar,weather}.ts`, add `extension/src/prefs/language.ts`; modify `extension/src/widgets/{host,card,weather,live}.ts`; modify `extension/tests/gnome/preferences.js`, `tests/gnome/{preferences,widgets}.js`; update user docs.
 **Interfaces:** `TextBindings` drives property changes from `changed::language` until window destruction. WidgetHost reads the same key at layout/render; tick locale cannot override it.
 
-- [ ] Add failing real GTK selection/draft preservation tests and Shell language/tick/disable-enable persistence assertions. Run existing build then `./scripts/test-gnome.py --preferences`; expect missing language control failure.
-- [ ] Add enum schema key, first-page selector, GTK property translations and Shell translated text/date rendering. Dispose bindings for removed search rows and on window destruction.
-- [ ] Run typecheck/build and Node tests, then actual GTK and full GNOME tests. Expect both languages, retained drafts/status, translated delayed responses and no duplicate calendar subscriptions.
-- [ ] Inspect isolated Korean/English screenshots and run `./scripts/check.sh`; expect exit 0.
+- [x] Add failing real GTK selection/draft preservation tests and Shell language/tick/disable-enable persistence assertions. Run existing build then `./scripts/test-gnome.py --preferences`; expect missing language control failure.
+- [x] Add enum schema key, first-page selector, GTK property translations and Shell translated text/date rendering. Dispose bindings for removed search rows and on window destruction.
+- [x] Run typecheck/build and Node tests, then actual GTK and full GNOME tests. Expect both languages, retained drafts/status, translated delayed responses and no duplicate calendar subscriptions.
+- [x] Inspect isolated Korean/English screenshots and run `./scripts/check.sh`; expect exit 0.
 - [ ] Commit; perform one fresh whole-change review, resolve material findings, package/install, verify artifacts and existing calendar connection without exposing private data.

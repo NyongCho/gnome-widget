@@ -34,6 +34,15 @@ export async function run(){
     check(host.actor.visible&&host.diagnostics.cards===5,'monitor fallback failed');
     settings.set_string('monitor','primary');await Scripting.sleep(300);
     await setScale(1.25);await capture('widgets-fractional');await setScale(1);
+    settings.set_string('language','en');await Scripting.sleep(150);
+    host.tick(Date.parse('2026-11-04T00:00:00Z'),'Asia/Seoul',false,'ko-KR',1);
+    check(host.cards.get('agenda').title.get_text()==='Upcoming events','English widget title missing');
+    check(host.cards.get('calendar').title.get_text()==='November 2026','clock tick reverted the selected locale');
+    check(host.cards.get('clock').title.get_text().includes('Wednesday'),'English weekday missing');
+    await capture('widgets-english');
+    settings.set_string('language','ko');await Scripting.sleep(150);
+    check(host.cards.get('calendar').title.get_text()==='2026년 11월','Korean month missing');
+    await capture('widgets-korean');
     const format=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
     format.set_string('clock-format','12h');await Scripting.sleep(200);
     check(/AM|PM|오전|오후/.test(host.cards.get('clock').body.get_children()[0].get_text()),'clock ignored 12-hour preference');
@@ -51,6 +60,9 @@ export async function run(){
     const process=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
     try{
         await until(()=>host.connected,'GNOME did not connect to Rust');
+        const languageToken=extension.stateObj.client.token;check(typeof languageToken==='string','missing live subscription token');
+        settings.set_string('language','en');await Scripting.sleep(100);settings.set_string('language','ko');await Scripting.sleep(100);
+        check(extension.stateObj.client.token===languageToken,'language change resubscribed providers');
         await capture('widgets-connected');
         settings.set_strv('visible',['clock','system','network','media']);
         await until(()=>host.states.get('system')?.data?.cpuPercent!==null&&host.states.get('system')?.data&&host.states.get('network')?.data?.history.length>=2,'live CPU/network samples did not arrive');
@@ -87,6 +99,11 @@ export async function run(){
         check(host.cards.get('weather').title.get_text()==='날씨','previous city name survived source change');
         host.updateProvider('weather',weather);
         await capture('widgets-calendar-fixture');
+        settings.set_string('language','en');await Scripting.sleep(150);
+        host.updateProvider('weather',weather);
+        check(host.cards.get('weather').body.get_children().some(a=>a.get_text?.()==='Partly cloudy'),'provider update ignored English');
+        check(agenda().includes('프로젝트 리뷰'),'language switch changed source event titles');
+        await capture('widgets-english-data');settings.set_string('language','ko');await Scripting.sleep(100);
         const calendarButton=host.cards.get('calendar').button;const [cx,cy]=calendarButton.get_transformed_position();await click(cx+80,cy+60);
         await until(()=>{const [ok,bytes]=GLib.file_get_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/opened-uris.jsonl`);return ok&&new TextDecoder().decode(bytes).includes('https://calendar.google.com/');},'calendar click did not launch default URI handler');
         host.updateProvider('calendar',{...fixture,data:{...fixture.data,timeZone:'Etc/GMT+5'}});
@@ -115,6 +132,11 @@ export async function run(){
     const [,wy]=weatherFallback.status.get_transformed_position();const [,wby]=weatherFallback.button.get_transformed_position();
     check(wy+weatherFallback.status.height<=wby+weatherFallback.button.height-8,'fallback data status overflows card');
     await capture('widgets-fallback');
+    settings.set_string('language','en');await Scripting.sleep(150);
+    const [emx,emy]=weatherFallback.mode.get_transformed_position();const [ewx,ewy]=weatherFallback.button.get_transformed_position();
+    check(weatherFallback.mode.get_text()==='Translucent mode'&&emx>=ewx&&emx+weatherFallback.mode.width<=ewx+weatherFallback.button.width,'English fallback text overflows card');
+    check(weatherFallback.status.get_text().includes('Check your connection'),'English stale status missing');
+    await capture('widgets-english-fallback');settings.set_string('language','ko');await Scripting.sleep(100);
     await enable('ding@rastersoft.com');await enable('blur-my-shell@aunetx');
     let clicks=0;host.preferences=()=>{clicks++;};
     const [x,y]=host.cards.get('clock').button.get_transformed_position();
@@ -131,6 +153,7 @@ export async function run(){
     Main.sessionMode.pushMode('unlock-dialog');
     await until(()=>rootCount()===0,'widgets remained in locked session mode');await capture('widgets-locked-mode');
     Main.sessionMode.popMode('unlock-dialog');await until(()=>extension.state===1&&rootCount()===1,'widgets did not recover from locked mode');host=extension.stateObj.host;
+    settings.set_string('language','en');await Scripting.sleep(150);
     for(let i=0;i<20;i++){
         const oldClock=extension.stateObj.clock;const timer=oldClock.timer;
         const layer=extension.stateObj.layer;const signal=layer.restacked;
@@ -140,6 +163,8 @@ export async function run(){
         check(rootCount()===1,'duplicate layer after enable');
     }
     host=extension.stateObj.host;await capture('widgets-lifecycle');
+    check(host.cards.get('agenda').title.get_text()==='Upcoming events','language did not survive reactivation');
+    settings.set_string('language','ko');await Scripting.sleep(150);
     for(const card of host.cards.values())check(card.content.width>=card.button.width-2,`card content shrank after enable: ${card.id} ${card.content.width}/${card.button.width}`);
     const clockLabel=host.cards.get('clock').body.get_children()[0];
     host.updateProvider('network',{status:'unavailable',sourceId:'test',updatedAt:null,data:null,errorCode:'NO_INTERFACE'});

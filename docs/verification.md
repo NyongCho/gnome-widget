@@ -160,3 +160,13 @@ DESCRIPTION·LOCATION·SUMMARY의 정확한 ‘No value’ 진단과 콜론 뒤 
 전체 `./scripts/check.sh`가 exit 0: Rust 79개(격리 subprocess 재실행 중복 제외), TypeScript 56개, Python 7개와 fmt/clippy/build/typecheck/GJS/IPC 검사를 통과했다. 실제 GTK `--preferences` 검사도 오류→동기화 완료 전환을 통과했다. 회귀에는 공개 fixture/합성 일정만 사용했다.
 
 release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실제 비공개 피드의 `status=ok`, `errorCode=null`과 연결 설정 유지, service active/enabled, extension ACTIVE, 설치 파일 일치를 확인했다. Shell의 `extension.js`는 기존 파일과 같아 재로그인하지 않았다. 새 설정 화면은 창을 닫고 다시 열면 적용된다. 주소·일정 내용은 로그나 저장소 증거에 포함하지 않았고 일회성 진단 코드는 제거했다. [비식별 상태 확인](../outputs/verification/calendar-sync.json)을 보존한다.
+
+## 한국어·영어 선택 — 2026-11-04
+
+앱 GSettings `language`에 `ko`/`en` 선택을 저장하며 기본값은 `ko`다. 공용 메시지 사전과 locale 매핑으로 설정·위젯·오류·동기화·날씨·접근성 이름 및 날짜/요일/종일을 함께 바꾼다. 외부 일정/음악/도시 이름은 원문이다. 설정창의 문구만 바꾸므로 입력값과 비동기 상태가 유지되며 언어 변경으로 데이터 구독을 재시작하지 않는다.
+
+영어 요청에 한국어가 반환되는 실패를 먼저 확인한 뒤 공용 표시 회귀 3개를 추가했다. 최종 `./scripts/check.sh`는 Rust 79개, TypeScript 59개, Python 7개와 fmt/clippy/typecheck/build/GJS/IPC 검사를 통과했다. 실제 GTK 검사에서 언어 선택 컨트롤 부재→한국어/영어 양방향 전환, iCal·도시 초안 유지, 언어 변경 후 늦게 도착하는 검색 결과, 창 재개방과 저장된 언어 복구를 확인했다. 재개방 검사는 닫힌 창이 GC 전까지 캘린더 구독을 남기는 문제도 발견했다. 정리는 `close-request`와 `destroy` 중 먼저 발생한 시점에 한 번 실행하도록 고쳤으며 구독 2개→1개를 검증했다.
+
+실제 Shell 검사는 언어별 날짜·요일·월, 시스템 시계 tick 이후 언어 유지, 연결된 서비스의 구독 token 유지, provider 갱신 후 영어 표시와 원문 일정 유지, 영어 fallback 경계, 재활성화 20회 후 언어 유지를 포함해 exit 0였다. 설정 선택 검사의 초기 가상 키보드 입력은 popover focus와 경합했다. 검사기가 해당 선택지의 실제 focus를 기다리도록 고쳤으며 제품 선택 코드는 변경하지 않았다. 기존 GNOME 테스트 환경 경고는 남지만 제품 예외나 검사 실패는 없었다.
+
+[한국어 설정](../outputs/verification/language/preferences-korean.png), [영어 설정](../outputs/verification/language/preferences-english.png), [영어 데이터 화면](../outputs/verification/language/preferences-english-data.png), [영어 위젯](../outputs/verification/language/widgets-english-data.png), [영어 fallback](../outputs/verification/language/widgets-english-fallback.png)은 격리된 GNOME 세션의 합성 데이터 캡처다.

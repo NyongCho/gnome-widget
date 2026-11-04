@@ -17,7 +17,7 @@ export class GlassCard {
     readonly body=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-body',y_expand:true});
     readonly title:St.Label;
     readonly status=label('','liquid-status');
-    readonly mode=label('굴절 불가 · 반투명','liquid-status');
+    readonly mode=label('','liquid-status');
     constructor(readonly id:string,monitor:number,title:string,action:()=>void){
         this.surface=new GlassSurface(monitor,()=>this.applyAppearance());
         this.title=label(title,'liquid-title');
