@@ -1,0 +1,36 @@
+{
+  "prototype": true,
+  "size": {
+    "width": 232,
+    "height": 230
+  },
+  "time": "2026-11-04 10:08:38 Asia/Seoul",
+  "variants": [
+    {
+      "id": 1,
+      "name": "큰 디지털"
+    },
+    {
+      "id": 2,
+      "name": "사각 눈금"
+    },
+    {
+      "id": 3,
+      "name": "클래식 원형"
+    },
+    {
+      "id": 4,
+      "name": "미니멀 아날로그"
+    }
+  ],
+  "screens": [
+    "clock-1-dark.png",
+    "clock-2-dark.png",
+    "clock-3-dark.png",
+    "clock-4-dark.png",
+    "clock-1-light.png",
+    "clock-2-light.png",
+    "clock-3-light.png",
+    "clock-4-light.png"
+  ]
+}
