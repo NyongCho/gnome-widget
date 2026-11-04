@@ -55,6 +55,8 @@ export async function run(){
   const [x,y]=clock.body.get_transformed_position(),[w,h]=clock.body.get_transformed_size();
   const [fx,fy]=view().actor.get_transformed_position(),[fw,fh]=view().actor.get_transformed_size();
   check(fx>=x-1&&fy>=y-1&&fx+fw<=x+w+1&&fy+fh<=y+h+1,'clock face overflows its body');
+  const [,dateY]=view().dateBox.get_transformed_position(),[,dateHeight]=view().dateBox.get_transformed_size();
+  check(Math.abs(dateY+dateHeight-fy-fh)<=1,`clock date moved away from the allocated bottom: ${JSON.stringify({dateY,dateHeight,fy,fh,scale:settings.get_double('scale'),language:settings.get_string('language'),style:settings.get_string('clock-style')})}`);
   check(!digit().clutter_text.get_layout().is_ellipsized()&&digit().get_preferred_width(-1)[1]<=clock.button.width-34*settings.get_double('scale'),'digital digits clip');
  }
  for(const [scheme,mode] of [['prefer-dark','dark'],['prefer-light','light']]){

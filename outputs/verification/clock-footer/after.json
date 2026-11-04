@@ -1,0 +1,311 @@
+[
+  {
+    "change": "initial",
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=classic",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=classic",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=classic",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=minimal",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=minimal",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=minimal",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=0",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=0",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=0",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=20",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=20",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "strength=20",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.05",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.05",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.05",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.24",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.24",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "opacity=0.24",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=square",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 20,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 60,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  },
+  {
+    "change": "clock-style=digital",
+    "wait": 150,
+    "dateY": 194,
+    "dateHeight": 18,
+    "cardHeight": 230,
+    "faceHeight": 194,
+    "footerY": 176,
+    "bottomGap": 18
+  }
+]

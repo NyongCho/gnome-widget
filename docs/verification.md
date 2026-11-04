@@ -1,5 +1,17 @@
 # 검증 기록
 
+## 설정 변경 시 시계 날짜 위치 흔들림 — 2026-11-04
+
+`./scripts/test-gnome.py --clock-footer`에서 시계 스타일·굴절 강도·유리 농도를 바꾸면 카드 높이는 230px로 고정인데 날짜 y가 194↔184px로 번갈아 이동하는 현상을 재현했다. 날짜 좌표를 갱신하는 시점의 `actor.height`가 배정된 높이 194와 재배치 중 preferred height 184를 번갈아 반환했다. 최종 배정 높이가 그대로이면 height 알림만으로 날짜 위치를 다시 바로잡을 수 없었다.
+
+수동 y 계산을 제거하고 시계판은 위, 날짜는 아래로 native BinLayout이 배정하도록 바꿨다. [Mutter 50.1의 BinLayout 구현](https://github.com/GNOME/mutter/blob/50.1/clutter/clutter/clutter-bin-layout.c#L195-L227)에 따라 각 자식의 expand 플래그도 명시해 START/END 정렬이 적용되게 했다. 회귀 검사는 같은 카드 안에서 날짜 위치가 변하지 않는지와 footer가 실제 배정된 하단에 있는지를 함께 확인한다. [수정 전 측정](../outputs/verification/clock-footer/before.json), [수정 후 측정](../outputs/verification/clock-footer/after.json), [실제 캡처](../outputs/verification/clock-footer/after.png).
+
+수정 후 같은 설정 변경 31개 관측에서 날짜 y=194px, 카드 하단 여백=18px로 유지됐다. `--clock-styles`에도 날짜 하단 정렬 검사를 추가하여 네 스타일 × 한국어/영어 × .75–1.50 전체 .05 간격, 좁은 화면, 125% 배율 및 기존 timer/fallback 검사가 통과했다. 전체 `check.sh`와 별도 읽기 전용 리뷰도 통과했다.
+
+함께 제보된 굴절은 설정값 0/5/10/20이 효과 객체에 도달하고 실제 출력 픽셀이 바뀌는 것을 격리 GNOME에서 확인했다. 사용 중인 Tahoe 배경을 같은 세션에 불러온 진단에서 0 대비 20은 가장자리 4,624픽셀에 2/255 초과의 채널 차이가 있었지만 가장자리 평균 최대 채널 차이는 1.771/255, 중앙 변화는 0이었다. 20px bevel과 이미 블러된 배경에 한정한 효과라 눈에 띄는 변화가 약하다. 실제 사용자 compositor의 픽셀 측정으로 주장하지 않으며 셰이더나 강도 설정은 변경하지 않았다. [수치와 검사 범위](../outputs/verification/clock-footer/refraction-inspection.json).
+
+최종 `--visual`도 통과했다. 수정본을 패키징·설치하고 확장 8개 파일/daemon 일치, 모든 위젯 설정 보존, 서비스 active/enabled를 [확인했다](../outputs/verification/clock-footer/installation.json). 현재 세션은 재시작하지 않았고 새 코드는 다음 로그아웃/로그인에 적용된다.
+
 ## 선택 가능한 시계 스타일 — 2026-11-04
 
 사용자가 고른 큰 디지털을 기본으로 적용하고 사각 눈금·클래식 원형·미니멀 아날로그를 설정 옵션으로 추가했다. `clock-style`에 선택을 저장하며 실제 GTK 키보드 조작으로 네 가지 선택, 즉시 Shell 반영, 언어 변경, 외부 설정 변경, 창 재열기를 검증했다. 디지털 숫자는 고정 폭을 유지하고 날짜·오전/오후는 위젯 언어를 따른다. 시간대와 12/24시간은 기존 시스템 설정 경로를 사용한다.

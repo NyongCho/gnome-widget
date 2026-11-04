@@ -18,7 +18,8 @@ function text(name:string):St.Label{
 
 /** A clock owns its second timer and foreground. Minute ticks never recreate it. */
 export class ClockFace{
-    readonly actor=new St.Widget({name:'liquid-clock-face',layout_manager:new Clutter.FixedLayout(),y_expand:true});
+    readonly actor=new St.Widget({name:'liquid-clock-face',layout_manager:new Clutter.BinLayout(),y_expand:true});
+    private dial=new St.Widget({layout_manager:new Clutter.FixedLayout(),x_expand:true,y_expand:true,y_align:Clutter.ActorAlign.START});
     private area=new St.DrawingArea({name:'liquid-clock-dial'});
     private digits=text('liquid-clock-digits');private date=text('liquid-clock-date');private period=text('liquid-clock-period');
     private digitsBox=slot(this.digits);private dateBox=slot(this.date);private periodBox=slot(this.period);
@@ -27,9 +28,12 @@ export class ClockFace{
     private values=clockFaceValues(Date.now(),'UTC',false,'en-US');
     private unit=1;private offset=0;private timer=0;
     constructor(private card:GlassCard,private readNow:()=>number){
-        this.actor.add_child(this.area);
-        for(const number of this.numbers)this.actor.add_child(number.box);
-        for(const box of [this.digitsBox,this.periodBox,this.dateBox])this.actor.add_child(box);
+        this.actor.add_child(this.dial);this.dial.add_child(this.area);
+        for(const number of this.numbers)this.dial.add_child(number.box);
+        for(const box of [this.digitsBox,this.periodBox])this.dial.add_child(box);
+        this.dateBox.x_expand=true;this.dateBox.y_expand=true;
+        this.dateBox.x_align=Clutter.ActorAlign.CENTER;this.dateBox.y_align=Clutter.ActorAlign.END;
+        this.actor.add_child(this.dateBox);
         // Keep fallback messaging in the date footer without adding empty space.
         const heading=card.title.get_parent();heading?.remove_child(card.mode);heading?.hide();
         card.mode.x_align=Clutter.ActorAlign.CENTER;card.mode.y_align=Clutter.ActorAlign.CENTER;
@@ -39,7 +43,6 @@ export class ClockFace{
         const attrs=new Pango.AttrList();attrs.insert(Pango.attr_font_features_new('tnum=1'));
         attrs.insert(Pango.attr_stretch_new(Pango.Stretch.CONDENSED));this.digits.clutter_text.set_attributes(attrs);
         this.area.connect('repaint',()=>this.paint());
-        this.actor.connect('notify::height',()=>this.placeFooter());
         this.actor.connect('notify::mapped',()=>this.schedule());
         this.actor.connect('destroy',()=>this.stop());
     }
@@ -48,10 +51,11 @@ export class ClockFace{
         this.unit=Math.min(options.scale,Math.max(1,options.width)/196);this.offset=(options.width-196*this.unit)/2;
         const u=this.unit,x=this.offset;
         // Minimum: dial through 161, five-pixel gap, 18-pixel date. The body
-        // expands to the weather-matched allocation and pins the date below.
-        this.actor.set_size(options.width,184*u);this.area.set_size(options.width,166*u);
+        // expands to the weather-matched allocation. BinLayout anchors the date
+        // during allocation; reading actor.height here can return a stale size.
+        this.actor.set_size(options.width,184*u);this.dial.set_size(options.width,166*u);this.area.set_size(options.width,166*u);
         const place=(box:St.Widget,px:number,y:number,w:number,h:number)=>{box.set_position(x+px*u,y*u);box.set_size(w*u,h*u);};
-        place(this.digitsBox,8,41,180,84);place(this.periodBox,8,126,180,22);place(this.dateBox,0,166,196,18);this.placeFooter();
+        place(this.digitsBox,8,41,180,84);place(this.periodBox,8,126,180,22);this.dateBox.set_size(196*u,18*u);
         this.digits.set_style(`font-family:"Noto Sans Display";font-size:${62*u}px;font-weight:600;`);
         this.date.set_style(`font-size:${13*u}px;font-weight:500;`);this.period.set_style(`font-size:${12*u}px;font-weight:500;`);
         this.digitsBox.visible=options.style==='digital';this.periodBox.visible=options.style==='digital'&&options.hour12;
@@ -79,7 +83,6 @@ export class ClockFace{
         this.area.queue_repaint();
     }
     private stop():void{if(this.timer){GLib.Source.remove(this.timer);this.timer=0;}}
-    private placeFooter():void{this.dateBox.set_y(Math.max(166*this.unit,this.actor.height-18*this.unit));}
     private schedule():void{
         this.stop();
         if(!this.options||this.options.style==='digital'||this.options.lowPower||!this.actor.mapped)return;

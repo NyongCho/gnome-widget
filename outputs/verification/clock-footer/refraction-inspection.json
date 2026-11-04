@@ -1,0 +1,70 @@
+{
+  "rect": {
+    "x": 778,
+    "y": 92,
+    "width": 232,
+    "height": 230
+  },
+  "values": [
+    {
+      "requested": 0,
+      "received": 0,
+      "fallback": false,
+      "inputPaints": 5,
+      "blurPaints": 10,
+      "outputPaints": 134,
+      "textureBytes": 580320
+    },
+    {
+      "requested": 5,
+      "received": 5,
+      "fallback": false,
+      "inputPaints": 5,
+      "blurPaints": 10,
+      "outputPaints": 136,
+      "textureBytes": 580320
+    },
+    {
+      "requested": 10,
+      "received": 10,
+      "fallback": false,
+      "inputPaints": 5,
+      "blurPaints": 10,
+      "outputPaints": 138,
+      "textureBytes": 580320
+    },
+    {
+      "requested": 20,
+      "received": 20,
+      "fallback": false,
+      "inputPaints": 5,
+      "blurPaints": 10,
+      "outputPaints": 140,
+      "textureBytes": 580320
+    }
+  ],
+  "pixelDifferences": [
+    {
+      "strength": 5,
+      "rimPixelsChangedOver2": 498,
+      "rimMeanMaxChannelDelta": 0.513,
+      "maxChannelDelta": 8,
+      "centerPixelsChangedOver2": 0
+    },
+    {
+      "strength": 10,
+      "rimPixelsChangedOver2": 2464,
+      "rimMeanMaxChannelDelta": 0.962,
+      "maxChannelDelta": 12,
+      "centerPixelsChangedOver2": 0
+    },
+    {
+      "strength": 20,
+      "rimPixelsChangedOver2": 4624,
+      "rimMeanMaxChannelDelta": 1.771,
+      "maxChannelDelta": 16,
+      "centerPixelsChangedOver2": 0
+    }
+  ],
+  "scope": "Isolated GNOME session, configured Tahoe wallpaper at probe time, dark theme, tint .05. Not a measurement of the live user compositor. No shader changes."
+}
