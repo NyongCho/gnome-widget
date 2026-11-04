@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-04",
+  "installedArtifactsMatch": true,
+  "languageChoices": [
+    "ko",
+    "en"
+  ],
+  "savedLanguage": "ko",
+  "service": "active",
+  "calendarStatus": "ok",
+  "calendarEnabled": true,
+  "calendarSecretDeletionPending": false,
+  "shellCodeActivation": "next logout/login; current session left running",
+  "checks": {
+    "fullCheckExit": 0,
+    "gtkPreferencesExit": 0,
+    "gnomeWidgetsExit": 0,
+    "typescriptPassed": 59,
+    "rustUniquePassed": 79,
+    "pythonPassed": 7
+  },
+  "review": {
+    "range": "c906d1b..f65ef11",
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "privacy": "No private URLs, event fields or source counts recorded."
+}

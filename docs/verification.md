@@ -170,3 +170,5 @@ release 배포본을 기존 설치에 반영하고 서비스 재시작 후 실�
 실제 Shell 검사는 언어별 날짜·요일·월, 시스템 시계 tick 이후 언어 유지, 연결된 서비스의 구독 token 유지, provider 갱신 후 영어 표시와 원문 일정 유지, 영어 fallback 경계, 재활성화 20회 후 언어 유지를 포함해 exit 0였다. 설정 선택 검사의 초기 가상 키보드 입력은 popover focus와 경합했다. 검사기가 해당 선택지의 실제 focus를 기다리도록 고쳤으며 제품 선택 코드는 변경하지 않았다. 기존 GNOME 테스트 환경 경고는 남지만 제품 예외나 검사 실패는 없었다.
 
 [한국어 설정](../outputs/verification/language/preferences-korean.png), [영어 설정](../outputs/verification/language/preferences-english.png), [영어 데이터 화면](../outputs/verification/language/preferences-english-data.png), [영어 위젯](../outputs/verification/language/widgets-english-data.png), [영어 fallback](../outputs/verification/language/widgets-english-fallback.png)은 격리된 GNOME 세션의 합성 데이터 캡처다.
+
+별도 fresh-context 리뷰어가 `c906d1b..f65ef11`을 읽기 전용으로 검토했으며 Critical/Important/Minor 모두 없었다. release 배포본을 사용자 영역에 설치하고 JS·실행 파일·컴파일된 schema 일치, `ko`/`en` 선택지, 기본 한국어, 기존 캘린더 동기화 `ok`와 서비스 active를 확인했다. 이번에는 Shell JS가 변경되어 **다음 로그아웃·로그인에 새 위젯 코드가 로드된다**. 현재 사용자 세션은 종료하지 않았다. 새 코드가 로드된 뒤의 언어 변경은 재로그인 없이 반영된다. [설치 검증](../outputs/verification/language/installation.json)을 보존한다.

@@ -42,4 +42,4 @@
 - [x] Add enum schema key, first-page selector, GTK property translations and Shell translated text/date rendering. Dispose bindings for removed search rows and on window destruction.
 - [x] Run typecheck/build and Node tests, then actual GTK and full GNOME tests. Expect both languages, retained drafts/status, translated delayed responses and no duplicate calendar subscriptions.
 - [x] Inspect isolated Korean/English screenshots and run `./scripts/check.sh`; expect exit 0.
-- [ ] Commit; perform one fresh whole-change review, resolve material findings, package/install, verify artifacts and existing calendar connection without exposing private data.
+- [x] Commit; perform one fresh whole-change review, resolve material findings, package/install, verify artifacts and existing calendar connection without exposing private data.
