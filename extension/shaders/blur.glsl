@@ -1,14 +1,20 @@
 uniform float lw_step_x;
 uniform float lw_step_y;
+uniform float lw_sigma;
 
-// Separable Gaussian, adjacent taps paired by linear texture sampling.
-// The step is in logical pixels so fractional display scaling keeps the look.
+// Separable Gaussian in input texels. Widening the blur adds samples instead
+// of leaving holes. Read every tap: the downsampled output can lie between
+// input texel centers, where paired-tap offsets would no longer be exact.
 vec4 lw_blur(sampler2D source, vec2 uv) {
     vec2 stepSize = vec2(lw_step_x, lw_step_y);
-    vec4 color = texture2D(source, uv) * 0.2270270270;
-    color += texture2D(source, uv + stepSize * 1.3846153846) * 0.3162162162;
-    color += texture2D(source, uv - stepSize * 1.3846153846) * 0.3162162162;
-    color += texture2D(source, uv + stepSize * 3.2307692308) * 0.0702702703;
-    color += texture2D(source, uv - stepSize * 3.2307692308) * 0.0702702703;
-    return color;
+    float radius = ceil(3.0 * lw_sigma);
+    vec4 color = texture2D(source, uv);
+    float total = 1.0;
+    for (float tap = 1.0; tap <= radius; tap += 1.0) {
+        float weight = exp(-0.5 * pow(tap / lw_sigma, 2.0));
+        vec2 offset = stepSize * tap;
+        color += (texture2D(source, uv + offset) + texture2D(source, uv - offset)) * weight;
+        total += 2.0 * weight;
+    }
+    return color / total;
 }

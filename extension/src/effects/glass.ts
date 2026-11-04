@@ -70,7 +70,7 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
     private strength = 16;
     private tint = .24;
     private dark = true;
-    // Maximum 20px refraction + 13px blur support + filtering/AA headroom.
+    // Maximum 20px refraction + 18px blur support + filtering/AA headroom.
     readonly padding = 40;
     inputPaints = 0;
     blurPaints = 0;
@@ -111,8 +111,10 @@ export const GlassEffect = GObject.registerClass({GTypeName:'LiquidWidgetsGlassE
         bind(verticalPass, 0, horizontal.texture);
         horizontalPass.add_snippet(snippet(true));
         verticalPass.add_snippet(snippet(true));
-        uniforms(horizontalPass, {lw_step_x: 4 / width, lw_step_y: 0});
-        uniforms(verticalPass, {lw_step_x: 0, lw_step_y: 4 / height});
+        // Sample adjacent INPUT texels, never stretch the gaps between them.
+        // Each pass reads a different resolution; keep sigma at 6 logical px.
+        uniforms(horizontalPass, {lw_step_x: 1 / pixelWidth, lw_step_y: 0, lw_sigma: 6 * pixelWidth / width});
+        uniforms(verticalPass, {lw_step_x: 0, lw_step_y: 1 / halfHeight, lw_sigma: 6 * halfHeight / height});
         const composite = Cogl.Pipeline.new(context);
         bind(composite, 0, source.texture);
         bind(composite, 1, blurred.texture);
