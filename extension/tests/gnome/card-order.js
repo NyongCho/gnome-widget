@@ -39,39 +39,43 @@ const control=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.lo
  <method name="State"><arg type="s" direction="out"/></method>
  <method name="Focus"><arg type="s" direction="in"/><arg type="s" direction="in"/></method>
  <method name="Reopen"/>
- <method name="Seed"><arg type="as" direction="in"/><arg type="as" direction="in"/></method>
+ <method name="Seed"><arg type="as" direction="in"/><arg type="as" direction="in"/><arg type="as" direction="in"/></method>
 </interface></node>`,{
  State(){
   const widgets=walk(window);
-  const list=widgets.find(widget=>widget instanceof Gtk.ListBox&&widget.get_name()==='card-order-list');
-  const rowWidgets=[];
-  if(list){for(let index=0,row;(row=list.get_row_at_index(index));index++)rowWidgets.push(row);}
-  else rowWidgets.push(...widgets.filter(widget=>widget instanceof Adw.PreferencesRow));
-  const rows=rowWidgets.flatMap(row=>{
-   // Titles also identify the old switch-only rows, so a missing reorder UI is an assertion failure.
-   const id=Object.keys(titles).find(key=>row.get_name()===`card-order-${key}`||titles[key].includes(row.title));
-   if(!id)return [];
-   const children=walk(row);
-   const toggle=children.find(widget=>widget.get_name()===`card-order-${id}-toggle`);
-   const up=children.find(widget=>widget.get_name()===`card-order-${id}-up`);
-   const down=children.find(widget=>widget.get_name()===`card-order-${id}-down`);
-   return [{id,title:row.title,active:toggle?.active??row.active??false,upSensitive:up?.sensitive??null,downSensitive:down?.sensitive??null,upTooltip:up?.tooltip_text??null,downTooltip:down?.tooltip_text??null}];
-  });
+  const rows={left:[],right:[]};
+  const groups={left:null,right:null};
+  for(const side of ['left','right']){
+   const list=widgets.find(widget=>widget instanceof Gtk.ListBox&&widget.get_name()===`card-columns-${side}`);
+   if(!list)continue; // The old single list must fail the column assertions.
+   for(let group=list.get_parent();group;group=group.get_parent()){
+    if(group instanceof Adw.PreferencesGroup){groups[side]={title:group.title,description:group.description};break;}
+   }
+   for(let index=0,row;(row=list.get_row_at_index(index));index++){
+    const id=Object.keys(titles).find(key=>row.get_name()===`card-columns-${key}`||titles[key].includes(row.title));
+    if(!id)continue;
+    const children=walk(row);
+    const control=which=>children.find(widget=>widget.get_name()===`card-columns-${id}-${which}`);
+    const toggle=control('toggle'),up=control('up'),down=control('down'),transfer=control('transfer');
+    rows[side].push({id,title:row.title,active:toggle?.active??false,upSensitive:up?.sensitive??null,downSensitive:down?.sensitive??null,upTooltip:up?.tooltip_text??null,downTooltip:down?.tooltip_text??null,transferTooltip:transfer?.tooltip_text??null,transferIcon:transfer?.icon_name??null});
+   }
+  }
   const focus=[];
   for(let widget=window.get_focus();widget;widget=widget.get_parent())focus.push(widget.get_name());
-  return JSON.stringify({order:settings.get_strv('card-order'),visible:settings.get_strv('visible'),rows,language:settings.get_string('language'),keyEvents,focus});
+  const [left=[],right=[]]=settings.get_value('card-columns').deep_unpack();
+  return JSON.stringify({columns:{left,right},visible:settings.get_strv('visible'),rows,groups,language:settings.get_string('language'),keyEvents,focus});
  },
  Focus(id,which){
-  if(!['up','down','toggle'].includes(which))throw new Error('unknown card control');
+  if(!['up','down','toggle','transfer'].includes(which))throw new Error('unknown card control');
   window.set_visible_page_name('widgets');
-  const name=`card-order-${id}-${which}`;
+  const name=`card-columns-${id}-${which}`;
   const widget=walk(window).find(item=>item.get_name()===name);
   if(!widget)throw new Error(`missing card control: ${name}`);
   if(!widget.grab_focus())throw new Error(`card control did not receive focus: ${name}`);
   window.present();
  },
  Reopen(){app.hold();window.close();openWindow();app.release();},
- Seed(order,visible){settings.set_strv('visible',visible);settings.set_strv('card-order',order);Gio.Settings.sync();},
+ Seed(left,right,visible){settings.set_strv('visible',visible);settings.set_value('card-columns',new GLib.Variant('aas',[left,right]));Gio.Settings.sync();},
 });
 control.export(Gio.DBus.session,'/org/local/LiquidCardOrderTest');
 Gio.bus_own_name_on_connection(Gio.DBus.session,'org.local.LiquidCardOrderTest',Gio.BusNameOwnerFlags.NONE,null,null);

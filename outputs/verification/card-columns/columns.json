@@ -1,0 +1,144 @@
+[
+  {
+    "name": "default",
+    "layout": {
+      "cards": [
+        {
+          "id": "clock",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 232,
+            "height": 230
+          }
+        },
+        {
+          "id": "calendar",
+          "rect": {
+            "x": 0,
+            "y": 244,
+            "width": 232,
+            "height": 246
+          }
+        },
+        {
+          "id": "agenda",
+          "rect": {
+            "x": 0,
+            "y": 504,
+            "width": 232,
+            "height": 87
+          }
+        },
+        {
+          "id": "weather",
+          "rect": {
+            "x": 246,
+            "y": 0,
+            "width": 232,
+            "height": 230
+          }
+        },
+        {
+          "id": "system",
+          "rect": {
+            "x": 246,
+            "y": 244,
+            "width": 232,
+            "height": 221
+          }
+        },
+        {
+          "id": "network",
+          "rect": {
+            "x": 246,
+            "y": 479,
+            "width": 232,
+            "height": 177
+          }
+        }
+      ],
+      "columns": 2,
+      "overflow": false,
+      "contentHeight": 656,
+      "toolbarHeight": 40,
+      "viewport": {
+        "x": 778,
+        "y": 52,
+        "width": 478,
+        "height": 696
+      }
+    }
+  },
+  {
+    "name": "125%",
+    "layout": {
+      "cards": [
+        {
+          "id": "clock",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 232,
+            "height": 230
+          }
+        },
+        {
+          "id": "calendar",
+          "rect": {
+            "x": 0,
+            "y": 244,
+            "width": 232,
+            "height": 246
+          }
+        },
+        {
+          "id": "agenda",
+          "rect": {
+            "x": 0,
+            "y": 504,
+            "width": 232,
+            "height": 87
+          }
+        },
+        {
+          "id": "weather",
+          "rect": {
+            "x": 246,
+            "y": 0,
+            "width": 232,
+            "height": 230
+          }
+        },
+        {
+          "id": "system",
+          "rect": {
+            "x": 246,
+            "y": 244,
+            "width": 232,
+            "height": 221
+          }
+        },
+        {
+          "id": "network",
+          "rect": {
+            "x": 246,
+            "y": 479,
+            "width": 232,
+            "height": 177
+          }
+        }
+      ],
+      "columns": 2,
+      "overflow": true,
+      "contentHeight": 656,
+      "toolbarHeight": 40,
+      "viewport": {
+        "x": 522,
+        "y": 52,
+        "width": 478,
+        "height": 568
+      }
+    }
+  }
+]

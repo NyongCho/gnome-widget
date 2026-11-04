@@ -9,7 +9,7 @@ import {ClockController} from './clock.js';
 import {clockValues} from './shared/clockValues.js';
 import {desktopWorkarea,watchDesktopLayout} from './layout.js';
 import {requestedProviders} from './shared/liveData.js';
-import {initializeCardOrder} from './cardSettings.js';
+import {initializeCardColumns} from './cardSettings.js';
 import type {LayoutConfig} from './shared/layout.js';
 export default class LiquidWidgets extends Extension {
     private layer:DesktopLayerAdapter|null=null;
@@ -22,13 +22,13 @@ export default class LiquidWidgets extends Extension {
     private unwatch:(()=>void)|null=null;
     enable():void{
         this.settings=this.getSettings();
-        initializeCardOrder(this.settings);
+        initializeCardColumns(this.settings);
         this.layer=new DesktopLayerAdapter();
         this.host=new WidgetHost(this.settings,()=>{void this.openPreferences();});
         this.layer.actor.add_child(this.host.actor);
         this.unwatch=watchDesktopLayout(()=>this.layout());
         this.settingsChanged=this.settings.connect('changed',(_settings,key)=>{
-            if(key==='card-order'&&this.settings)initializeCardOrder(this.settings);
+            if(key==='card-columns'&&this.settings)initializeCardColumns(this.settings);
             this.syncProviders();this.layout();
         });
         const store=new ProviderStore();

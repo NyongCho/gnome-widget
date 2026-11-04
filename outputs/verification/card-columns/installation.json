@@ -1,0 +1,10 @@
+{
+  "extensionFilesMatch": true,
+  "extensionFileCount": 8,
+  "daemonMatches": true,
+  "existingSettingsPreserved": true,
+  "newColumnsKeyInstalled": true,
+  "serviceActive": true,
+  "serviceEnabled": true,
+  "newShellCode": "next logout/login"
+}

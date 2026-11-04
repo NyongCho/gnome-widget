@@ -42,6 +42,12 @@ async function todayPixels(host,name,scale){
 function compact(host,scale){
     for(const [id,card] of host.cards){
         check(card.status.visible===Boolean(card.status.get_text()),`${id}: empty status reserves footer space`);
+        // Clock deliberately matches the weather card and centers its time.
+        if(id==='clock'){
+            const weather=host.cards.get('weather');
+            if(weather)check(card.button.height===weather.button.height,'clock/weather sizes differ');
+            continue;
+        }
         const [,y]=card.button.get_transformed_position();
         const bottom=Math.max(...leaves(card.button).map(a=>a.get_transformed_position()[1]+a.get_transformed_size()[1]));
         const gap=y+card.button.height-bottom;

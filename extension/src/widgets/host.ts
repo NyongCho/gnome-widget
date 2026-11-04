@@ -13,7 +13,7 @@ import {clockValues} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
 import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
-import {orderedVisibleCards} from '../shared/cards.js';
+import {normalizeCardColumns,visibleCardColumns} from '../shared/cards.js';
 const TITLES:Record<string,Message>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
     readonly actor=new St.Widget({name:'liquid-widgets-host',style_class:'liquid-widgets'});
@@ -55,9 +55,15 @@ export class WidgetHost {
         this.placeCards();this.renderAll();this.reflow();
     }
     get visibleCards():string[]{
-        return orderedVisibleCards(this.settings.get_strv('card-order'),this.settings.get_strv('visible')).filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
+        const columns=visibleCardColumns(this.cardColumns,this.settings.get_strv('visible'));
+        return [...columns.left,...columns.right].filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
+    }
+    private get cardColumns(){
+        const raw=this.settings.get_value('card-columns').deep_unpack() as string[][];
+        return normalizeCardColumns({left:raw[0]??[],right:raw[1]??[]});
     }
     layout(config:LayoutConfig,area:{x:number;y:number;width:number;height:number},monitor:number):void{
+        config={...config,cardColumns:this.cardColumns};
         this.config=config;this.area={...area};this.scale=config.scale;
         if(this.monitor!==monitor){for(const card of this.cards.values())card.destroy();this.cards.clear();this.monitor=monitor;}
         const wanted=this.visibleCards;
@@ -126,7 +132,9 @@ export class WidgetHost {
         const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
         if(id==='clock'){
             card.title.set_text(`${clock.weekday} · ${clock.date}`);
-            const time=clockLabel(clock.time);card.body.add_child(time);fitClockLabel(time,card.button.width-36*this.scale);card.status.set_text('');return;
+            card.body.y_expand=true;
+            const time=clockLabel(clock.time);time.x_align=Clutter.ActorAlign.CENTER;time.y_align=Clutter.ActorAlign.CENTER;time.y_expand=true;
+            card.body.add_child(time);fitClockLabel(time,card.button.width-36*this.scale);card.status.set_text('');return;
         }
         const provider=(id==='agenda'?'calendar':id) as ProviderName;
         let state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
