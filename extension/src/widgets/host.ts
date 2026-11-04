@@ -13,6 +13,7 @@ import {clockValues} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
 import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
+import {orderedVisibleCards} from '../shared/cards.js';
 const TITLES:Record<string,Message>={clock:'오늘',calendar:'달력',weather:'날씨',agenda:'다가오는 일정',network:'네트워크',system:'시스템',media:'지금 재생 중'};
 export class WidgetHost {
     readonly actor=new St.Widget({name:'liquid-widgets-host',style_class:'liquid-widgets'});
@@ -54,7 +55,7 @@ export class WidgetHost {
         this.placeCards();this.renderAll();this.reflow();
     }
     get visibleCards():string[]{
-        return this.settings.get_strv('visible').filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
+        return orderedVisibleCards(this.settings.get_strv('card-order'),this.settings.get_strv('visible')).filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
     }
     layout(config:LayoutConfig,area:{x:number;y:number;width:number;height:number},monitor:number):void{
         this.config=config;this.area={...area};this.scale=config.scale;
@@ -69,6 +70,8 @@ export class WidgetHost {
             this.cards.set(id,card);this.canvas.add_child(card.surface.actor);
             card.button.connect('key-focus-in',()=>this.reveal(id));
         }
+        // Keep keyboard traversal in the same order as the visual grid.
+        wanted.forEach((id,index)=>this.canvas.set_child_at_index(this.cards.get(id)!.surface.actor,index));
         // Establish width and typography before measuring; never apply a
         // temporary fixed height to the glass, which would discard its cache.
         for(const {id,rect} of computeLayout(config,area,wanted).cards){

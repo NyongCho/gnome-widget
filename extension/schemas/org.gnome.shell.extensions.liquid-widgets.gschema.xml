@@ -7,6 +7,7 @@
   <key name="offset-y" type="i"><default>20</default><range min="0" max="1000"/><summary>Vertical margin</summary></key>
   <key name="scale" type="d"><default>1.0</default><range min="0.75" max="1.5"/><summary>Widget size</summary></key>
   <key name="visible" type="as"><default>['clock','calendar','weather','agenda','network']</default><summary>Visible cards</summary></key>
+  <key name="card-order" type="as"><default>[]</default><summary>Card order; initialized from existing visible cards</summary></key>
   <key name="strength" type="d"><default>12.0</default><range min="0.0" max="20.0"/><summary>Refraction strength</summary></key>
   <key name="opacity" type="d"><default>0.24</default><range min="0.05" max="0.8"/><summary>Glass tint opacity</summary></key>
   <key name="low-power" type="b"><default>false</default><summary>Translucent low power mode</summary></key>

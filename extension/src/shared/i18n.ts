@@ -1,5 +1,7 @@
 /** App-owned messages only. Calendar, media and place names remain source data. */
 export const messages = {
+ '위로 이동':'Move up', '아래로 이동':'Move down',
+ '위·아래 버튼으로 순서를 바꿉니다. 카드는 왼쪽부터 한 줄에 두 개씩 배치됩니다. 음악은 재생 중일 때만 표시됩니다.':'Use the up/down buttons to reorder. Cards fill each row from left to right, two per row. Music appears only while playing.',
  '위젯':'Widgets', '데이터':'Data', '언어 / Language':'언어 / Language',
  '표시 언어':'Display language', '위젯과 설정에 바로 적용됩니다.':'Applies immediately to widgets and settings.',
  '표시할 카드':'Visible cards', '음악은 재생 중일 때만 표시됩니다.':'Music appears only while playing.',

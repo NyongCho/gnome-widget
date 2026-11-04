@@ -16,12 +16,10 @@ export function computeLayout(config:LayoutConfig,area:Rect,visible:string[],mea
     const cards:LayoutResult['cards']=[];
     let y=0,column=0,rowHeight=0;
     for(const id of ids){
-        const wide=id==='clock';
-        if(wide && column){y+=rowHeight+gap;column=0;rowHeight=0;}
         const measured=measuredHeights[id];
         const height=measured!==undefined&&Number.isFinite(measured)&&measured>0?measured:heights[id]!*scale;
-        cards.push({id,rect:{x:column*(cardWidth+gap),y,width:wide?width:cardWidth,height}});
-        rowHeight=Math.max(rowHeight,height);column+=wide?columns:1;
+        cards.push({id,rect:{x:column*(cardWidth+gap),y,width:cardWidth,height}});
+        rowHeight=Math.max(rowHeight,height);column++;
         if(column===columns){y+=rowHeight+gap;column=0;rowHeight=0;}
     }
     const contentHeight=cards.length?(column?y+rowHeight:y-gap):0;

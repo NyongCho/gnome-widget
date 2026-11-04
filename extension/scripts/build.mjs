@@ -11,4 +11,4 @@ await mkdir('dist/schemas',{recursive:true});
 await copyFile('schemas/org.gnome.shell.extensions.liquid-widgets.gschema.xml','dist/schemas/org.gnome.shell.extensions.liquid-widgets.gschema.xml');
 execFileSync('glib-compile-schemas',['--strict','dist/schemas']);
 
-await build({entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js'},outdir:'dist/tests',bundle:true,format:'esm',platform:'browser',target:'es2022',external:['gi://*','resource://*'],loader:{'.glsl':'text'}});
+await build({entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js'},outdir:'dist/tests',bundle:true,format:'esm',platform:'browser',target:'es2022',external:['gi://*','resource://*'],loader:{'.glsl':'text'}});
