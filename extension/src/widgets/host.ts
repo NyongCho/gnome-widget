@@ -25,6 +25,7 @@ export class WidgetHost {
     private cards=new Map<string,GlassCard>();
     private current:LayoutResult|null=null;
     private config:LayoutConfig|null=null;
+    private area:{x:number;y:number;width:number;height:number}|null=null;
     private monitor=-1;
     private scale=1;
     private connected=false;
@@ -49,31 +50,46 @@ export class WidgetHost {
     }
     private refreshAppearance():void{
         this.actor.set_style_class_name(`liquid-widgets ${this.dark?'liquid-dark':'liquid-light'}`);
-        this.placeCards();this.renderAll();
+        this.placeCards();this.renderAll();this.reflow();
     }
     get visibleCards():string[]{
         return this.settings.get_strv('visible').filter(id=>id!=='media'||(this.states.get('media')?.data as ProviderMap['media']['data'])?.status==='playing');
     }
     layout(config:LayoutConfig,area:{x:number;y:number;width:number;height:number},monitor:number):void{
-        this.config=config;this.scale=config.scale;
+        this.config=config;this.area={...area};this.scale=config.scale;
         if(this.monitor!==monitor){for(const card of this.cards.values())card.destroy();this.cards.clear();this.monitor=monitor;}
         const wanted=this.visibleCards;
         for(const [id,card] of this.cards)if(!wanted.includes(id)){card.destroy();this.cards.delete(id);}
         for(const id of wanted)if(!this.cards.has(id)){
             const card=new GlassCard(id,monitor,TITLES[id]?this.t(TITLES[id]):id,()=>{
-                if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text(this.t('브라우저를 열 수 없어요'));}});
+                if(id==='calendar'||id==='agenda')Gio.AppInfo.launch_default_for_uri_async('https://calendar.google.com/',null,null,(_object,result)=>{try{Gio.AppInfo.launch_default_for_uri_finish(result);}catch{card.status.set_text(this.t('브라우저를 열 수 없어요'));this.reflow();}});
                 else this.preferences();
             });
             this.cards.set(id,card);this.canvas.add_child(card.surface.actor);
             card.button.connect('key-focus-in',()=>this.reveal(id));
         }
-        this.current=computeLayout(config,area,wanted);
+        // Establish width and typography before measuring; never apply a
+        // temporary fixed height to the glass, which would discard its cache.
+        for(const {id,rect} of computeLayout(config,area,wanted).cards){
+            const card=this.cards.get(id)!;card.button.set_width(rect.width);
+            card.setStyle(this.settings.get_double('strength'),this.settings.get_double('opacity'),this.settings.get_boolean('low-power'),this.dark,this.scale);
+        }
+        this.renderAll();this.reflow();
+    }
+    private reflow():void{
+        if(!this.config||!this.area)return;
+        const wanted=this.visibleCards.filter(id=>this.cards.has(id));
+        const measured=Object.fromEntries(wanted.map(id=>{
+            const card=this.cards.get(id)!;
+            return[id,Math.ceil(card.content.get_preferred_height(card.button.width)[1])];
+        }));
+        this.current=computeLayout(this.config,this.area,wanted,measured);
         const {viewport,toolbarHeight,contentHeight}=this.current;
         this.actor.set_position(viewport.x,viewport.y);this.actor.set_size(viewport.width,viewport.height);
         this.toolbar.set_size(viewport.width,toolbarHeight-8);
         this.scroll.set_position(0,toolbarHeight);this.scroll.set_size(viewport.width,viewport.height-toolbarHeight);
         this.canvas.set_size(viewport.width,contentHeight);
-        this.placeCards();this.renderAll();
+        this.placeCards();
     }
     private reveal(id:string):void{
         const item=this.current?.cards.find(c=>c.id===id);if(!item||!this.current)return;
@@ -92,11 +108,13 @@ export class WidgetHost {
     update(snapshot:Snapshot):void{for(const name of ['calendar','weather','system','network','media'] as const)this.updateProvider(name,snapshot[name]);}
     updateProvider<K extends ProviderName>(name:K,state:ProviderMap[K]):void{
         this.states.set(name,state);for(const id of name==='calendar'?['calendar','agenda']:[name])this.render(id);
+        this.reflow();
     }
-    setConnected(value:boolean):void{this.connected=value;this.renderAll();}
+    setConnected(value:boolean):void{this.connected=value;this.renderAll();this.reflow();}
     tick(now:number,zone:string,hour12:boolean,_systemLocale:string,weekStart:number):void{
         this.now=now;this.zone=zone;this.hour12=hour12;this.weekStart=weekStart;
         for(const id of ['clock','calendar','agenda'])this.render(id);
+        this.reflow();
     }
     private renderAll():void{this.settingsButton.accessible_name=this.t('위젯 설정');for(const id of this.cards.keys())this.render(id);}
     private render(id:string):void{

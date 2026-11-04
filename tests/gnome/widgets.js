@@ -30,7 +30,7 @@ export async function run(){
     host.layout(config,{x:900,y:40,width:300,height:420},0);
     check(host.diagnostics.layout.columns===1&&host.diagnostics.layout.overflow,'small workarea did not reflow');
     await capture('widgets-narrow');host.scroll.vadjustment.value=host.scroll.vadjustment.upper;await Scripting.sleep(250);await capture('widgets-narrow-bottom');
-    check(host.scroll.vadjustment.value>500,'lower cards are not reachable in narrow view');
+    check(host.scroll.vadjustment.value>0&&Math.abs(host.scroll.vadjustment.value-(host.scroll.vadjustment.upper-host.scroll.vadjustment.page_size))<2,'lower cards are not reachable in narrow view');
     settings.set_string('monitor','missing-monitor');await Scripting.sleep(300);
     check(host.actor.visible&&host.diagnostics.cards===5,'monitor fallback failed');
     settings.set_string('monitor','primary');await Scripting.sleep(300);
@@ -53,10 +53,13 @@ export async function run(){
     LoginManager.getLoginManager().emit('prepare-for-sleep',false);await Scripting.sleep(100);
     check(resumeCalls===1,'resume did not request provider refresh');
     check(clock.timer!==previousTimer && !GLib.MainContext.default().find_source_by_id(previousTimer),'resume did not replace the minute timer');
-    const paints=[...host.cards.values()].map(card=>card.surface.diagnostics.inputPaints);
+    const geometry=card=>[...card.button.get_transformed_position(),...card.button.get_transformed_size()];
+    const paints=[...host.cards.values()].map(card=>({count:card.surface.diagnostics.inputPaints,geometry:geometry(card)}));
     host.tick(Date.parse('2026-11-04T00:00:00Z'),'America/New_York',false,'en-US',1);await Scripting.sleep(150);
     check(host.cards.get('clock').body.get_children()[0].get_text()==='19:00','timezone render mismatch');
-    check([...host.cards.values()].every((card,i)=>card.surface.diagnostics.inputPaints===paints[i]),`clock text invalidates glass cache: before=${JSON.stringify(paints)} after=${JSON.stringify([...host.cards.values()].map(card=>({id:card.id,...card.surface.diagnostics})))}`);
+    // Changing week start can add a calendar row and move the lower cards.
+    // Those backgrounds must refresh; geometry-stable cards reuse their input.
+    check([...host.cards.values()].every((card,i)=>JSON.stringify(geometry(card))===JSON.stringify(paints[i].geometry)?card.surface.diagnostics.inputPaints===paints[i].count:card.surface.diagnostics.inputPaints>paints[i].count),`clock/layout cache mismatch: before=${JSON.stringify(paints)} after=${JSON.stringify([...host.cards.values()].map(card=>({id:card.id,geometry:geometry(card),...card.surface.diagnostics})))}`);
     LoginManager.getLoginManager().emit('prepare-for-sleep',false);
     const process=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
     try{

@@ -29,3 +29,16 @@ test('lost monitor falls back to an available primary monitor',()=>{
  assert.equal(selectMonitor('HDMI-1',[{id:'DP-1',primary:true},{id:'HDMI-1',primary:false}]),1);
  assert.equal(selectMonitor('primary',[]),-1);
 });
+test('measured content heights pack rows without retaining fixed footer space',()=>{
+ const r=computeLayout(config,{x:0,y:0,width:1280,height:800},['clock','calendar','weather','network'],{clock:130,calendar:240,weather:220,network:160});
+ assert.deepEqual(r.cards.map(c=>[c.id,c.rect.y,c.rect.height]),[['clock',0,130],['calendar',144,240],['weather',144,220],['network',398,160]]);
+ assert.equal(r.contentHeight,558);
+});
+test('measured heights already include UI scale and invalid measurements use defaults',()=>{
+ const scaled={...config,scale:1.5},area={x:0,y:0,width:1600,height:1200};
+ const a=computeLayout(scaled,area,['clock','weather'],{clock:195,weather:330});
+ assert.equal(a.cards[0]!.rect.height,195);assert.equal(a.cards[1]!.rect.y,216);assert.equal(a.cards[1]!.rect.height,330);
+ const fallback=computeLayout(scaled,area,['clock','weather']);
+ const invalid=computeLayout(scaled,area,['clock','weather'],{clock:NaN,weather:-1});
+ assert.deepEqual(invalid,fallback);
+});

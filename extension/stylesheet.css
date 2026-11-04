@@ -6,7 +6,7 @@
 .liquid-card:focus { box-shadow: inset 0 0 0 2px #d2f0ff; }
 .liquid-card:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.45); }
 .liquid-content { text-shadow: none; padding: 1.286em; spacing: .571em; }
-.liquid-title { font-size: .929em; font-weight: 600; color: #e6e4eb; letter-spacing: .1px; }
+.liquid-title { font-size: 1.071em; font-weight: 600; color: #e6e4eb; letter-spacing: .1px; }
 .liquid-body { spacing: .571em; }
 .liquid-big { font-size: 3.714em; font-weight: 400; letter-spacing: -2px; }
 .liquid-value { font-size: 1.929em; font-weight: 400; }

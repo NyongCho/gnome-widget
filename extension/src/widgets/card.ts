@@ -27,7 +27,7 @@ export class GlassCard {
     readonly surface:GlassSurface;
     readonly button:St.Button;
     readonly content=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-content',x_expand:true,y_expand:true,x_align:Clutter.ActorAlign.FILL,y_align:Clutter.ActorAlign.FILL});
-    readonly body=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-body',y_expand:true});
+    readonly body=new St.BoxLayout({orientation:Clutter.Orientation.VERTICAL,style_class:'liquid-body'});
     readonly title:St.Label;
     readonly status=label('','liquid-status');
     readonly mode=label('','liquid-status');
@@ -36,6 +36,8 @@ export class GlassCard {
         this.title=label(title,'liquid-title');
         const heading=new St.BoxLayout({x_expand:true});
         heading.add_child(this.title);this.mode.x_expand=false;this.mode.x_align=Clutter.ActorAlign.END;this.mode.hide();heading.add_child(this.mode);
+        this.status.hide();
+        this.status.connect('notify::text',()=>{this.status.visible=Boolean(this.status.get_text());});
         this.content.add_child(heading);this.content.add_child(this.body);this.content.add_child(this.status);
         this.button=new St.Button({child:this.content,reactive:true,can_focus:true,track_hover:true,style_class:'liquid-card',accessible_name:title});
         this.button.connect('clicked',action);this.surface.actor.add_child(this.button);
@@ -44,7 +46,8 @@ export class GlassCard {
         this.surface.setGeometry(local,scale,world);
         this.scale=scale;this.button.set_size(local.width,local.height);
     }
-    setStyle(strength:number,opacity:number,lowPower:boolean,dark:boolean):void{
+    setStyle(strength:number,opacity:number,lowPower:boolean,dark:boolean,scale=this.scale):void{
+        this.scale=scale;
         this.opacity=opacity;this.lowPower=lowPower;this.dark=dark;
         this.surface.setStrength(strength);this.surface.setEnabled(!lowPower);this.applyAppearance();
     }

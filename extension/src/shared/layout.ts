@@ -2,7 +2,8 @@ export interface Rect{x:number;y:number;width:number;height:number}
 export interface LayoutConfig{monitor:string;anchor:'top-right'|'top-left';offsetX:number;offsetY:number;scale:number;visible:string[]}
 export interface LayoutResult{cards:{id:string;rect:Rect}[];columns:1|2;overflow:boolean;viewport:Rect;toolbarHeight:number;contentHeight:number}
 const heights:Record<string,number>={clock:142,calendar:252,weather:252,agenda:210,network:210,system:174,media:174};
-export function computeLayout(config:LayoutConfig,area:Rect,visible:string[]):LayoutResult{
+// Measurements are logical screen pixels and already include the UI scale.
+export function computeLayout(config:LayoutConfig,area:Rect,visible:string[],measuredHeights:Readonly<Record<string,number>>={}):LayoutResult{
     const scale=Math.max(.75,Math.min(1.5,Number.isFinite(config.scale)?config.scale:1));
     const marginX=Math.min(Math.max(0,config.offsetX),Math.max(0,area.width*.08));
     const marginY=Math.min(Math.max(0,config.offsetY),Math.max(0,area.height*.08));
@@ -17,7 +18,8 @@ export function computeLayout(config:LayoutConfig,area:Rect,visible:string[]):La
     for(const id of ids){
         const wide=id==='clock';
         if(wide && column){y+=rowHeight+gap;column=0;rowHeight=0;}
-        const height=heights[id]!*scale;
+        const measured=measuredHeights[id];
+        const height=measured!==undefined&&Number.isFinite(measured)&&measured>0?measured:heights[id]!*scale;
         cards.push({id,rect:{x:column*(cardWidth+gap),y,width:wide?width:cardWidth,height}});
         rowHeight=Math.max(rowHeight,height);column+=wide?columns:1;
         if(column===columns){y+=rowHeight+gap;column=0;rowHeight=0;}
