@@ -2,14 +2,16 @@ import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
 import Pango from 'gi://Pango';
+import GLib from 'gi://GLib';
 import type {ProviderName,ProviderMap,Snapshot,ProviderState,CalendarData} from '../types.js';
 import {translate,language,localeFor,type Message} from '../shared/i18n.js';
-import {GlassCard,label,clockLabel,fitClockLabel} from './card.js';
+import {GlassCard,label} from './card.js';
+import {ClockFace} from './clock.js';
 import {renderNetwork,renderMedia} from './live.js';
 import {renderSystem} from './system.js';
 import {renderWeather} from './weather.js';
 import {cardState} from '../shared/cardState.js';
-import {clockValues} from '../shared/clockValues.js';
+import {clockValues,clockStyle} from '../shared/clockValues.js';
 import {monthGrid,eventDays} from '../shared/calendarFormat.js';
 import {selectAgenda,formatAgendaWhen} from '../shared/agenda.js';
 import {computeLayout,type LayoutConfig,type LayoutResult} from '../shared/layout.js';
@@ -34,6 +36,8 @@ export class WidgetHost {
     private states=new Map<ProviderName,ProviderState<unknown>>();
     private adjustmentSignal:number;
     private now=Date.now();private zone='UTC';private hour12=false;private weekStart=1;
+    private recordedAt=GLib.get_monotonic_time();
+    private clockFaces=new WeakMap<GlassCard,ClockFace>();
     private settingsButton:St.Button;
     private get language(){return language(this.settings.get_string('language'));}
     private get locale():string{return localeFor(this.language);}
@@ -122,20 +126,22 @@ export class WidgetHost {
     }
     setConnected(value:boolean):void{this.connected=value;this.renderAll();this.reflow();}
     tick(now:number,zone:string,hour12:boolean,_systemLocale:string,weekStart:number):void{
-        this.now=now;this.zone=zone;this.hour12=hour12;this.weekStart=weekStart;
+        this.now=now;this.recordedAt=GLib.get_monotonic_time();this.zone=zone;this.hour12=hour12;this.weekStart=weekStart;
         for(const id of ['clock','calendar','agenda'])this.render(id);
         this.reflow();
     }
     private renderAll():void{this.settingsButton.accessible_name=this.t('위젯 설정');for(const id of this.cards.keys())this.render(id);}
     private render(id:string):void{
-        const card=this.cards.get(id);if(!card)return;card.clear();card.title.set_text(TITLES[id]?this.t(TITLES[id]):id);card.button.accessible_name=TITLES[id]?this.t(TITLES[id]):id;card.mode.set_text(this.t('굴절 불가 · 반투명'));
+        const card=this.cards.get(id);if(!card)return;card.mode.set_text(this.t('굴절 불가 · 반투명'));
         const clock=clockValues(this.now,this.zone,this.hour12,this.locale);
         if(id==='clock'){
             card.title.set_text(`${clock.weekday} · ${clock.date}`);
-            card.body.y_expand=true;
-            const time=clockLabel(clock.time);time.x_align=Clutter.ActorAlign.CENTER;time.y_align=Clutter.ActorAlign.CENTER;time.y_expand=true;
-            card.body.add_child(time);fitClockLabel(time,card.button.width-36*this.scale);card.status.set_text('');return;
+            let face=this.clockFaces.get(card);
+            if(!face){face=new ClockFace(card,()=>this.now+(GLib.get_monotonic_time()-this.recordedAt)/1000);this.clockFaces.set(card,face);}
+            face.update({style:clockStyle(this.settings.get_string('clock-style')),zone:this.zone,hour12:this.hour12,locale:this.locale,scale:this.scale,width:Math.max(1,card.button.width-36*this.scale),lowPower:this.settings.get_boolean('low-power')});
+            card.status.set_text('');return;
         }
+        card.clear();card.title.set_text(TITLES[id]?this.t(TITLES[id]):id);card.button.accessible_name=TITLES[id]?this.t(TITLES[id]):id;
         const provider=(id==='agenda'?'calendar':id) as ProviderName;
         let state=this.states.get(provider)??{status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
         const calendar=provider==='calendar'?state.data as CalendarData|null:null;

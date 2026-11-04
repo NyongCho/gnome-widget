@@ -8,19 +8,6 @@ export function label(text:string,styleClass='liquid-caption'):St.Label{
     actor.clutter_text.ellipsize=Pango.EllipsizeMode.END;
     return actor;
 }
-export function clockLabel(text:string):St.Label{
-    const actor=label(text,'liquid-clock-time');
-    const attributes=new Pango.AttrList();
-    attributes.insert(Pango.attr_font_features_new('tnum=1'));
-    actor.clutter_text.set_attributes(attributes);
-    return actor;
-}
-export function fitClockLabel(actor:St.Label,availableWidth:number):void{
-    const naturalWidth=actor.get_preferred_width(-1)[1];
-    if(naturalWidth<=availableWidth)return;
-    const size=actor.get_theme_node().get_font().get_size()/Pango.SCALE;
-    actor.set_style(`font-size:${Math.max(1,Math.floor(size*(availableWidth-2)/naturalWidth))}px;`);
-}
 export class GlassCard {
     private scale=1;
     private opacity=.24;private lowPower=false;private dark=true;

@@ -1,6 +1,7 @@
 <schemalist>
  <schema id="org.gnome.shell.extensions.liquid-widgets" path="/org/gnome/shell/extensions/liquid-widgets/">
   <key name="language" type="s"><default>'ko'</default><choices><choice value="ko"/><choice value="en"/></choices><summary>Widget and preferences language</summary></key>
+  <key name="clock-style" type="s"><default>'digital'</default><choices><choice value="digital"/><choice value="square"/><choice value="classic"/><choice value="minimal"/></choices><summary>Clock face style</summary></key>
   <key name="monitor" type="s"><default>'primary'</default><summary>Display connector or primary</summary></key>
   <key name="anchor" type="s"><default>'top-right'</default><choices><choice value="top-right"/><choice value="top-left"/></choices><summary>Desktop corner</summary></key>
   <key name="offset-x" type="i"><default>24</default><range min="0" max="1000"/><summary>Horizontal margin</summary></key>

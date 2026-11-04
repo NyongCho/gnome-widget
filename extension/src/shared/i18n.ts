@@ -8,6 +8,8 @@ export const messages = {
  '표시 언어':'Display language', '위젯과 설정에 바로 적용됩니다.':'Applies immediately to widgets and settings.',
  '표시할 카드':'Visible cards', '음악은 재생 중일 때만 표시됩니다.':'Music appears only while playing.',
  '날짜와 시계':'Date and clock', '월간 달력':'Monthly calendar', '다가오는 일정':'Upcoming events',
+ '시계':'Clock', '시계 스타일':'Clock style', '선택한 스타일이 바로 적용됩니다.':'The selected style applies immediately.',
+ '큰 디지털':'Large digital', '사각 눈금':'Square dial', '클래식 원형':'Classic round', '미니멀 아날로그':'Minimal analog',
  '날씨':'Weather', '네트워크':'Network', 'CPU · 메모리 · 온도':'CPU · Memory · Temperature', '음악':'Music',
  '유리와 크기':'Glass and size', '유리 농도':'Glass tint', '유리 농도를 높이면 배경이 더 차분해집니다. 글자 대비는 자동으로 유지합니다.':'Increase glass tint for a calmer backdrop. Text contrast is maintained automatically.',
  '전체 크기':'Scale', '굴절 강도':'Refraction strength', '저전력 모드':'Low power mode',

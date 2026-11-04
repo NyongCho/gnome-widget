@@ -38,6 +38,7 @@ let keyEvents=0;
 const control=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.local.LiquidCardOrderTest1">
  <method name="State"><arg type="s" direction="out"/></method>
  <method name="Focus"><arg type="s" direction="in"/><arg type="s" direction="in"/></method>
+ <method name="FocusClock"/>
  <method name="Reopen"/>
  <method name="Seed"><arg type="as" direction="in"/><arg type="as" direction="in"/><arg type="as" direction="in"/></method>
 </interface></node>`,{
@@ -63,7 +64,9 @@ const control=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.lo
   const focus=[];
   for(let widget=window.get_focus();widget;widget=widget.get_parent())focus.push(widget.get_name());
   const [left=[],right=[]]=settings.get_value('card-columns').deep_unpack();
-  return JSON.stringify({columns:{left,right},visible:settings.get_strv('visible'),rows,groups,language:settings.get_string('language'),keyEvents,focus});
+  const clock=widgets.find(widget=>widget instanceof Adw.ComboRow&&widget.get_name()==='clock-style');
+  const clockStyle=clock?{value:settings.get_string('clock-style'),title:clock.title,selected:clock.selected,labels:Array.from({length:clock.model.get_n_items()},(_,index)=>clock.model.get_item(index).get_string())}:null;
+  return JSON.stringify({columns:{left,right},visible:settings.get_strv('visible'),rows,groups,clockStyle,language:settings.get_string('language'),keyEvents,focus});
  },
  Focus(id,which){
   if(!['up','down','toggle','transfer'].includes(which))throw new Error('unknown card control');
@@ -72,6 +75,15 @@ const control=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.lo
   const widget=walk(window).find(item=>item.get_name()===name);
   if(!widget)throw new Error(`missing card control: ${name}`);
   if(!widget.grab_focus())throw new Error(`card control did not receive focus: ${name}`);
+  window.present();
+ },
+ FocusClock(){
+  window.set_visible_page_name('widgets');
+  const row=walk(window).find(widget=>widget instanceof Adw.ComboRow&&widget.get_name()==='clock-style');
+  if(!row)throw new Error('missing clock style control');
+  // ComboRow itself opens its popover unless an explicit activatable widget is set.
+  const control=row.get_activatable_widget()??row;
+  if(!control.grab_focus())throw new Error('clock style control did not receive focus');
   window.present();
  },
  Reopen(){app.hold();window.close();openWindow();app.release();},

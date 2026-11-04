@@ -12,6 +12,11 @@ export async function capture(name) {
     await new Shell.Screenshot().screenshot(false,stream);
     stream.close(null);
 }
+export function findNamed(actor,name){
+    if(actor.name===name)return actor;
+    for(const child of actor.get_children()){const found=findNamed(child,name);if(found)return found;}
+    return null;
+}
 // Reuse one mouse across gestures, like a physical device. Repeatedly removing
 // the seat's pointer between presses introduces device-hotplug/focus races.
 let pointer=null;

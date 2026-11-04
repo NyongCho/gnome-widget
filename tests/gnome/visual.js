@@ -1,5 +1,5 @@
 import Gio from 'gi://Gio';import GLib from 'gi://GLib';import St from 'gi://St';import GdkPixbuf from 'gi://GdkPixbuf';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';import {capture,setScale} from './helpers.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';import {capture,setScale,findNamed} from './helpers.js';
 export const METRICS={};
 function check(ok,message){if(!ok)throw new Error(message);}
 function luminance(color){const values=[color.red,color.green,color.blue].map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return values[0]*.2126+values[1]*.7152+values[2]*.0722;}
@@ -106,14 +106,14 @@ export async function run(){
  }
  desktop.set_string('color-scheme','default');await Scripting.sleep(150);
  // Typography must keep digit advances stable and fit AM/PM on a narrow display.
- const time=host.cards.get('clock').body.get_first_child();const widths=[];
+ const time=findNamed(host.cards.get('clock').body,'liquid-clock-digits');const widths=[];
  for(const value of ['00:00','11:11','23:59']){time.set_text(value);widths.push(time.get_preferred_width(-1)[1]);}
  check(Math.max(...widths)-Math.min(...widths)<=1,'clock digits change width as time advances');
  print('APPEARANCE_TEST: clockFont='+time.get_theme_node().get_font().to_string());
  for(const lang of ['ko','en']){
   settings.set_string('language',lang);host.layout({monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:settings.get_strv('visible')},{x:0,y:32,width:300,height:768},0);
   host.tick(Date.parse('2026-11-04T13:58:00Z'),'Asia/Seoul',true,'en-US',1);await Scripting.sleep(150);
-  const clock=host.cards.get('clock'),label=clock.body.get_first_child();
+  const clock=host.cards.get('clock'),label=findNamed(clock.body,'liquid-clock-digits');
   check(label.get_preferred_width(-1)[1]<=clock.button.width-36,`${lang}: narrow clock clips AM/PM (${label.get_preferred_width(-1)[1]} > ${clock.button.width-36})`);
   await capture(`clock-narrow-${lang}`);
  }

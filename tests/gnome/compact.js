@@ -42,7 +42,7 @@ async function todayPixels(host,name,scale){
 function compact(host,scale){
     for(const [id,card] of host.cards){
         check(card.status.visible===Boolean(card.status.get_text()),`${id}: empty status reserves footer space`);
-        // Clock deliberately matches the weather card and centers its time.
+        // Clock deliberately matches the weather card with a full clock face.
         if(id==='clock'){
             const weather=host.cards.get('weather');
             if(weather)check(card.button.height===weather.button.height,'clock/weather sizes differ');

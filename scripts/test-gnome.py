@@ -10,7 +10,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 WORK = ROOT / '.superpowers/sdd/liquid-glass-plan'
-SHOT_MODE = next((flag[2:] for flag in ('--clock-prototype', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
+SHOT_MODE = next((flag[2:] for flag in ('--clock-styles', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
 SHOTS = WORK / 'screenshots' / SHOT_MODE
 
 
@@ -95,7 +95,7 @@ def main():
         raise SystemExit('mutter-devkit missing; see docs/shader-spike.md')
     shell = subprocess.Popen([
         'gnome-shell-test-tool', '--devkit', '--wrap', str(ROOT / 'scripts/gnome-test-env.py'),
-        '--extension', str(archive), str(ROOT / ('tests/gnome/clock-prototype.js' if '--clock-prototype' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
+        '--extension', str(archive), str(ROOT / ('tests/gnome/clock-styles.js' if '--clock-styles' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
     ], env=env, start_new_session=True)
     viewer = None
     try:

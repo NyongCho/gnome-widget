@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';import GLib from 'gi://GLib';import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
-import {capture,setScale} from './helpers.js';
+import {capture,setScale,findNamed} from './helpers.js';
 export const METRICS={};
 function check(ok,message){if(!ok)throw new Error(message);}
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
@@ -86,8 +86,8 @@ export async function run(){
   }
   const clock=host.cards.get('clock'),weatherCard=host.cards.get('weather');
   if(clock&&weatherCard)check(clock.button.height===weatherCard.button.height&&clock.button.width===weatherCard.button.width,'clock does not match weather dimensions');
-  if(clock){const time=clock.body.get_first_child(),[x,y]=time.get_transformed_position(),[w,h]=time.get_transformed_size(),[bx,by]=clock.body.get_transformed_position(),[bw,bh]=clock.body.get_transformed_size();
-   check(Math.abs(x+w/2-bx-bw/2)<=1&&Math.abs(y+h/2-by-bh/2)<=1,'clock time is not centered');check(time.get_preferred_width(-1)[1]<=clock.button.width-34*scale,'clock text overflows');}
+  if(clock){const time=findNamed(clock.body,'liquid-clock-digits');
+   check(Boolean(time),'digital clock is missing');check(time.get_preferred_width(-1)[1]<=clock.button.width-34*scale,'clock text overflows');}
   check(same(host.canvas.get_children().map(actor=>[...host.cards].find(([,card])=>card.surface.actor===actor)[0]),[...expected.left,...expected.right]),'keyboard actor order differs from columns');
  }
  const visibleDefault={left:defaults.left,right:['weather','system','network']};
@@ -103,5 +103,5 @@ export async function run(){
  host.layout({monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:all},{x:900,y:40,width:300,height:420},0);await Scripting.sleep(100);verify(visibleDefault,1);
  ext.layout();await setScale(1.25);verify(visibleDefault);await capture('columns-grid-125');report.push({name:'125%',layout:host.current});
  GLib.file_set_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/columns.json`,JSON.stringify(report,null,2));
- print('COLUMN_SHELL: independent stacks, matching clock/weather, centered time, hide/transfer, media, language/scale, one column and 125% passed');
+ print('COLUMN_SHELL: independent stacks, matching clock/weather, digital clock, hide/transfer, media, language/scale, one column and 125% passed');
 }

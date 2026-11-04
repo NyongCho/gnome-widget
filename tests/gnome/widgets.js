@@ -6,7 +6,7 @@ import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as LoginManager from 'resource:///org/gnome/shell/misc/loginManager.js';
 import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
-import {capture,click,drag,setScale,enable,releaseInput} from './helpers.js';
+import {capture,click,drag,setScale,enable,releaseInput,findNamed} from './helpers.js';
 export const METRICS={};
 function check(condition,message){if(!condition)throw new Error(message);}
 async function until(predicate,message){for(let i=0;i<200;i++){if(predicate())return;await Scripting.sleep(30);}throw new Error(message);}
@@ -46,7 +46,7 @@ export async function run(){
     await capture('widgets-korean');
     const format=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
     format.set_string('clock-format','12h');await Scripting.sleep(200);
-    check(/AM|PM|오전|오후/.test(host.cards.get('clock').body.get_children()[0].get_text()),'clock ignored 12-hour preference');
+    check(/AM|PM|오전|오후/.test(findNamed(host.cards.get('clock').body,'liquid-clock-period').get_text()),'clock ignored 12-hour preference');
     format.set_string('clock-format','24h');await Scripting.sleep(200);
     const clock=extension.stateObj.clock;const previousTimer=clock.timer;
     const actualResume=extension.stateObj.client.refreshAfterResume;let resumeCalls=0;extension.stateObj.client.refreshAfterResume=function(){resumeCalls++;actualResume?.call(this);};
@@ -56,7 +56,7 @@ export async function run(){
     const geometry=card=>[...card.button.get_transformed_position(),...card.button.get_transformed_size()];
     const paints=[...host.cards.values()].map(card=>({count:card.surface.diagnostics.inputPaints,geometry:geometry(card)}));
     host.tick(Date.parse('2026-11-04T00:00:00Z'),'America/New_York',false,'en-US',1);await Scripting.sleep(150);
-    check(host.cards.get('clock').body.get_children()[0].get_text()==='19:00','timezone render mismatch');
+    check(findNamed(host.cards.get('clock').body,'liquid-clock-digits').get_text()==='19:00','timezone render mismatch');
     // Changing week start can add a calendar row and move the lower cards.
     // Those backgrounds must refresh; geometry-stable cards reuse their input.
     check([...host.cards.values()].every((card,i)=>JSON.stringify(geometry(card))===JSON.stringify(paints[i].geometry)?card.surface.diagnostics.inputPaints===paints[i].count:card.surface.diagnostics.inputPaints>paints[i].count),`clock/layout cache mismatch: before=${JSON.stringify(paints)} after=${JSON.stringify([...host.cards.values()].map(card=>({id:card.id,geometry:geometry(card),...card.surface.diagnostics})))}`);
@@ -114,7 +114,7 @@ export async function run(){
         check(!agenda().includes('프로젝트 리뷰'),'mismatched context exposed old events');
         host.updateProvider('calendar',{status:'unconfigured',sourceId:'gui-fixture',updatedAt:null,data:null,errorCode:null});
         process.force_exit();await until(()=>!host.connected,'service loss not reflected');
-        check(host.cards.get('clock').body.get_children()[0].get_text().length>0,'clock stopped with service');
+        check(findNamed(host.cards.get('clock').body,'liquid-clock-digits').get_text().length>0,'clock stopped with service');
     }finally{process.force_exit();}
     const fallbackCard=host.cards.get('clock');
     fallbackCard.surface.effect.ensureTarget=()=>{throw new Error('test allocation failure');};
