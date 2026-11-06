@@ -1,0 +1,22 @@
+{
+  "rust": {
+    "backend": "rust",
+    "uuid": "liquid-widgets@local",
+    "schemaId": "org.gnome.shell.extensions.liquid-widgets",
+    "schemaPath": "/org/gnome/shell/extensions/liquid-widgets/",
+    "dataDirectory": "liquid-widgets",
+    "secretApplication": "org.local.LiquidWidgets",
+    "output": "dist",
+    "homepage": "https://github.com/NyongCho/gnome-widget"
+  },
+  "gjs": {
+    "backend": "gjs",
+    "uuid": "liquid-widgets@nyongcho.github.io",
+    "schemaId": "org.gnome.shell.extensions.liquid-widgets-public",
+    "schemaPath": "/org/gnome/shell/extensions/liquid-widgets-public/",
+    "dataDirectory": "liquid-widgets-public",
+    "secretApplication": "io.github.NyongCho.LiquidWidgets",
+    "output": "dist-gjs",
+    "homepage": "https://github.com/NyongCho/gnome-widget"
+  }
+}

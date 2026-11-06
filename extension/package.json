@@ -13,7 +13,8 @@
     "generate": "node scripts/generate-validators.mjs",
     "pretest": "npm run generate",
     "pretypecheck": "npm run generate",
-    "test:calendar": "python3 ../scripts/test-calendar-parity.py --engine gjs"
+    "test:calendar": "python3 ../scripts/test-calendar-parity.py --engine gjs",
+    "build:gjs": "node scripts/build.mjs --edition gjs"
   },
   "devDependencies": {
     "@girs/gnome-shell": "50.0.4",

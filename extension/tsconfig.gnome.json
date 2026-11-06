@@ -1,7 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src/gnome.d.ts",
@@ -14,6 +15,8 @@
     "src/clock.ts",
     "src/layout.ts",
     "src/widgets/**/*.ts",
-    "tests/gnome/*.ts"
+    "tests/gnome/*.ts",
+    "src/backend/**/*.ts",
+    "src/edition.ts"
   ]
 }

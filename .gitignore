@@ -12,3 +12,5 @@ __pycache__/
 
 # Managed worktree development toolchain symlink
 .tools
+
+extension/dist-gjs/

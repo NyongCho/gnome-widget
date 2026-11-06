@@ -117,11 +117,13 @@ function createWidgetDataSession(options: WidgetSessionOptions): WidgetDataSessi
 ```
 `stop()`는 카드 수요만 해제, `destroy()`는 bridge/prefs 수요까지 포함해 세션 전체 종료다. Rust adapter는 기존 DataClient 동작을 유지한다. gjs 구현은 Task 5에서 연결한다.
 
-- [ ] rust/gjs metadata·UUID·GSettings id와 path·cache namespace가 정확히 분리되고 기존 rust 값이 유지되는 테스트를 작성해 FAIL 확인한다.
-- [ ] `build.mjs --edition rust|gjs` 구현. 기본 rust, 출력 dist/dist-gjs, public에 calendar-worker.js 별도 entry. engine/ical/timezone 데이터가 extension.js 또는 prefs.js dependency graph에 있으면 build 검사 실패로 만든다.
-- [ ] Rust WidgetDataSession wrapper와 typed factory를 구현한다. 현재 설치를 수정하거나 완료 전 gjs artifact를 배포하지 않는다.
-- [ ] `./scripts/dev npm --prefix extension test -- backendEdition.test.ts`, typecheck, 두 edition build PASS. Rust의 기존 client tests도 PASS.
-- [ ] 커밋: `refactor: share UI contracts between Rust and public editions`.
+- [x] rust/gjs metadata·UUID·GSettings id와 path·cache namespace가 정확히 분리되고 기존 rust 값이 유지되는 테스트를 작성해 FAIL 확인한다.
+- [x] `build.mjs --edition rust|gjs` 구현. 기본 rust, 출력 dist/dist-gjs, public에 calendar-worker.js 별도 entry. engine/ical/timezone 데이터가 extension.js 또는 prefs.js dependency graph에 있으면 build 검사 실패로 만든다.
+- [x] Rust WidgetDataSession wrapper와 typed factory를 구현한다. 현재 설치를 수정하거나 완료 전 gjs artifact를 배포하지 않는다.
+- [x] `./scripts/dev npm --prefix extension test -- backendEdition.test.ts`, typecheck, 두 edition build PASS. Rust의 기존 client tests도 PASS.
+- [x] 커밋: `refactor: share UI contracts between Rust and public editions`.
+
+Task 3 검증(2026-11-07): 전체 Node 80/80과 typecheck 통과. backend/client 16개 검사에서 두 edition을 실제 빌드하고 metadata/schema/worker entry를 확인했다. UI graph 방어 검사를 끄면 금지 의존성 테스트가 실패하고 복원 후 통과한다. 공개 artifact는 Task 5/11 연결 전 staging이며 설치하지 않았다.
 
 ## Task 4: 공통 I/O·설정·키링과 변경 직렬화
 
