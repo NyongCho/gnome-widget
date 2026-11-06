@@ -86,12 +86,14 @@ function acquireBusLease(name: string, timeoutMs: number, cancel: Cancellation):
 ```
 `acquireBusLease`는 전용 session 연결을 소유하고 DO_NOT_QUEUE/owner watch로 대기한다. `timeoutMs=0`은 즉시 시도하고 실패 시 `LeaseBusyError`, 양수는 기한 뒤 `LeaseTimeoutError`로 reject한다. Shell 공유 연결을 닫지 않는다. worker는 CalendarJob 이름을 즉시 시도하고 busy일 때 기다리지 않고 종료한다. ConfigLock은 이후 같은 도구의 대기 기능을 쓴다.
 
-- [ ] `--suite worker`에 ready/busy 경쟁, 16 KiB/5 MiB/512 KiB 경계, invalid UTF-8, extra/truncated frame, exit nonzero, 완료 후 계속 살아 있는 fake child를 추가한다. 미구현 reader/lifecycle에서 FAIL을 확인한다.
-- [ ] spec의 u32 framing을 구현한다. child는 계산 lease를 얻기 전에 engine/시간대 데이터를 초기화하지 않는다. 9초 deadline은 시작 시 기록하며 lease/입력 대기에는 GLib timeout, 동기 계산에는 같은 deadline의 budget을 적용한다. ready 후 stdin raw bytes를 읽고, 계산→schema 검증→한 reply→exit 한다. stdout은 protocol 전용, stderr는 부모에서 버린다.
-- [ ] 부모는 입력/출력을 비동기 stream으로 제한해 읽는다. 무제한 `communicate_utf8_async()` 수집을 사용하지 않는다. source/context/generation, EOF, exit 0을 모두 확인한다. 취소 시 먼저 무효화하고 force_exit 후 uncancelled wait_async로 reap한다. `dispose()`는 즉시 kill을 요청하고 정리가 끝나면 resolve한다.
-- [ ] 부모별 활성 하나+최신 대기 하나, 세션 계산 슬롯 하나, busy wait 30초, spawn watchdog 10초를 구현한다. worker lease는 자기 연결이 소유하므로 부모가 죽어도 기존 계산 중 다른 worker가 슬롯을 얻지 못한다. 부모 없는 worker도 내부 9초 budget으로 종료해야 한다.
-- [ ] `./scripts/test-public-backend.py --suite worker` PASS: 일반 취소 ≤1초, parent SIGKILL 후 ≤11초, 입력 전 parent 사망/pipe EOF, 20회 교체 후 child/FD/watch 0. 이 실패를 '취소 요청 성공'으로 대신하지 않는다.
-- [ ] 커밋: `feat: isolate calendar jobs in short-lived GJS workers`.
+- [x] `--suite worker`에 ready/busy 경쟁, 16 KiB/5 MiB/512 KiB 경계, invalid UTF-8, extra/truncated frame, exit nonzero, 완료 후 계속 살아 있는 fake child를 추가한다. 미구현 reader/lifecycle에서 FAIL을 확인한다.
+- [x] spec의 u32 framing을 구현한다. child는 계산 lease를 얻기 전에 engine/시간대 데이터를 초기화하지 않는다. 9초 deadline은 시작 시 기록하며 lease/입력 대기에는 GLib timeout, 동기 계산에는 같은 deadline의 budget을 적용한다. ready 후 stdin raw bytes를 읽고, 계산→schema 검증→한 reply→exit 한다. stdout은 protocol 전용, stderr는 부모에서 버린다.
+- [x] 부모는 입력/출력을 비동기 stream으로 제한해 읽는다. 무제한 `communicate_utf8_async()` 수집을 사용하지 않는다. source/context/generation, EOF, exit 0을 모두 확인한다. 취소 시 먼저 무효화하고 force_exit 후 uncancelled wait_async로 reap한다. `dispose()`는 즉시 kill을 요청하고 정리가 끝나면 resolve한다.
+- [x] 부모별 활성 하나+최신 대기 하나, 세션 계산 슬롯 하나, busy wait 30초, spawn watchdog 10초를 구현한다. worker lease는 자기 연결이 소유하므로 부모가 죽어도 기존 계산 중 다른 worker가 슬롯을 얻지 못한다. 부모 없는 worker도 내부 9초 budget으로 종료해야 한다.
+- [x] `./scripts/test-public-backend.py --suite worker` PASS: 일반 취소 ≤1초, parent SIGKILL 후 ≤11초, 입력 전 parent 사망/pipe EOF, 20회 교체 후 child/FD/watch 0. 이 실패를 '취소 요청 성공'으로 대신하지 않는다.
+- [x] 커밋: `feat: isolate calendar jobs in short-lived GJS workers`.
+
+Task 2 검증(2026-11-07): Node 75/75, 전체 typecheck, 실제 private-bus worker suite 통과. 16 KiB/5 MiB/512 KiB 경계, malformed/nonzero/crash/hang, 재사용·교체·취소·FD 정리를 확인했다. 부모 SIGKILL 뒤 입력 대기는 약 0.05초, 동기 계산은 약 8.9초에 실제 종료/reap됐고, 부모 watchdog 없이 입력을 기다려도 내부 9초 기한에 종료했다.
 
 ## Task 3: 두 에디션의 빌드와 UI API
 

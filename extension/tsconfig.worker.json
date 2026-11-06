@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {"skipLibCheck": true, "resolveJsonModule": true},
-  "include": ["src/worker-env.d.ts", "src/calendar-worker/**/*.ts", "tests/gjs/calendarEngine.ts", "tests/gjs/calendarBudget.ts"]
+  "include": ["src/worker-env.d.ts", "src/calendar-worker/**/*.ts", "src/calendar/**/*.ts", "src/data/**/*.ts", "tests/gjs/**/*.ts"]
 }

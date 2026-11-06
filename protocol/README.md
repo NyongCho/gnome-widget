@@ -18,3 +18,11 @@
 ## Task 2 런타임
 
 Rust zbus 서비스와 GJS 비동기 클라이언트를 구현했다. GetSnapshot/ProviderChanged는 기존 schema를 그대로 쓰며, 서비스 인스턴스가 바뀌면 provider revision을 초기화한다. 구독은 sender+token에 귀속된다. 설정 메서드의 현재 지원 범위, 캐시·취소와 설치 소유권은 [데이터 서비스](../docs/data-service.md)에 있다.
+
+## 공개용 calendar worker v1
+
+`calendar-worker.schema.json`은 기존 Rust D-Bus와 별개의 단일 작업 계약이다. 모든 frame은 big-endian u32 UTF-8 byte 길이와 JSON 본문을 사용한다. child는 private session bus 연결에서 `io.github.NyongCho.LiquidWidgets.CalendarJob`을 DO_NOT_QUEUE로 얻고 ready를 보내며, 실패하면 busy만 보내고 종료한다. ready/busy와 입력 header는 각각 16 KiB, 최종 reply는 512 KiB 제한이다.
+
+ready 이후 부모는 header frame, u32 길이+raw ICS bytes(5 MiB 이하), EOF를 순서대로 쓴다. URL·비밀은 프로토콜에 없다. child는 한 reply와 EOF를 남기고 종료한다. 부모는 version, job/source/generation/context, schema, EOF와 exit 0을 모두 확인한 뒤에만 반영한다. 취소된 결과는 반영하지 않는다.
+
+내부 계산·입력 대기 기한은 시작 후 9초, 부모 watchdog은 spawn 후 10초다. 부모는 취소 즉시 kill을 요청하고 취소하지 않은 wait_async로 실제 종료를 확인한다. 세션 slot 대기는 30초 이내이며, 부모는 name 소멸을 관찰할 뿐 계산 lease를 소유하지 않는다. `scripts/test-public-backend.py --suite worker`가 private bus에서 경계·경쟁·강제 종료를 검사한다.

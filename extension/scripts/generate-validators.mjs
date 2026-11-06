@@ -10,6 +10,9 @@ const settings = JSON.parse(await readFile(new URL('../../protocol/settings.sche
 ajv.addSchema(snapshot); ajv.addSchema(settings);
 const exports = {snapshot: snapshot.$id, settings: settings.$id, calendarContext: `${snapshot.$id}#/$defs/CalendarContext`, weatherLocation: `${settings.$id}#/$defs/WeatherLocationInput`, locationSearchResults: `${settings.$id}#/$defs/LocationSearchResults`};
 for (const name of ['Calendar','Weather','System','Network','Media']) exports[name.toLowerCase()] = `${snapshot.$id}#/$defs/${name}State`;
+const worker = JSON.parse(await readFile(new URL('../../protocol/calendar-worker.schema.json', import.meta.url), 'utf8'));
+ajv.addSchema(worker);
+for (const name of ['Header', 'Control', 'Reply']) exports[`worker${name}`] = `${worker.$id}#/$defs/${name}`;
 const dir = new URL('../generated/', import.meta.url);
 await mkdir(dir, {recursive: true});
 // Bundling replaces Ajv's tiny helper imports. No Node/Ajv/compiler at runtime.

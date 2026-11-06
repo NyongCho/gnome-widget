@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:liquid-widgets:calendar-worker:v1",
+  "$defs": {
+    "Header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "jobId",
+        "sourceId",
+        "generation",
+        "context",
+        "now"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "jobId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "context": {
+          "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/CalendarContext"
+        },
+        "now": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      }
+    },
+    "Control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "state"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "state": {
+          "enum": [
+            "ready",
+            "busy"
+          ]
+        }
+      }
+    },
+    "Reply": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "jobId",
+            "sourceId",
+            "generation",
+            "ok",
+            "data"
+          ],
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "jobId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "sourceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "ok": {
+              "const": true
+            },
+            "data": {
+              "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/CalendarData"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "jobId",
+            "sourceId",
+            "generation",
+            "ok",
+            "errorCode"
+          ],
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "jobId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "sourceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "ok": {
+              "const": false
+            },
+            "errorCode": {
+              "enum": [
+                "INVALID_DATA",
+                "UNSUPPORTED_CALENDAR",
+                "UNKNOWN_TIME_ZONE",
+                "PAYLOAD_TOO_LARGE",
+                "EXPANSION_LIMIT"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
