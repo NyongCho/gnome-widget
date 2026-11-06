@@ -1,0 +1,1391 @@
+{
+  "runtime": "GNOME Shell 50.1 nested Wayland; existing seven-card UI, synthetic data; no backend process",
+  "capabilities": {
+    "Soup?version=3.0": "imported",
+    "Secret?version=1": "imported",
+    "Gio": "imported",
+    "procAsyncMs": 0.2980000078678131
+  },
+  "benchmarks": [
+    {
+      "name": "idle",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 0,
+      "elapsedMs": 80.14300000667572,
+      "maxHeartbeatGapMs": 5.127000004053116,
+      "p95HeartbeatGapMs": 5.106000006198883,
+      "maxFrameGapMs": 7.459999978542328,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 0,
+      "elapsedMs": 80.1230000257492,
+      "maxHeartbeatGapMs": 5.097000002861023,
+      "p95HeartbeatGapMs": 5.078000009059906,
+      "maxFrameGapMs": 11.564999997615814,
+      "frames": 21,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 0,
+      "elapsedMs": 80.13300001621246,
+      "maxHeartbeatGapMs": 5.320000022649765,
+      "p95HeartbeatGapMs": 5.226999998092651,
+      "maxFrameGapMs": 8.070000022649765,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 0,
+      "elapsedMs": 80.11400002241135,
+      "maxHeartbeatGapMs": 5.296999990940094,
+      "p95HeartbeatGapMs": 5.127000004053116,
+      "maxFrameGapMs": 8.400999993085861,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 0,
+      "elapsedMs": 80.18100002408028,
+      "maxHeartbeatGapMs": 5.252000004053116,
+      "p95HeartbeatGapMs": 5.247000008821487,
+      "maxFrameGapMs": 18.20600000023842,
+      "frames": 18,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 0,
+      "elapsedMs": 80.20299997925758,
+      "maxHeartbeatGapMs": 5.246000021696091,
+      "p95HeartbeatGapMs": 5.21900001168251,
+      "maxFrameGapMs": 7.844999998807907,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 0,
+      "elapsedMs": 80.11300000548363,
+      "maxHeartbeatGapMs": 5.277999997138977,
+      "p95HeartbeatGapMs": 5.118000000715256,
+      "maxFrameGapMs": 10.337000012397766,
+      "frames": 21,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 0,
+      "elapsedMs": 80.12099999189377,
+      "maxHeartbeatGapMs": 5.076999992132187,
+      "p95HeartbeatGapMs": 5.0719999969005585,
+      "maxFrameGapMs": 8.65200001001358,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 0,
+      "elapsedMs": 80.12800002098083,
+      "maxHeartbeatGapMs": 9.315999984741211,
+      "p95HeartbeatGapMs": 5.294999986886978,
+      "maxFrameGapMs": 10.724999994039536,
+      "frames": 18,
+      "result": null
+    },
+    {
+      "name": "idle",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 0,
+      "elapsedMs": 80.12700000405312,
+      "maxHeartbeatGapMs": 5.319000005722046,
+      "p95HeartbeatGapMs": 5.089000016450882,
+      "maxFrameGapMs": 7.826999992132187,
+      "frames": 20,
+      "result": null
+    },
+    {
+      "name": "100-events",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 13025,
+      "elapsedMs": 0.9229999780654907,
+      "maxHeartbeatGapMs": 5.83899998664856,
+      "p95HeartbeatGapMs": 5.83899998664856,
+      "maxFrameGapMs": 7.854000002145767,
+      "frames": 9,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 13025,
+      "elapsedMs": 0.9650000035762787,
+      "maxHeartbeatGapMs": 5.858000010251999,
+      "p95HeartbeatGapMs": 5.858000010251999,
+      "maxFrameGapMs": 8.23700001835823,
+      "frames": 8,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 13025,
+      "elapsedMs": 0.5730000138282776,
+      "maxHeartbeatGapMs": 5.473000019788742,
+      "p95HeartbeatGapMs": 5.473000019788742,
+      "maxFrameGapMs": 6.997999995946884,
+      "frames": 9,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 13025,
+      "elapsedMs": 0.3669999837875366,
+      "maxHeartbeatGapMs": 5.212999999523163,
+      "p95HeartbeatGapMs": 5.212999999523163,
+      "maxFrameGapMs": 7.0840000212192535,
+      "frames": 8,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 13025,
+      "elapsedMs": 0.4020000100135803,
+      "maxHeartbeatGapMs": 5.315999984741211,
+      "p95HeartbeatGapMs": 5.315999984741211,
+      "maxFrameGapMs": 8.182000011205673,
+      "frames": 9,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 13025,
+      "elapsedMs": 0.5750000178813934,
+      "maxHeartbeatGapMs": 5.522000014781952,
+      "p95HeartbeatGapMs": 5.522000014781952,
+      "maxFrameGapMs": 8.719999998807907,
+      "frames": 8,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 13025,
+      "elapsedMs": 0.6439999938011169,
+      "maxHeartbeatGapMs": 5.587000012397766,
+      "p95HeartbeatGapMs": 5.587000012397766,
+      "maxFrameGapMs": 7.010000020265579,
+      "frames": 8,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 13025,
+      "elapsedMs": 0.414000004529953,
+      "maxHeartbeatGapMs": 5.212999999523163,
+      "p95HeartbeatGapMs": 5.212999999523163,
+      "maxFrameGapMs": 8.013999998569489,
+      "frames": 9,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 13025,
+      "elapsedMs": 0.4960000216960907,
+      "maxHeartbeatGapMs": 5.416000008583069,
+      "p95HeartbeatGapMs": 5.416000008583069,
+      "maxFrameGapMs": 7.094999998807907,
+      "frames": 9,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "100-events",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 13025,
+      "elapsedMs": 0.5810000002384186,
+      "maxHeartbeatGapMs": 5.4670000076293945,
+      "p95HeartbeatGapMs": 5.4670000076293945,
+      "maxFrameGapMs": 9.732999980449677,
+      "frames": 7,
+      "result": {
+        "events": 100
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 131825,
+      "elapsedMs": 3.652999997138977,
+      "maxHeartbeatGapMs": 8.893999993801117,
+      "p95HeartbeatGapMs": 8.893999993801117,
+      "maxFrameGapMs": 9.48700001835823,
+      "frames": 10,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 131825,
+      "elapsedMs": 5.537999987602234,
+      "maxHeartbeatGapMs": 7.023000001907349,
+      "p95HeartbeatGapMs": 7.023000001907349,
+      "maxFrameGapMs": 7.006999999284744,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 131825,
+      "elapsedMs": 4.166999995708466,
+      "maxHeartbeatGapMs": 7.299000024795532,
+      "p95HeartbeatGapMs": 7.299000024795532,
+      "maxFrameGapMs": 8.437999993562698,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 131825,
+      "elapsedMs": 2.190999984741211,
+      "maxHeartbeatGapMs": 7.394999980926514,
+      "p95HeartbeatGapMs": 7.394999980926514,
+      "maxFrameGapMs": 15.236000001430511,
+      "frames": 8,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 131825,
+      "elapsedMs": 1.2979999780654907,
+      "maxHeartbeatGapMs": 6.235000014305115,
+      "p95HeartbeatGapMs": 6.235000014305115,
+      "maxFrameGapMs": 10.900999993085861,
+      "frames": 8,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 131825,
+      "elapsedMs": 4.833000004291534,
+      "maxHeartbeatGapMs": 6.942999988794327,
+      "p95HeartbeatGapMs": 6.942999988794327,
+      "maxFrameGapMs": 10.516999989748001,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 131825,
+      "elapsedMs": 3.384999990463257,
+      "maxHeartbeatGapMs": 7.2639999985694885,
+      "p95HeartbeatGapMs": 7.2639999985694885,
+      "maxFrameGapMs": 7.715999990701675,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 131825,
+      "elapsedMs": 1.5059999823570251,
+      "maxHeartbeatGapMs": 6.336999982595444,
+      "p95HeartbeatGapMs": 6.336999982595444,
+      "maxFrameGapMs": 7.932000011205673,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 131825,
+      "elapsedMs": 1.0819999873638153,
+      "maxHeartbeatGapMs": 6.164000004529953,
+      "p95HeartbeatGapMs": 6.164000004529953,
+      "maxFrameGapMs": 8.81700000166893,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-events",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 131825,
+      "elapsedMs": 3.4189999997615814,
+      "maxHeartbeatGapMs": 6.997999995946884,
+      "p95HeartbeatGapMs": 6.997999995946884,
+      "maxFrameGapMs": 8.21000000834465,
+      "frames": 9,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 1337825,
+      "elapsedMs": 20.377999991178513,
+      "maxHeartbeatGapMs": 25.76800000667572,
+      "p95HeartbeatGapMs": 25.76800000667572,
+      "maxFrameGapMs": 22.03200000524521,
+      "frames": 10,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 1337825,
+      "elapsedMs": 36.6870000064373,
+      "maxHeartbeatGapMs": 8.935000002384186,
+      "p95HeartbeatGapMs": 8.935000002384186,
+      "maxFrameGapMs": 8.081000000238419,
+      "frames": 14,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 1337825,
+      "elapsedMs": 35.99500000476837,
+      "maxHeartbeatGapMs": 8.317999988794327,
+      "p95HeartbeatGapMs": 8.317999988794327,
+      "maxFrameGapMs": 8.888000011444092,
+      "frames": 14,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 1337825,
+      "elapsedMs": 14.918000012636185,
+      "maxHeartbeatGapMs": 20.267000019550323,
+      "p95HeartbeatGapMs": 20.267000019550323,
+      "maxFrameGapMs": 16.380999982357025,
+      "frames": 10,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 1337825,
+      "elapsedMs": 15.017000019550323,
+      "maxHeartbeatGapMs": 20.391999989748,
+      "p95HeartbeatGapMs": 20.391999989748,
+      "maxFrameGapMs": 16.902999997138977,
+      "frames": 11,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 1337825,
+      "elapsedMs": 35.18200001120567,
+      "maxHeartbeatGapMs": 7.398000001907349,
+      "p95HeartbeatGapMs": 7.398000001907349,
+      "maxFrameGapMs": 7.902999997138977,
+      "frames": 14,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 1337825,
+      "elapsedMs": 39.389999985694885,
+      "maxHeartbeatGapMs": 10.101000010967255,
+      "p95HeartbeatGapMs": 10.101000010967255,
+      "maxFrameGapMs": 10.075999975204468,
+      "frames": 13,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 1337825,
+      "elapsedMs": 14.284999996423721,
+      "maxHeartbeatGapMs": 19.660000026226044,
+      "p95HeartbeatGapMs": 19.660000026226044,
+      "maxFrameGapMs": 18.09500002861023,
+      "frames": 11,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 1337825,
+      "elapsedMs": 14.414000004529953,
+      "maxHeartbeatGapMs": 19.63500002026558,
+      "p95HeartbeatGapMs": 19.63500002026558,
+      "maxFrameGapMs": 17.607999980449677,
+      "frames": 10,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-events",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 1337825,
+      "elapsedMs": 37.168000012636185,
+      "maxHeartbeatGapMs": 9.754999995231628,
+      "p95HeartbeatGapMs": 9.754999995231628,
+      "maxFrameGapMs": 12.606000006198883,
+      "frames": 13,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 4937825,
+      "elapsedMs": 20.354000002145767,
+      "maxHeartbeatGapMs": 25.787000000476837,
+      "p95HeartbeatGapMs": 25.787000000476837,
+      "maxFrameGapMs": 26.86599999666214,
+      "frames": 9,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 4937825,
+      "elapsedMs": 38.84799998998642,
+      "maxHeartbeatGapMs": 9.048000007867813,
+      "p95HeartbeatGapMs": 9.048000007867813,
+      "maxFrameGapMs": 10.814999997615814,
+      "frames": 14,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 4937825,
+      "elapsedMs": 40.12399998307228,
+      "maxHeartbeatGapMs": 8.993999987840652,
+      "p95HeartbeatGapMs": 8.993999987840652,
+      "maxFrameGapMs": 10.171999990940094,
+      "frames": 13,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 4937825,
+      "elapsedMs": 21.219999998807907,
+      "maxHeartbeatGapMs": 26.69200000166893,
+      "p95HeartbeatGapMs": 26.69200000166893,
+      "maxFrameGapMs": 25.515000015497208,
+      "frames": 10,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 4937825,
+      "elapsedMs": 18.62900000810623,
+      "maxHeartbeatGapMs": 23.99099999666214,
+      "p95HeartbeatGapMs": 23.99099999666214,
+      "maxFrameGapMs": 20.98199999332428,
+      "frames": 8,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 4937825,
+      "elapsedMs": 39.37099999189377,
+      "maxHeartbeatGapMs": 9.534000009298325,
+      "p95HeartbeatGapMs": 9.534000009298325,
+      "maxFrameGapMs": 11.808999985456467,
+      "frames": 12,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 4937825,
+      "elapsedMs": 35.54799997806549,
+      "maxHeartbeatGapMs": 7.272000014781952,
+      "p95HeartbeatGapMs": 7.272000014781952,
+      "maxFrameGapMs": 12.20200002193451,
+      "frames": 13,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 4937825,
+      "elapsedMs": 22.98600000143051,
+      "maxHeartbeatGapMs": 28.330000013113022,
+      "p95HeartbeatGapMs": 28.330000013113022,
+      "maxFrameGapMs": 30.261000007390976,
+      "frames": 8,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 4937825,
+      "elapsedMs": 21.72699999809265,
+      "maxHeartbeatGapMs": 27.006000012159348,
+      "p95HeartbeatGapMs": 27.006000012159348,
+      "maxFrameGapMs": 25.06800001859665,
+      "frames": 9,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-many-events",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 4937825,
+      "elapsedMs": 38.82199999690056,
+      "maxHeartbeatGapMs": 8.802000015974045,
+      "p95HeartbeatGapMs": 8.802000015974045,
+      "maxFrameGapMs": 11.287999987602234,
+      "frames": 13,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 5242541,
+      "elapsedMs": 1.99099999666214,
+      "maxHeartbeatGapMs": 6.898000001907349,
+      "p95HeartbeatGapMs": 6.898000001907349,
+      "maxFrameGapMs": 9.865000009536743,
+      "frames": 8,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 5242541,
+      "elapsedMs": 0.5589999854564667,
+      "maxHeartbeatGapMs": 5.456999987363815,
+      "p95HeartbeatGapMs": 5.456999987363815,
+      "maxFrameGapMs": 8.312000006437302,
+      "frames": 9,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 5242541,
+      "elapsedMs": 0.5639999806880951,
+      "maxHeartbeatGapMs": 5.293000012636185,
+      "p95HeartbeatGapMs": 5.293000012636185,
+      "maxFrameGapMs": 8.413000017404556,
+      "frames": 8,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 5242541,
+      "elapsedMs": 0.7129999995231628,
+      "maxHeartbeatGapMs": 5.5060000121593475,
+      "p95HeartbeatGapMs": 5.5060000121593475,
+      "maxFrameGapMs": 10.89300000667572,
+      "frames": 9,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 5242541,
+      "elapsedMs": 0.6109999716281891,
+      "maxHeartbeatGapMs": 5.460999995470047,
+      "p95HeartbeatGapMs": 5.460999995470047,
+      "maxFrameGapMs": 7.625,
+      "frames": 9,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 5242541,
+      "elapsedMs": 0.4650000035762787,
+      "maxHeartbeatGapMs": 5.377999991178513,
+      "p95HeartbeatGapMs": 5.377999991178513,
+      "maxFrameGapMs": 8.032999992370605,
+      "frames": 8,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 5242541,
+      "elapsedMs": 0.55799999833107,
+      "maxHeartbeatGapMs": 5.4670000076293945,
+      "p95HeartbeatGapMs": 5.4670000076293945,
+      "maxFrameGapMs": 7.290000021457672,
+      "frames": 9,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 5242541,
+      "elapsedMs": 0.5169999897480011,
+      "maxHeartbeatGapMs": 5.418000012636185,
+      "p95HeartbeatGapMs": 5.418000012636185,
+      "maxFrameGapMs": 6.964000016450882,
+      "frames": 8,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 5242541,
+      "elapsedMs": 0.6749999821186066,
+      "maxHeartbeatGapMs": 5.600999981164932,
+      "p95HeartbeatGapMs": 5.600999981164932,
+      "maxFrameGapMs": 7.023999989032745,
+      "frames": 7,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "near-5MiB-one-property",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 5242541,
+      "elapsedMs": 0.4970000088214874,
+      "maxHeartbeatGapMs": 5.376000016927719,
+      "p95HeartbeatGapMs": 5.376000016927719,
+      "maxFrameGapMs": 8.877999991178513,
+      "frames": 9,
+      "result": {
+        "events": 1
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 131825,
+      "elapsedMs": 25.712000012397766,
+      "maxHeartbeatGapMs": 31.04799997806549,
+      "p95HeartbeatGapMs": 31.04799997806549,
+      "maxFrameGapMs": 31.975000023841858,
+      "frames": 10,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 131825,
+      "elapsedMs": 23.381000012159348,
+      "maxHeartbeatGapMs": 9.750999987125397,
+      "p95HeartbeatGapMs": 9.750999987125397,
+      "maxFrameGapMs": 17.104999989271164,
+      "frames": 11,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 131825,
+      "elapsedMs": 23.226000010967255,
+      "maxHeartbeatGapMs": 8.492000013589859,
+      "p95HeartbeatGapMs": 8.492000013589859,
+      "maxFrameGapMs": 32.563999980688095,
+      "frames": 12,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 131825,
+      "elapsedMs": 17.583000004291534,
+      "maxHeartbeatGapMs": 22.953000009059906,
+      "p95HeartbeatGapMs": 22.953000009059906,
+      "maxFrameGapMs": 24.560999989509583,
+      "frames": 10,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 131825,
+      "elapsedMs": 16.30799999833107,
+      "maxHeartbeatGapMs": 21.657999992370605,
+      "p95HeartbeatGapMs": 21.657999992370605,
+      "maxFrameGapMs": 16.65700000524521,
+      "frames": 11,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 131825,
+      "elapsedMs": 19.74600002169609,
+      "maxHeartbeatGapMs": 7.993000000715256,
+      "p95HeartbeatGapMs": 7.993000000715256,
+      "maxFrameGapMs": 9.254999995231628,
+      "frames": 11,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 131825,
+      "elapsedMs": 19.433999985456467,
+      "maxHeartbeatGapMs": 7.575000017881393,
+      "p95HeartbeatGapMs": 7.575000017881393,
+      "maxFrameGapMs": 11.025999993085861,
+      "frames": 11,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 131825,
+      "elapsedMs": 15.742000013589859,
+      "maxHeartbeatGapMs": 21.104999989271164,
+      "p95HeartbeatGapMs": 21.104999989271164,
+      "maxFrameGapMs": 17.66499999165535,
+      "frames": 10,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 131825,
+      "elapsedMs": 15.250999987125397,
+      "maxHeartbeatGapMs": 20.537000000476837,
+      "p95HeartbeatGapMs": 20.537000000476837,
+      "maxFrameGapMs": 21.21799999475479,
+      "frames": 10,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "1000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 131825,
+      "elapsedMs": 18.972000002861023,
+      "maxHeartbeatGapMs": 7.46900001168251,
+      "p95HeartbeatGapMs": 7.46900001168251,
+      "maxFrameGapMs": 10.17900002002716,
+      "frames": 12,
+      "result": {
+        "events": 1000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 1337825,
+      "elapsedMs": 150.19699999690056,
+      "maxHeartbeatGapMs": 155.54300001263618,
+      "p95HeartbeatGapMs": 155.54300001263618,
+      "maxFrameGapMs": 152.02300000190735,
+      "frames": 10,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 1337825,
+      "elapsedMs": 170.07799997925758,
+      "maxHeartbeatGapMs": 44.341000020504,
+      "p95HeartbeatGapMs": 13.972000002861023,
+      "maxFrameGapMs": 44.24099999666214,
+      "frames": 22,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 1337825,
+      "elapsedMs": 181.8910000026226,
+      "maxHeartbeatGapMs": 59.141999989748,
+      "p95HeartbeatGapMs": 8.754000008106232,
+      "maxFrameGapMs": 59.03600001335144,
+      "frames": 22,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 1337825,
+      "elapsedMs": 147.09900000691414,
+      "maxHeartbeatGapMs": 152.4370000064373,
+      "p95HeartbeatGapMs": 152.4370000064373,
+      "maxFrameGapMs": 152.7209999859333,
+      "frames": 9,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 1337825,
+      "elapsedMs": 144.77099999785423,
+      "maxHeartbeatGapMs": 150.10699999332428,
+      "p95HeartbeatGapMs": 150.10699999332428,
+      "maxFrameGapMs": 148.6289999783039,
+      "frames": 7,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 1337825,
+      "elapsedMs": 187.9530000090599,
+      "maxHeartbeatGapMs": 59.53700000047684,
+      "p95HeartbeatGapMs": 8.370999991893768,
+      "maxFrameGapMs": 61.564999997615814,
+      "frames": 23,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 1337825,
+      "elapsedMs": 177.21199998259544,
+      "maxHeartbeatGapMs": 54.78900000452995,
+      "p95HeartbeatGapMs": 8.41499999165535,
+      "maxFrameGapMs": 62.89000001549721,
+      "frames": 22,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 1337825,
+      "elapsedMs": 143.55199998617172,
+      "maxHeartbeatGapMs": 148.96200001239777,
+      "p95HeartbeatGapMs": 148.96200001239777,
+      "maxFrameGapMs": 147.74300000071526,
+      "frames": 8,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 1337825,
+      "elapsedMs": 143.97299998998642,
+      "maxHeartbeatGapMs": 149.24899998307228,
+      "p95HeartbeatGapMs": 149.24899998307228,
+      "maxFrameGapMs": 147.2039999961853,
+      "frames": 8,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "10000-parse-and-expand",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 1337825,
+      "elapsedMs": 175.39599999785423,
+      "maxHeartbeatGapMs": 58.40600001811981,
+      "p95HeartbeatGapMs": 8.469999998807907,
+      "maxFrameGapMs": 58.33299997448921,
+      "frames": 21,
+      "result": {
+        "events": 10000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 131,
+      "elapsedMs": 207.72800001502037,
+      "maxHeartbeatGapMs": 213.11599999666214,
+      "p95HeartbeatGapMs": 213.11599999666214,
+      "maxFrameGapMs": 210.3149999976158,
+      "frames": 7,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 131,
+      "elapsedMs": 260.52099999785423,
+      "maxHeartbeatGapMs": 5.498999983072281,
+      "p95HeartbeatGapMs": 5.305000007152557,
+      "maxFrameGapMs": 10.173000007867813,
+      "frames": 44,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 131,
+      "elapsedMs": 261.66400000452995,
+      "maxHeartbeatGapMs": 5.482000023126602,
+      "p95HeartbeatGapMs": 5.300000011920929,
+      "maxFrameGapMs": 10.658000022172928,
+      "frames": 47,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 131,
+      "elapsedMs": 208.08700001239777,
+      "maxHeartbeatGapMs": 213.47100001573563,
+      "p95HeartbeatGapMs": 213.47100001573563,
+      "maxFrameGapMs": 212.1389999985695,
+      "frames": 9,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 131,
+      "elapsedMs": 207.53499999642372,
+      "maxHeartbeatGapMs": 212.8900000154972,
+      "p95HeartbeatGapMs": 212.8900000154972,
+      "maxFrameGapMs": 209.74099999666214,
+      "frames": 9,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 131,
+      "elapsedMs": 265.16600000858307,
+      "maxHeartbeatGapMs": 5.603999972343445,
+      "p95HeartbeatGapMs": 5.345999985933304,
+      "maxFrameGapMs": 11.440999984741211,
+      "frames": 44,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 131,
+      "elapsedMs": 274.27199998497963,
+      "maxHeartbeatGapMs": 5.543000012636185,
+      "p95HeartbeatGapMs": 5.444999992847443,
+      "maxFrameGapMs": 10.681000024080276,
+      "frames": 44,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 131,
+      "elapsedMs": 209.74599999189377,
+      "maxHeartbeatGapMs": 215.05799999833107,
+      "p95HeartbeatGapMs": 215.05799999833107,
+      "maxFrameGapMs": 215.516999989748,
+      "frames": 10,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 131,
+      "elapsedMs": 213.46699997782707,
+      "maxHeartbeatGapMs": 241.05099999904633,
+      "p95HeartbeatGapMs": 241.05099999904633,
+      "maxFrameGapMs": 237.35299998521805,
+      "frames": 6,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "historical-100k",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 131,
+      "elapsedMs": 289.5909999907017,
+      "maxHeartbeatGapMs": 7.022000014781952,
+      "p95HeartbeatGapMs": 5.355000019073486,
+      "maxFrameGapMs": 15.57600000500679,
+      "frames": 50,
+      "result": {
+        "iterations": 100000
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "sync",
+      "trial": 0,
+      "bytes": 91,
+      "elapsedMs": 699.5030000209808,
+      "maxHeartbeatGapMs": 705.402999997139,
+      "p95HeartbeatGapMs": 705.402999997139,
+      "maxFrameGapMs": 700.7390000224113,
+      "frames": 8,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "cooperative",
+      "trial": 0,
+      "bytes": 91,
+      "elapsedMs": 675.1829999983311,
+      "maxHeartbeatGapMs": 675.3379999995232,
+      "p95HeartbeatGapMs": 675.3379999995232,
+      "maxFrameGapMs": 676.9390000104904,
+      "frames": 8,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "cooperative",
+      "trial": 1,
+      "bytes": 91,
+      "elapsedMs": 691.8779999911785,
+      "maxHeartbeatGapMs": 692.1599999964237,
+      "p95HeartbeatGapMs": 692.1599999964237,
+      "maxFrameGapMs": 692.7770000100136,
+      "frames": 7,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "sync",
+      "trial": 1,
+      "bytes": 91,
+      "elapsedMs": 695.4919999837875,
+      "maxHeartbeatGapMs": 700.8279999792576,
+      "p95HeartbeatGapMs": 700.8279999792576,
+      "maxFrameGapMs": 696.5540000200272,
+      "frames": 7,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "sync",
+      "trial": 2,
+      "bytes": 91,
+      "elapsedMs": 683.4870000183582,
+      "maxHeartbeatGapMs": 688.8050000071526,
+      "p95HeartbeatGapMs": 688.8050000071526,
+      "maxFrameGapMs": 683.8449999988079,
+      "frames": 8,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "cooperative",
+      "trial": 2,
+      "bytes": 91,
+      "elapsedMs": 691.4410000145435,
+      "maxHeartbeatGapMs": 691.7770000100136,
+      "p95HeartbeatGapMs": 691.7770000100136,
+      "maxFrameGapMs": 692.2409999966621,
+      "frames": 8,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "cooperative",
+      "trial": 3,
+      "bytes": 91,
+      "elapsedMs": 685.6629999876022,
+      "maxHeartbeatGapMs": 685.9659999907017,
+      "p95HeartbeatGapMs": 685.9659999907017,
+      "maxFrameGapMs": 695.4189999997616,
+      "frames": 5,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "sync",
+      "trial": 3,
+      "bytes": 91,
+      "elapsedMs": 690.41400000453,
+      "maxHeartbeatGapMs": 695.7479999959469,
+      "p95HeartbeatGapMs": 695.7479999959469,
+      "maxFrameGapMs": 701.7730000019073,
+      "frames": 5,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "sync",
+      "trial": 4,
+      "bytes": 91,
+      "elapsedMs": 690.0160000026226,
+      "maxHeartbeatGapMs": 695.3049999773502,
+      "p95HeartbeatGapMs": 695.3049999773502,
+      "maxFrameGapMs": 691.7179999947548,
+      "frames": 5,
+      "result": {
+        "next": null
+      }
+    },
+    {
+      "name": "sparse-single-next",
+      "mode": "cooperative",
+      "trial": 4,
+      "bytes": 91,
+      "elapsedMs": 682.0379999876022,
+      "maxHeartbeatGapMs": 682.2479999959469,
+      "p95HeartbeatGapMs": 682.2479999959469,
+      "maxFrameGapMs": 686.4159999787807,
+      "frames": 6,
+      "result": {
+        "next": null
+      }
+    }
+  ]
+}

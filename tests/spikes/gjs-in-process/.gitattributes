@@ -1,0 +1,2 @@
+# Exported iCalendar fixtures retain RFC line endings.
+zones/*.ics whitespace=cr-at-eol

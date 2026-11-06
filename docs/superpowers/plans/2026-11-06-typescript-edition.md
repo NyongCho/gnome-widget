@@ -10,6 +10,8 @@
 
 **Spec:** [TypeScript 공개용 에디션 설계](../specs/2026-11-06-typescript-edition-design.md). 기준 커밋 `87e0104`. 상태: 미구현, 전체 12개 task.
 
+**실행 보류 (2026-11-06):** 사용자가 Shell 내부 실행 검증을 우선하도록 방향을 정했다. [실측 보고서](../../typescript-shell-feasibility.md)를 먼저 읽는다. 아래 12개 task는 외부 GJS worker를 전제로 작성한 초기 계획이며 그대로 실행하지 않는다. 단일 호출 안에서도 중단/양보 가능한 달력 엔진과 시간대·반복 의미 보존을 선행 검증하고, 그 결과에 맞춰 backend·prefs·수명 관리 task를 다시 작성해야 한다. 이번 검증은 이 계획의 Task 1 전체 완료를 뜻하지 않는다.
+
 ## Global Constraints
 
 - GNOME Shell 50만 지원. 공개용 실행에는 Node.js·Rust·libical·systemd 서비스 설치가 필요 없어야 한다.

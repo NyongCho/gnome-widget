@@ -1,0 +1,7 @@
+{
+  "name": "liquid-widgets-in-process-feasibility-spike",
+  "private": true,
+  "type": "module",
+  "description": "Throwaway GJS feasibility measurements, not production code",
+  "dependencies": {"ical.js": "2.2.1"}
+}

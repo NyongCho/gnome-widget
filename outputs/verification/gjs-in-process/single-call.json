@@ -1,0 +1,88 @@
+[
+  {
+    "rule": "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30",
+    "dtstart": "2026-01-01T00:00:00Z",
+    "constructorMs": 0.403,
+    "calls": [
+      {
+        "ms": 0.025,
+        "value": "2026-03-02T00:00:00Z"
+      },
+      {
+        "ms": 0.19,
+        "value": "2027-03-02T00:00:00Z"
+      },
+      {
+        "ms": 0.164,
+        "value": "2028-03-01T00:00:00Z"
+      },
+      {
+        "ms": 0.151,
+        "value": "2029-03-02T00:00:00Z"
+      },
+      {
+        "ms": 0.102,
+        "value": "2030-03-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "rule": "FREQ=SECONDLY;BYMONTH=2;BYMONTHDAY=29;BYHOUR=0;BYMINUTE=0;BYSECOND=0",
+    "dtstart": "2024-02-29T00:00:00Z",
+    "constructorMs": 0.397,
+    "calls": [
+      {
+        "ms": 0.043,
+        "value": "2024-02-29T00:00:00Z"
+      },
+      {
+        "ms": 687.164,
+        "value": "2028-02-29T00:00:00Z"
+      },
+      {
+        "ms": 678.906,
+        "value": "2032-02-29T00:00:00Z"
+      },
+      {
+        "ms": 682.993,
+        "value": "2036-02-29T00:00:00Z"
+      },
+      {
+        "ms": 675.279,
+        "value": "2040-02-29T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "rule": "FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30",
+    "timeoutSeconds": 4,
+    "completedCalls": "{\"rule\":\"FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30\",\"dtstart\":\"2026-01-01T00:00:00Z\",\"constructorMs\":0.315,\"calls\":[{\"ms\":0.05,\"value\":\"2026-01-01T00:00:00Z\"}]}\n"
+  },
+  {
+    "rule": "FREQ=YEARLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=1,2,3,4,5,6,7,8,9,10,11,12;BYSETPOS=-1",
+    "dtstart": "2026-01-01T00:00:00Z",
+    "constructorMs": 4.417,
+    "calls": [
+      {
+        "ms": 0.017,
+        "value": "2026-01-31T00:00:00Z"
+      },
+      {
+        "ms": 0.104,
+        "value": "2026-02-28T00:00:00Z"
+      },
+      {
+        "ms": 0.079,
+        "value": "2026-03-31T00:00:00Z"
+      },
+      {
+        "ms": 0.091,
+        "value": "2026-04-30T00:00:00Z"
+      },
+      {
+        "ms": 0.065,
+        "value": "2026-05-31T00:00:00Z"
+      }
+    ]
+  }
+]
