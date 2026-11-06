@@ -25,8 +25,8 @@ function pixels(name,actor){
 }
 export async function run(){
     Main.overview.hide();await Scripting.sleep(1500);
-    const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj;
-    ext.client.stop();ext.client=null;ext.clock.destroy();ext.clock=null;
+    const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj;
+    ext.client.destroy();ext.client=null;ext.clock.destroy();ext.clock=null;
     ext.settings.set_strv('visible',['media']);ext.host.setConnected(true);
     const fixtures=[['wide',160,90],['square',90,90],['portrait',90,160]].map(([name,w,h])=>({name,w,h,uri:fixture(name,w,h)}));
     const data=uri=>({status:'ok',sourceId:'art-fixture',updatedAt:'2026-11-04T04:30:00Z',errorCode:null,data:{player:'org.mpris.MediaPlayer2.fixture',status:'playing',title:'Artwork test',artist:'Test artist',artUri:uri}});

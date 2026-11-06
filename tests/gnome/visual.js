@@ -37,7 +37,9 @@ async function renderedContrasts(host,name){
  return readings;
 }
 export async function run(){
- Main.overview.hide();await Scripting.sleep(1500);const ext=Main.extensionManager.lookup('liquid-widgets@local');const settings=ext.stateObj.settings;const host=ext.stateObj.host;
+ Main.overview.hide();await Scripting.sleep(1500);const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));const settings=ext.stateObj.settings;const host=ext.stateObj.host;
+ // Freeze provider data for GPU/contrast assertions; live collectors have their own integration suites.
+ ext.stateObj.client?.destroy();ext.stateObj.client=null;
  const background=new Gio.Settings({schema_id:'org.gnome.desktop.background'});const desktop=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
  const now=Date.now(),updatedAt=new Date(now).toISOString();host.setConnected(true);
  const surface=host.cards.get('clock').surface;

@@ -17,6 +17,7 @@ outer_display=Path(os.environ['WAYLAND_DISPLAY'])
 if not outer_display.is_absolute():os.environ['WAYLAND_DISPLAY']=str(outer_runtime/outer_display)
 runtime=Path(os.environ['LIQUID_TEST_RUNTIME'])
 os.environ['XDG_RUNTIME_DIR']=str(runtime)
+os.environ['GNOME_KEYRING_CONTROL']=str(runtime/'keyring')
 # Devkit streams the nested output through the existing PipeWire server.
 os.environ['PIPEWIRE_RUNTIME_DIR']=str(outer_runtime)
 apps=data/'applications';apps.mkdir(parents=True,exist_ok=True)
@@ -41,7 +42,7 @@ if blur.is_dir():
 os.environ.pop('SHELL_BACKGROUND_IMAGE',None)
 # D-Bus activated preferences/portal processes must join the test display and
 # temporary settings, not inherit the outer desktop from dbus-run-session.
-values=[f'{key}={os.environ[key]}' for key in ('XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','XDG_RUNTIME_DIR','PIPEWIRE_RUNTIME_DIR','GSETTINGS_BACKEND') if key in os.environ]
+values=[f'{key}={os.environ[key]}' for key in ('XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','XDG_RUNTIME_DIR','PIPEWIRE_RUNTIME_DIR','GSETTINGS_BACKEND','GNOME_KEYRING_CONTROL','LIQUID_TEST_EDITION','LIQUID_TEST_UUID','LIQUID_TEST_SCHEMA','LIQUID_TEST_WORKER','LIQUID_TEST_FIXTURES') if key in os.environ]
 display=os.environ.get('LIQUID_TEST_DISPLAY','gnome-shell-test-display')
 subprocess.run(['dbus-update-activation-environment',f'WAYLAND_DISPLAY={display}',*values],check=True)
 arguments=sys.argv[1:]

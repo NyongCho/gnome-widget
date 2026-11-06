@@ -2,6 +2,7 @@
 """Visible GNOME 50 integration test, always on a private D-Bus session."""
 from pathlib import Path
 import os
+import json
 import signal
 import subprocess
 import sys
@@ -9,9 +10,14 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-WORK = ROOT / '.superpowers/sdd/liquid-glass-plan'
-SHOT_MODE = next((flag[2:] for flag in ('--dynamic-wallpaper', '--clock-footer', '--clock-styles', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
-SHOTS = WORK / 'screenshots' / SHOT_MODE
+EDITION = sys.argv[sys.argv.index('--edition')+1] if '--edition' in sys.argv else 'rust'
+EDITIONS = json.loads((ROOT/'extension/editions.json').read_text())
+if EDITION not in EDITIONS: raise SystemExit('Expected --edition rust or gjs')
+EDITION_INFO = EDITIONS[EDITION]
+BUILD = ROOT/'extension'/EDITION_INFO['output']
+WORK = Path(os.environ.get('LIQUID_GNOME_WORK',ROOT/'.superpowers/gnome-tests'))
+SHOT_MODE = next((flag[2:] for flag in ('--editions', '--dynamic-wallpaper', '--clock-footer', '--clock-styles', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
+SHOTS = WORK / 'screenshots' / EDITION / SHOT_MODE
 
 
 def verify_images():
@@ -81,21 +87,21 @@ def main():
         raise SystemExit('A visible Wayland desktop is required')
     os.chdir(ROOT)
     SHOTS.mkdir(parents=True, exist_ok=True)
-    env = os.environ | {'LIQUID_TEST_DISPLAY': f'liquid-widgets-test-{os.getpid()}', 'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(ROOT / 'daemon/target/debug/liquid-widgets-daemon'), 'LIQUID_TEST_PREFS': str(ROOT / 'extension/dist/tests/preferences.js'), 'LIQUID_TEST_CARD_ORDER': str(ROOT / 'extension/dist/tests/card-order.js'), 'LIQUID_TEST_SCHEMAS': str(ROOT / 'extension/dist/schemas'), 'LIQUID_CLOCK_TICKS': str(os.sysconf('SC_CLK_TCK')), 'LIQUID_SOAK_SECONDS': '1800' if '--soak' in sys.argv else '0'}
+    env = os.environ | {'LIQUID_TEST_EDITION':EDITION,'LIQUID_TEST_UUID':EDITION_INFO['uuid'],'LIQUID_TEST_SCHEMA':EDITION_INFO['schemaId'],'LIQUID_TEST_WORKER':str(BUILD),'LIQUID_TEST_FIXTURES':str(ROOT/'tests/fixtures'),'LIQUID_TEST_DISPLAY': f'liquid-widgets-test-{os.getpid()}', 'GIO_USE_VFS': 'local', 'GTK_A11Y': 'none', 'LIQUID_TEST_OUTPUT': str(SHOTS), 'LIQUID_TEST_DAEMON': str(Path(os.environ.get('CARGO_TARGET_DIR',ROOT/'daemon/target'))/'debug/liquid-widgets-daemon'), 'LIQUID_TEST_PREFS': str(BUILD/'tests/preferences.js'), 'LIQUID_TEST_CARD_ORDER': str(BUILD/'tests/card-order.js'), 'LIQUID_TEST_SCHEMAS': str(BUILD/'schemas'), 'LIQUID_CLOCK_TICKS': str(os.sysconf('SC_CLK_TCK')), 'LIQUID_SOAK_SECONDS': '1800' if '--soak' in sys.argv else '0'}
     archive = WORK / 'liquid-widgets.shell-extension.zip'
     with zipfile.ZipFile(archive, 'w') as output:
-        for file in (ROOT / 'extension/dist').rglob('*'):
-            if not file.is_file() or 'tests' in file.relative_to(ROOT / 'extension/dist').parts: continue
+        for file in BUILD.rglob('*'):
+            if not file.is_file() or 'tests' in file.relative_to(BUILD).parts: continue
             if '--spike' in sys.argv and file.name == 'extension.js':
-                output.write(ROOT / 'extension/dist/tests/spike.js', 'extension.js')
-            else: output.write(file, str(file.relative_to(ROOT / 'extension/dist')))
+                output.write(BUILD/'tests/spike.js', 'extension.js')
+            else: output.write(file, str(file.relative_to(BUILD)))
     system_viewer = Path('/usr/libexec/mutter-devkit')
     local_viewer = ROOT / '.tools/sysroot/usr/libexec/mutter-devkit'
     if not system_viewer.exists() and not local_viewer.exists():
         raise SystemExit('mutter-devkit missing; see docs/shader-spike.md')
     shell = subprocess.Popen([
         'gnome-shell-test-tool', '--devkit', '--wrap', str(ROOT / 'scripts/gnome-test-env.py'),
-        '--extension', str(archive), str(ROOT / ('tests/gnome/dynamic-wallpaper.js' if '--dynamic-wallpaper' in sys.argv else 'tests/gnome/clock-footer.js' if '--clock-footer' in sys.argv else 'tests/gnome/clock-styles.js' if '--clock-styles' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
+        '--extension', str(archive), str(ROOT / ('tests/gnome/editions.js' if '--editions' in sys.argv else 'tests/gnome/dynamic-wallpaper.js' if '--dynamic-wallpaper' in sys.argv else 'tests/gnome/clock-footer.js' if '--clock-footer' in sys.argv else 'tests/gnome/clock-styles.js' if '--clock-styles' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
     ], env=env, start_new_session=True)
     viewer = None
     try:

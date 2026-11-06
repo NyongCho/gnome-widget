@@ -13,7 +13,7 @@ async function until(predicate,message){for(let i=0;i<200;i++){if(predicate())re
 const config={monitor:'primary',anchor:'top-right',offsetX:24,offsetY:20,scale:1,visible:['clock','calendar','weather','agenda','network']};
 export async function run(){
     Main.overview.hide();await Scripting.sleep(1500);
-    const extension=Main.extensionManager.lookup('liquid-widgets@local');
+    const extension=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));
     check(extension?.stateObj?.host,'WidgetHost did not load');
     let host=extension.stateObj.host;
     print(`WIDGET_LAYOUT: ${JSON.stringify(host.diagnostics)}`);
@@ -61,19 +61,21 @@ export async function run(){
     // Those backgrounds must refresh; geometry-stable cards reuse their input.
     check([...host.cards.values()].every((card,i)=>JSON.stringify(geometry(card))===JSON.stringify(paints[i].geometry)?card.surface.diagnostics.inputPaints===paints[i].count:card.surface.diagnostics.inputPaints>paints[i].count),`clock/layout cache mismatch: before=${JSON.stringify(paints)} after=${JSON.stringify([...host.cards.values()].map(card=>({id:card.id,geometry:geometry(card),...card.surface.diagnostics})))}`);
     LoginManager.getLoginManager().emit('prepare-for-sleep',false);
-    const process=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
+    const isPublic=GLib.getenv('LIQUID_TEST_EDITION')==='gjs';
+    const process=isPublic?null:Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE);
     try{
-        await until(()=>host.connected,'GNOME did not connect to Rust');
-        const languageToken=extension.stateObj.client.token;check(typeof languageToken==='string','missing live subscription token');
+        await until(()=>host.connected,'GNOME data session did not become ready');
+        const subscription=()=>isPublic?extension.stateObj.client.calendarStatus().generation:extension.stateObj.client.client.token;
+        const languageToken=subscription();check(languageToken!==null,'missing live subscription');
         settings.set_string('language','en');await Scripting.sleep(100);settings.set_string('language','ko');await Scripting.sleep(100);
-        check(extension.stateObj.client.token===languageToken,'language change resubscribed providers');
+        check(subscription()===languageToken,'language change resubscribed providers');
         await capture('widgets-connected');
         settings.set_strv('visible',['clock','system','network','media']);
-        await until(()=>host.states.get('system')?.data?.cpuPercent!==null&&host.states.get('system')?.data&&host.states.get('network')?.data?.history.length>=2,'live CPU/network samples did not arrive');
+        await until(()=>host.states.get('system')?.data?.cpuPercent!==null&&host.states.get('system')?.data&&host.states.get('network')?.data?.history.length>=2,'live CPU/network samples did not arrive').catch(error=>{throw new Error(error.message+': '+JSON.stringify({system:host.states.get('system'),network:host.states.get('network')}));});
         check(host.states.get('system').data.memoryUsedBytes>0,'RAM sample missing');
         check(!host.visibleCards.includes('media'),'idle music card should be hidden');
         await capture('widgets-live-metrics');
-        // Deterministic cover/title UI: MPRIS property/owner transitions are tested on a private real bus in Rust.
+        // Deterministic cover/title UI: MPRIS property/owner transitions are separately tested on private real buses in both backends.
         extension.stateObj.client.stop();
         const music={status:'ok',sourceId:'fixture',updatedAt:new Date().toISOString(),errorCode:null,data:{player:'org.mpris.MediaPlayer2.fixture',status:'playing',title:'밤하늘을 걷다',artist:'Liquid Sessions',artUri:null}};
         host.updateProvider('media',music);extension.stateObj.layout();host.setConnected(true);
@@ -113,9 +115,13 @@ export async function run(){
         host.updateProvider('calendar',{...fixture,data:{...fixture.data,timeZone:'Etc/GMT+5'}});
         check(!agenda().includes('프로젝트 리뷰'),'mismatched context exposed old events');
         host.updateProvider('calendar',{status:'unconfigured',sourceId:'gui-fixture',updatedAt:null,data:null,errorCode:null});
-        process.force_exit();await until(()=>!host.connected,'service loss not reflected');
-        check(findNamed(host.cards.get('clock').body,'liquid-clock-digits').get_text().length>0,'clock stopped with service');
-    }finally{process.force_exit();}
+        if(process){process.force_exit();await until(()=>!host.connected,'service loss not reflected');}
+        else {
+            host.updateProvider('weather',{...weather,status:'stale',errorCode:'NETWORK_ERROR'});
+            check(host.connected,'individual provider failure disconnected the local session');
+        }
+        check(findNamed(host.cards.get('clock').body,'liquid-clock-digits').get_text().length>0,'clock stopped after backend failure');
+    }finally{process?.force_exit();}
     const fallbackCard=host.cards.get('clock');
     fallbackCard.surface.effect.ensureTarget=()=>{throw new Error('test allocation failure');};
     fallbackCard.surface.effect.invalidate();
@@ -161,10 +167,10 @@ export async function run(){
     for(let i=0;i<20;i++){
         const oldClock=extension.stateObj.clock;const timer=oldClock.timer;const schemeSignal=extension.stateObj.host.schemeSignal;
         const layer=extension.stateObj.layer;const signal=layer.restacked;
-        Main.extensionManager.disableExtension('liquid-widgets@local');await until(()=>extension.state===2,'extension disable failed');
+        Main.extensionManager.disableExtension((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));await until(()=>extension.state===2,'extension disable failed');
         check(!GObject.signal_handler_is_connected(St.Settings.get(),schemeSignal),'orphan color scheme signal');
         check(rootCount()===0,'orphan layer after disable');check(!GLib.MainContext.default().find_source_by_id(timer),'orphan minute timer');check(!GObject.signal_handler_is_connected(global.display,signal),'orphan display signal');
-        Main.extensionManager.enableExtension('liquid-widgets@local');await until(()=>extension.state===1,'extension enable failed');await Scripting.sleep(50);
+        Main.extensionManager.enableExtension((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));await until(()=>extension.state===1,'extension enable failed');await Scripting.sleep(50);
         check(rootCount()===1,`unexpected layers after enable: cycle=${i} roots=${rootCount()} state=${extension.state} liveLayer=${!!extension.stateObj.layer}`);
     }
     host=extension.stateObj.host;await capture('widgets-lifecycle');
@@ -174,11 +180,11 @@ export async function run(){
     const clockLabel=host.cards.get('clock').body.get_children()[0];
     host.updateProvider('network',{status:'unavailable',sourceId:'test',updatedAt:null,data:null,errorCode:'NO_INTERFACE'});
     check(host.cards.get('clock').body.get_children()[0]===clockLabel,'network update rebuilt clock');
-    Gio.Subprocess.new(['gnome-extensions','prefs','liquid-widgets@local'],Gio.SubprocessFlags.NONE);
+    Gio.Subprocess.new(['gnome-extensions','prefs',(GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')],Gio.SubprocessFlags.NONE);
     let prefs;await until(()=>{prefs=global.get_window_actors().find(a=>a.mapped&&a.meta_window.get_title()==='Liquid Widgets');return !!prefs;},'preferences window did not map');
     await Scripting.sleep(300);await capture('widgets-preferences');
     const prefsRect=prefs.meta_window.get_frame_rect();await click(prefsRect.x+370,prefsRect.y+22);await Scripting.sleep(300);await capture('widgets-calendar-preferences');
     prefs.meta_window.delete(global.get_current_time());
     releaseInput();
-    print('WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, owner loss, DING/BMS input, window overlap and 20-cycle cleanup passed');
+    print('WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, backend failure, DING/BMS input, window overlap and 20-cycle cleanup passed');
 }

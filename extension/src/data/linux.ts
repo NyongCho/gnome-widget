@@ -16,11 +16,13 @@ export class GioLinuxFiles implements LinuxFiles {
         try{return await bounded(cancel,2000,'SERVICE_UNAVAILABLE',fn);}catch(error){if(error instanceof DataFailure||error instanceof DataCancelled)throw error;throw new DataFailure('SERVICE_UNAVAILABLE');}
     }
     readText(path:string,maxBytes:number,cancel:Cancellation):Promise<string>{return this.use(cancel,async io=>{
-        const file=this.file(path),attributes='standard::type,standard::size';
+        const file=this.file(path),attributes='standard::type';
         // Hardware directories legitimately contain symlinks; the opened target
         // must still be a regular file, never a FIFO or device stream.
         const before=await gioAsync(cb=>file.query_info_async(attributes,Gio.FileQueryInfoFlags.NONE,0,io,cb),r=>file.query_info_finish(r));
-        if(before.get_file_type()!==Gio.FileType.REGULAR)throw new DataFailure('INVALID_DATA');if(before.get_size()>maxBytes)throw new DataFailure('PAYLOAD_TOO_LARGE');checkIO(io);
+        if(before.get_file_type()!==Gio.FileType.REGULAR)throw new DataFailure('INVALID_DATA');checkIO(io);
+        // sysfs st_size is commonly 4096 for a short attribute (procfs may say 0).
+        // Enforce the bound on bytes actually read, below, rather than this metadata.
         const stream=await gioAsync(cb=>file.read_async(0,io,cb),r=>file.read_finish(r));
         try{
             const opened=await gioAsync(cb=>stream.query_info_async(attributes,0,io,cb),r=>stream.query_info_finish(r));if(opened.get_file_type()!==Gio.FileType.REGULAR)throw new DataFailure('INVALID_DATA');

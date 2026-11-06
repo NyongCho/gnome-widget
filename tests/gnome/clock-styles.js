@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';import GLib from 'gi://GLib';import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
-import {capture,setScale,findNamed} from './helpers.js';
+import {capture,setScale,findNamed,settledMaterial} from './helpers.js';
 export const METRICS={};
 function check(ok,message){if(!ok)throw new Error(message);}
 const styles=['digital','square','classic','minimal'];
@@ -9,8 +9,8 @@ const state=async()=>JSON.parse((await call('State'))[0]);
 async function until(predicate,message){for(let i=0;i<80;i++){if(await predicate())return;await Scripting.sleep(50);}throw new Error(message);}
 export async function run(){
  Main.overview.hide();await Scripting.sleep(1000);
- const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj,host=ext.host,settings=ext.settings;
- ext.client.stop();ext.client=null;ext.clock.destroy();ext.clock=null;
+ const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj,host=ext.host,settings=ext.settings;
+ ext.client.destroy();ext.client=null;ext.clock.destroy();ext.clock=null;
  const child=Gio.Subprocess.new(['gjs','-m',GLib.getenv('LIQUID_TEST_CARD_ORDER')],Gio.SubprocessFlags.NONE);
  const keyboard=global.stage.get_context().get_backend().get_default_seat().create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
  const key=async value=>{keyboard.notify_keyval(GLib.get_monotonic_time(),value,Clutter.KeyState.PRESSED);await Scripting.sleep(20);keyboard.notify_keyval(GLib.get_monotonic_time(),value,Clutter.KeyState.RELEASED);await Scripting.sleep(80);};
@@ -64,6 +64,7 @@ export async function run(){
   for(const style of styles){settings.set_string('clock-style',style);host.tick(now,'Asia/Seoul',false,'ko-KR',1);await Scripting.sleep(150);fit();await capture(`clock-${style}-${mode}`);}
  }
  settings.set_string('clock-style','minimal');await Scripting.sleep(150);
+ await settledMaterial(card().surface);
  const face=view(),calendar=host.cards.get('calendar').body.get_first_child(),cached=card().surface.diagnostics.blurPaints;
  let paints=0;const repaint=face.area.connect('repaint',()=>paints++);const before=face.values.secondAngle;
  await Scripting.sleep(2200);check(paints>=2&&face.values.secondAngle!==before,'analog second hand did not advance');
@@ -95,6 +96,6 @@ export async function run(){
  const visible=settings.get_strv('visible');settings.set_strv('visible',visible.filter(id=>id!=='clock'));await Scripting.sleep(100);
  check(removed.timer===0&&!GLib.MainContext.default().find_source_by_id(oldTimer),'removed clock leaked its timer');
  settings.set_strv('visible',visible);await Scripting.sleep(100);check(view()!==removed&&view().timer>0,'reenabled clock not restored');
- for(let i=0;i<5;i++){settings.set_string('clock-style','classic');await Scripting.sleep(30);const running=ext.host,clock=running.clockFaces.get(running.cards.get('clock')),timer=clock.timer;Main.extensionManager.disableExtension('liquid-widgets@local');await until(()=>!ext.host,'extension did not disable');check(clock.timer===0&&!GLib.MainContext.default().find_source_by_id(timer),'extension disable leaked clock timer');if(i<4){Main.extensionManager.enableExtension('liquid-widgets@local');await until(()=>ext.host?.cards.has('clock'),'extension did not enable');}}
+ for(let i=0;i<5;i++){settings.set_string('clock-style','classic');await Scripting.sleep(30);const running=ext.host,clock=running.clockFaces.get(running.cards.get('clock')),timer=clock.timer;Main.extensionManager.disableExtension((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));await until(()=>!ext.host,'extension did not disable');check(clock.timer===0&&!GLib.MainContext.default().find_source_by_id(timer),'extension disable leaked clock timer');if(i<4){Main.extensionManager.enableExtension((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));await until(()=>ext.host?.cards.has('clock'),'extension did not enable');}}
  print('CLOCK_SHELL: four faces, time/locale/scale, second hand, stable actors/blur, mapped/low-power/style/removal/disable cleanup passed');
 }

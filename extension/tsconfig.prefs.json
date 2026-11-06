@@ -8,6 +8,7 @@
     "src/prefs.ts",
     "src/prefs-env.d.ts",
     "src/shared/**/*.ts",
-    "src/data-env.d.ts"
+    "src/data-env.d.ts",
+    "tests/gnome/publicPreferences.ts"
   ]
 }

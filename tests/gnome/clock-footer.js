@@ -6,8 +6,8 @@ export const METRICS={};
 function check(value,message){if(!value)throw new Error(message);}
 export async function run(){
  Main.overview.hide();await Scripting.sleep(1000);
- const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj,host=ext.host,settings=ext.settings;
- ext.client.stop();ext.client=null;ext.clock.destroy();ext.clock=null;
+ const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj,host=ext.host,settings=ext.settings;
+ ext.client.destroy();ext.client=null;ext.clock.destroy();ext.clock=null;
  settings.set_string('language','ko');settings.set_double('scale',1);settings.set_string('clock-style','digital');
  settings.set_strv('visible',['clock','weather']);host.setConnected(true);
  const now=Date.parse('2026-11-04T01:08:38Z');host.tick(now,'Asia/Seoul',false,'ko-KR',1);

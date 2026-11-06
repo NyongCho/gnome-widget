@@ -1,0 +1,33 @@
+{
+  "ready": {
+    "clock": {
+      "height": 230,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "calendar": {
+      "height": 246,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "agenda": {
+      "height": 218,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "weather": {
+      "height": 230,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "network": {
+      "height": 177,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "system": {
+      "height": 221,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    },
+    "media": {
+      "height": 111,
+      "titleFont": "Ubuntu Sans Semi-Bold 14.993px"
+    }
+  },
+  "weatherWithError": 255
+}

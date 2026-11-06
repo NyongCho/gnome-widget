@@ -8,13 +8,13 @@ import {fillSettingsWindow} from '../../src/prefs/pages.js';
 if(GLib.getenv('GSETTINGS_BACKEND')!=='keyfile')throw new Error('private settings required');
 const schemas=GLib.getenv('LIQUID_TEST_SCHEMAS');
 if(!schemas)throw new Error('private schemas required');
-const schema=Gio.SettingsSchemaSource.new_from_directory(schemas,Gio.SettingsSchemaSource.get_default(),false).lookup('org.gnome.shell.extensions.liquid-widgets',false);
+const schema=Gio.SettingsSchemaSource.new_from_directory(schemas,Gio.SettingsSchemaSource.get_default(),false).lookup(GLib.getenv('LIQUID_TEST_SCHEMA')||'org.gnome.shell.extensions.liquid-widgets',false);
 const settings=new Gio.Settings({settings_schema:schema});
 
 // Acquire the fixture name before opening preferences; never contact an existing service.
 const [ownership]=Gio.DBus.session.call_sync('org.freedesktop.DBus','/org/freedesktop/DBus','org.freedesktop.DBus','RequestName',new GLib.Variant('(su)',['org.local.LiquidWidgets',4]),new GLib.VariantType('(u)'),Gio.DBusCallFlags.NONE,-1,null).deep_unpack();
 if(ownership!==1)throw new Error('private data service name required');
-const fixturePath=GLib.build_filenamev([schemas,'../../../tests/fixtures/protocol/snapshot-valid.json']);
+const fixturePath=GLib.build_filenamev([GLib.getenv('LIQUID_TEST_FIXTURES'),'protocol/snapshot-valid.json']);
 const snapshot=JSON.parse(new TextDecoder().decode(GLib.file_get_contents(fixturePath)[1]));
 snapshot.calendar={status:'unconfigured',sourceId:null,updatedAt:null,data:null,errorCode:null};
 const fixture=Gio.DBusExportedObject.wrapJSObject(`<node><interface name="org.local.LiquidWidgets1">
@@ -94,7 +94,7 @@ Gio.bus_own_name_on_connection(Gio.DBus.session,'org.local.LiquidCardOrderTest',
 const app=new Adw.Application({application_id:'org.local.LiquidCardOrderHarness'});
 function openWindow(){
  window=new Adw.PreferencesWindow({application:app,title:'Liquid Card Order Keyboard Test'});
- fillSettingsWindow(window,settings);
+ fillSettingsWindow(window,settings,GLib.getenv('LIQUID_TEST_WORKER'));
  const controller=new Gtk.EventControllerKey({propagation_phase:Gtk.PropagationPhase.CAPTURE});
  controller.connect('key-pressed',()=>{keyEvents++;return false;});
  window.add_controller(controller);

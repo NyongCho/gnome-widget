@@ -4,7 +4,7 @@ import GLib from 'gi://GLib';
 import GdkPixbuf from 'gi://GdkPixbuf';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
-import {capture,setScale} from './helpers.js';
+import {capture,setScale,settledMaterial} from './helpers.js';
 export const METRICS={};
 function check(value,message){if(!value)throw new Error(message);}
 function leaves(actor){
@@ -83,8 +83,8 @@ export async function run(){
     const uri=Gio.File.new_for_path(path).get_uri();background.set_string('picture-uri',uri);background.set_string('picture-uri-dark',uri);
     desktop.set_string('color-scheme','prefer-dark');
     await Scripting.sleep(1300); // Let the Shell's wallpaper crossfade finish.
-    const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj;
-    ext.clock.destroy();ext.clock=null;ext.client.stop();ext.client=null;
+    const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj;
+    ext.clock.destroy();ext.clock=null;ext.client.destroy();ext.client=null;
     const host=ext.host,settings=ext.settings;
     settings.set_strv('visible',['clock','calendar','weather','agenda','network','system','media']);
     const now=Date.parse('2026-11-04T04:30:00Z'),updatedAt=new Date(now).toISOString();
@@ -111,9 +111,13 @@ export async function run(){
     compact(host,1);await capture('compact-error');
     host.updateProvider('weather',weather);await Scripting.sleep(200);
     check(host.cards.get('weather').button.height===oldHeight,'recovery retains error footer space');
-    const before=host.cards.get('clock').surface.diagnostics.inputPaints;
+    const clockSample=()=>{const c=host.cards.get('clock');return {geometry:[...c.button.get_transformed_position(),...c.button.get_transformed_size()],...c.surface.diagnostics};};
+    // Theme changes crossfade distinct light/dark wallpaper actors for about a second.
+    // Cache reuse is only expected after that native content animation settles.
+    await settledMaterial(host.cards.get('clock').surface);
+    const beforeState=clockSample();const before=beforeState.inputPaints;
     host.tick(now+1000,'Asia/Seoul',false,'ko-KR',1);await Scripting.sleep(150);
-    check(host.cards.get('clock').surface.diagnostics.inputPaints===before,'unchanged clock height invalidates glass cache');
+    check(host.cards.get('clock').surface.diagnostics.inputPaints===before,`unchanged clock height invalidates glass cache: ${JSON.stringify({before:beforeState,after:clockSample()})}`);
     host.updateProvider('calendar',{...calendar,data:{...calendar.data,events:[]}});await Scripting.sleep(150);compact(host,1);
     await capture('compact-no-events');
     for(const language of ['ko','en']){

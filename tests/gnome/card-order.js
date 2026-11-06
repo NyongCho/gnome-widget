@@ -11,8 +11,8 @@ const state=async()=>JSON.parse((await call('State'))[0]);
 async function waitFor(predicate,message){for(let i=0;i<80;i++){try{if(await predicate())return;}catch{}await Scripting.sleep(50);}throw new Error(message);}
 export async function run(){
  Main.overview.hide();await Scripting.sleep(1000);
- const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj,settings=ext.settings,host=ext.host;
- ext.client.stop();ext.client=null;ext.clock.destroy();ext.clock=null;
+ const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj,settings=ext.settings,host=ext.host;
+ ext.client.destroy();ext.client=null;ext.clock.destroy();ext.clock=null;
  const write=columns=>settings.set_value('card-columns',new GLib.Variant('aas',[columns.left,columns.right]));
  settings.set_strv('visible',all);settings.set_strv('card-order',['system','clock','calendar']);settings.reset('card-columns');Gio.Settings.sync();
  const child=Gio.Subprocess.new(['gjs','-m',GLib.getenv('LIQUID_TEST_CARD_ORDER')],Gio.SubprocessFlags.NONE);

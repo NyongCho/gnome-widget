@@ -4,12 +4,13 @@ import Gio from 'gi://Gio';
 import {addWeatherSettings} from './weather.js';
 import {addCalendarSettings} from './calendar.js';
 import {addDisplaySettings,addNetworkSettings} from './placement.js';
+import type {PreferencesDataSession} from '../backend/contracts.js';
 import {createPreferencesDataSession} from './dataSession.js';
 import {preferencesLanguage,addLanguageSettings,onPreferencesClosed} from './language.js';
 import {addCardSettings} from './cards.js';
 import {addClockSettings} from './clock.js';
-export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Settings,extensionPath:string):void{
- const ui=preferencesLanguage(window,settings),session=createPreferencesDataSession(extensionPath);onPreferencesClosed(window,()=>session.destroy());
+export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Settings,extensionPath:string,session:PreferencesDataSession=createPreferencesDataSession(extensionPath)):void{
+ const ui=preferencesLanguage(window,settings);onPreferencesClosed(window,()=>session.destroy());
  window.set_default_size(600,720);
  const page=ui.bind(new Adw.PreferencesPage({name:'widgets',icon_name:'preferences-desktop-display-symbolic'}),{title:'위젯'});
  addLanguageSettings(page,settings,ui);

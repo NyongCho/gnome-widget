@@ -5,7 +5,7 @@ import {execFileSync} from 'node:child_process';
 import {parseArgs} from 'node:util';
 import {assertCalendarIsolated} from '../src/shared/buildPolicy.ts';
 
-const {values}=parseArgs({options:{edition:{type:'string',default:'rust'}},strict:true});
+const {values}=parseArgs({options:{edition:{type:'string',default:'rust'},tests:{type:'boolean',default:false}},strict:true});
 if(!['rust','gjs'].includes(values.edition))throw new Error('Expected --edition rust or gjs');
 const editions=JSON.parse(await readFile('editions.json','utf8'));
 const edition=editions[values.edition],outdir=edition.output;
@@ -22,7 +22,8 @@ const ui=await build({...common,entryPoints,outdir,metafile:true});
 assertCalendarIsolated(ui.metafile);
 if(values.edition==='gjs'){
     await build({...common,entryPoints:{'calendar-worker':'src/calendar-worker/main.ts'},outdir,splitting:true,banner:{js:'#!@GJS@ -m'}});
-}else{
+}
+if(values.edition==='rust'||values.tests){
     await build({...common,entryPoints:['src/shared/validation.ts'],outdir:`${outdir}/shared`});
     await build({...common,entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js'},outdir:`${outdir}/tests`});
 }

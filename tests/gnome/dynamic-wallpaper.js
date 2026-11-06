@@ -25,8 +25,8 @@ function read(name,host){
 }
 export async function run(){
  Main.overview.hide();await Scripting.sleep(1000);
- const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj,host=ext.host,settings=ext.settings;
- ext.client.stop();ext.client=null;ext.clock.destroy();ext.clock=null;
+ const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj,host=ext.host,settings=ext.settings;
+ ext.client.destroy();ext.client=null;ext.clock.destroy();ext.clock=null;
  settings.set_double('scale',.75);settings.set_double('opacity',.05);settings.set_strv('visible',['clock','calendar','agenda','weather','system','network','media']);
  new Gio.Settings({schema_id:'org.gnome.desktop.interface'}).set_string('color-scheme','prefer-dark');
  const clockNow=Date.parse('2026-11-05T01:00:00Z');host.tick(clockNow,'Asia/Seoul',false,'ko-KR',1);

@@ -20,6 +20,10 @@ const wait=(ms:number)=>new Promise<void>(resolve=>GLib.timeout_add(0,ms,()=>{re
 function assert(value:unknown,message:string):asserts value{if(!value)throw new Error(message);}
 async function rejects(p:Promise<unknown>,code:string){try{await p;throw new Error('unexpected success');}catch(error){assert(error instanceof Error&&error.message===code,`expected ${code}: ${String(error)}`);}}
 void(async()=>{
+    // Real sysfs reports a page-sized st_size for short text attributes.
+    const live=new GioLinuxFiles();
+    const counter=await live.readText('/sys/class/net/lo/statistics/rx_bytes',128,cancel());
+    assert(/^\d+\n?$/.test(counter),'read real sysfs counter within its content bound');
     const system=new SystemProvider(files,clock),network=new NetworkProvider(files,()=>time);
     const first=await system.collect(context());assert(first.data?.cpuPercent===null&&first.data.memoryUsedBytes===768000&&first.data.temperatureC===38,'first system sample');
     GLib.file_set_contents(`${root}/proc/stat`,new TextDecoder().decode(GLib.file_get_contents(`${root}/stat-next.txt`)[1]));time=2000;

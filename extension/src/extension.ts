@@ -1,7 +1,7 @@
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import Gio from 'gi://Gio';
-import {SessionTransport} from './dbus.js';
-import {DataClient} from './shared/dataClient.js';
+import {createWidgetDataSession} from './backend/factory.js';
+import type {WidgetDataSession} from './backend/contracts.js';
 import {ProviderStore,PROVIDERS} from './shared/providerStore.js';
 import {DesktopLayerAdapter} from './platform/desktopLayer.js';
 import {WidgetHost} from './widgets/host.js';
@@ -15,7 +15,7 @@ export default class LiquidWidgets extends Extension {
     private layer:DesktopLayerAdapter|null=null;
     private host:WidgetHost|null=null;
     private clock:ClockController|null=null;
-    private client:DataClient|null=null;
+    private client:WidgetDataSession|null=null;
     private settings:Gio.Settings|null=null;
     private settingsChanged=0;
     private subscribed='';
@@ -32,12 +32,12 @@ export default class LiquidWidgets extends Extension {
             this.syncProviders();this.layout();
         });
         const store=new ProviderStore();
-        this.client=new DataClient(new SessionTransport(),store,provider=>{
+        this.client=createWidgetDataSession({extensionPath:this.path,store,changed:provider=>{
             const before=this.host?.visibleCards.join(',');
             if(provider)this.host?.updateProvider(provider,store.get(provider));
             else for(const name of PROVIDERS)this.host?.updateProvider(name,store.get(name));
             if(!provider||before!==this.host?.visibleCards.join(','))this.layout();
-        },state=>this.host?.setConnected(state==='connected'));
+        },connection:state=>this.host?.setConnected(state==='connected')});
         this.syncProviders();
         this.clock=new ClockController();
         this.clock.start(now=>{const clock=this.clock!;this.host?.tick(now,clock.timeZone,clock.hour12,clock.locale,clock.weekStart);
@@ -60,7 +60,7 @@ export default class LiquidWidgets extends Extension {
         this.host.layout(config,placement.area,placement.index);
     }
     disable():void{
-        this.subscribed='';this.client?.stop();this.client=null;this.clock?.destroy();this.clock=null;
+        this.subscribed='';this.client?.destroy();this.client=null;this.clock?.destroy();this.clock=null;
         this.unwatch?.();this.unwatch=null;
         if(this.settingsChanged)this.settings?.disconnect(this.settingsChanged);
         this.settingsChanged=0;this.settings=null;

@@ -1,0 +1,197 @@
+{
+  "date": "2026-11-07",
+  "platform": "GNOME Shell 50 / Wayland / 1280x800 private Devkit",
+  "uiSuites": [
+    {
+      "edition": "rust",
+      "suite": "preferences",
+      "passed": true,
+      "evidence": [
+        "PREFERENCES_TEST: actual GTK keyboard search/select/clear, secret submit/clear, error, Tab/Shift+Tab and placement/NIC controls passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "clock-styles",
+      "passed": true,
+      "evidence": [
+        "CLOCK_PREFERENCES: all keyboard choices, live Shell updates, localization, external settings and reopening passed",
+        "CLOCK_SHELL: four faces, time/locale/scale, second hand, stable actors/blur, mapped/low-power/style/removal/disable cleanup passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "clock-footer",
+      "passed": true,
+      "evidence": [
+        "CLOCK_FOOTER: style/material changes preserve the date position"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "dynamic-wallpaper",
+      "passed": true,
+      "evidence": [
+        "DYNAMIC_WALLPAPER: all seven cards follow crossfade/endpoints, retain static cache and catch up after hiding"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "media-art",
+      "passed": true,
+      "evidence": [
+        "MEDIA_ART_TEST: aspect ratios, fractional scale, missing image, replacement and close passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "system",
+      "passed": true,
+      "evidence": [
+        "SYSTEM_TEST: painted usage, zero/unknown/full, theme, scale, language, centering and teardown passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "compact",
+      "passed": true,
+      "evidence": [
+        "COMPACT_TEST: content fit, error/recovery, empty agenda, scale, languages, narrow layout and glass cache passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "card-order",
+      "passed": true,
+      "evidence": [
+        "COLUMN_PREFERENCES: transfer both ways, in-column order, visibility, focus, language, empty side, normalization and reopening passed",
+        "COLUMN_SHELL: independent stacks, matching clock/weather, digital clock, hide/transfer, media, language/scale, one column and 125% passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "visual",
+      "passed": true,
+      "evidence": [
+        "VISUAL_TEST: live light/dark mode, readable text on bright/dark wallpaper, tabular clock, narrow 12h clock and 125 percent passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "functional",
+      "passed": true,
+      "evidence": [
+        "WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, backend failure, DING/BMS input, window overlap and 20-cycle cleanup passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "preferences",
+      "passed": true,
+      "evidence": [
+        "PREFERENCES_TEST: actual GTK keyboard search/select/clear, secret submit/clear, error, Tab/Shift+Tab and placement/NIC controls passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "clock-styles",
+      "passed": true,
+      "evidence": [
+        "CLOCK_PREFERENCES: all keyboard choices, live Shell updates, localization, external settings and reopening passed",
+        "CLOCK_SHELL: four faces, time/locale/scale, second hand, stable actors/blur, mapped/low-power/style/removal/disable cleanup passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "clock-footer",
+      "passed": true,
+      "evidence": [
+        "CLOCK_FOOTER: style/material changes preserve the date position"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "dynamic-wallpaper",
+      "passed": true,
+      "evidence": [
+        "DYNAMIC_WALLPAPER: all seven cards follow crossfade/endpoints, retain static cache and catch up after hiding"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "media-art",
+      "passed": true,
+      "evidence": [
+        "MEDIA_ART_TEST: aspect ratios, fractional scale, missing image, replacement and close passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "system",
+      "passed": true,
+      "evidence": [
+        "SYSTEM_TEST: painted usage, zero/unknown/full, theme, scale, language, centering and teardown passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "compact",
+      "passed": true,
+      "evidence": [
+        "COMPACT_TEST: content fit, error/recovery, empty agenda, scale, languages, narrow layout and glass cache passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "card-order",
+      "passed": true,
+      "evidence": [
+        "COLUMN_PREFERENCES: transfer both ways, in-column order, visibility, focus, language, empty side, normalization and reopening passed",
+        "COLUMN_SHELL: independent stacks, matching clock/weather, digital clock, hide/transfer, media, language/scale, one column and 125% passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "visual",
+      "passed": true,
+      "evidence": [
+        "VISUAL_TEST: live light/dark mode, readable text on bright/dark wallpaper, tabular clock, narrow 12h clock and 125 percent passed"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "functional",
+      "passed": true,
+      "evidence": [
+        "WIDGET_TEST: layout, scroll, fractional scale, clock/resume event, backend failure, DING/BMS input, window overlap and 20-cycle cleanup passed"
+      ]
+    },
+    {
+      "edition": "rust",
+      "suite": "editions",
+      "passed": true,
+      "evidence": [
+        "EDITION_TEST: Rust factory and shared host loaded"
+      ]
+    },
+    {
+      "edition": "gjs",
+      "suite": "editions",
+      "passed": true,
+      "evidence": [
+        "EDITION_TEST: public factory, hidden preferences demand, disable/reenable ownership and real GTK handoff passed"
+      ]
+    }
+  ],
+  "nativeSysfsRegression": {
+    "before": "PAYLOAD_TOO_LARGE",
+    "after": "PASS real loopback sysfs attribute plus synthetic CPU/RAM/hwmon/routes/counters/FIFO/size/cancellation suite"
+  },
+  "visualInspection": [
+    "gjs-compact-dark.png",
+    "rust-compact-dark.png",
+    "gjs-light-wallpaper.png",
+    "gjs-live-metrics.png",
+    "gjs-preferences-stale.png"
+  ]
+}

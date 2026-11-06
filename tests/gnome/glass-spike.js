@@ -62,7 +62,7 @@ async function enable(uuid) {
 export async function run() {
     Main.overview.hide();
     await Scripting.sleep(1000);
-    const extension = Main.extensionManager.lookup('liquid-widgets@local');
+    const extension = Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'));
     if (!extension?.stateObj) throw new Error('Liquid Widgets extension did not load');
     const labels=extension.stateObj.surface.actor.get_children().filter(child=>child.get_text);
     if (!labels.some(label=>label.get_text()==='사용자 서비스를 설치·시작해 주세요')) throw new Error('missing service installation hint');

@@ -22,8 +22,8 @@ function paintedQuadrants(name,ring){
 }
 export async function run(){
     Main.overview.hide();await Scripting.sleep(1500);
-    const ext=Main.extensionManager.lookup('liquid-widgets@local').stateObj;
-    ext.clock.destroy();ext.clock=null;ext.client.stop();ext.client=null;
+    const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj;
+    ext.clock.destroy();ext.clock=null;ext.client.destroy();ext.client=null;
     const settings=ext.settings,desktop=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
     settings.set_strv('visible',['system']);ext.host.setConnected(true);
     const base={cpuPercent:25,memoryUsedBytes:16*2**30,memoryTotalBytes:32*2**30,temperatureC:43};

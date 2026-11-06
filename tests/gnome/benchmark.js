@@ -2,7 +2,7 @@ import Gio from 'gi://Gio';import GLib from 'gi://GLib';import Shell from 'gi://
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
 import {capture,enable} from './helpers.js';
 export const METRICS={};
-const uuid='liquid-widgets@local',report={trials:[],soak:[],method:'GNOME 50 stagePaintStart → stagePaintDone (includes swap, no forced glFinish); foreground window follows the same 16ms motion in each trial',clockTicks:Number(GLib.getenv('LIQUID_CLOCK_TICKS')||100)};
+const uuid=(GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'),report={trials:[],soak:[],method:'GNOME 50 stagePaintStart → stagePaintDone (includes swap, no forced glFinish); foreground window follows the same 16ms motion in each trial',clockTicks:Number(GLib.getenv('LIQUID_CLOCK_TICKS')||100)};
 const frames=[];let phase=-1,start=null;
 function check(ok,message){if(!ok)throw new Error(message);}
 async function until(predicate,message){for(let i=0;i<200;i++){if(predicate())return;await Scripting.sleep(30);}throw new Error(message);}

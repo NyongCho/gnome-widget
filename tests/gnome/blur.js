@@ -9,7 +9,7 @@ import {capture,setScale} from './helpers.js';
 export const METRICS={};
 export async function run(){
     Main.overview.hide();await Scripting.sleep(1500);
-    const extension=Main.extensionManager.lookup('liquid-widgets@local').stateObj;
+    const extension=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj;
     extension.settings.set_strv('visible',['clock']);
     extension.settings.set_double('strength',0);
     extension.settings.set_double('opacity',.05);

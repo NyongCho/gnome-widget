@@ -7,7 +7,7 @@ function rss(){const [ok,bytes]=GLib.file_get_contents('/proc/self/status');if(!
 export async function run(){
  const keepAlive=GLib.timeout_add(GLib.PRIORITY_DEFAULT,10000,()=>{void Scripting.waitTestWindows();return GLib.SOURCE_CONTINUE;});
  Main.overview.hide();await Scripting.sleep(1500);await enable('ding@rastersoft.com');await enable('blur-my-shell@aunetx');await enable('ubuntu-dock@ubuntu.com');
- const uuid='liquid-widgets@local',ext=Main.extensionManager.lookup(uuid);ext.stateObj.settings.set_strv('visible',['clock','calendar','weather','agenda','network','system','media']);
+ const uuid=(GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local'),ext=Main.extensionManager.lookup(uuid);ext.stateObj.settings.set_strv('visible',['clock','calendar','weather','agenda','network','system','media']);
  const daemon=Gio.Subprocess.new([GLib.getenv('LIQUID_TEST_DAEMON')],Gio.SubprocessFlags.NONE),samples=[];
  try{
   await until(()=>ext.stateObj.host.connected);await Scripting.sleep(2000);

@@ -19,6 +19,8 @@ async function selectLanguage(value){
 }
 export async function run(){
  Main.overview.hide();await Scripting.sleep(1000);
+ const isPublic=GLib.getenv('LIQUID_TEST_EDITION')==='gjs';
+ if(isPublic){const uuid=GLib.getenv('LIQUID_TEST_UUID');Main.extensionManager.disableExtension(uuid);for(let i=0;i<100&&Main.extensionManager.lookup(uuid).state!==2;i++)await Scripting.sleep(20);}
  const child=Gio.Subprocess.new(['gjs','-m',GLib.getenv('LIQUID_TEST_PREFS')],Gio.SubprocessFlags.NONE);
  keyboard=global.stage.get_context().get_backend().get_default_seat().create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
  try{
@@ -52,8 +54,9 @@ export async function run(){
   await focus('비공개 iCal 주소');await type('https://calendar.google.com/calendar/ical/test/public/basic.ics');await focus('연결');await key(Clutter.KEY_Return);await waitFor(async()=>(await state()).current.calendarEnabled,'calendar keyboard connect failed');check((await state()).calendarEmpty,'saved calendar input leaked');
   await waitFor(async()=>(await state()).messages.some(t=>t.includes('데이터를 읽을 수 없어요')),'actual sync failure not shown');
   await call('CalendarStatus',new GLib.Variant('(s)',['ok']));
-  await waitFor(async()=>(await state()).messages.some(t=>t.includes('동기화 완료')),'sync completion did not replace waiting text');
-  await capture('widgets-calendar-sync-state');
+  await waitFor(async()=>(await state()).messages.some(t=>t.includes(isPublic?'연결 확인 완료':'동기화 완료')),'sync completion did not replace waiting text');
+  await call('ScrollTop');await Scripting.sleep(150);await capture('widgets-calendar-sync-state');
+  if(isPublic){await call('CalendarStatus',new GLib.Variant('(s)',['stale']));await waitFor(async()=>(await state()).messages.some(t=>t.includes('마지막 확인 데이터')),'preview stale state lost last-good data');await call('ScrollTop');await Scripting.sleep(150);await capture('preferences-public-stale');}
   await focus('연결 해제');await key(Clutter.KEY_Return);await waitFor(async()=>!(await state()).current.calendarEnabled,'keyboard calendar clear failed');
   await capture('widgets-keyboard-preferences');
   // A response arriving after the language switch uses the new language.

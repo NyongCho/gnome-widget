@@ -67,3 +67,14 @@ export async function enable(uuid) {
     const extension=Main.extensionManager.lookup(uuid);
     if (extension.state !== 1) throw new Error(`extension failed: ${uuid} state=${extension.state} ${extension.error}`);
 }
+
+// BackgroundManager crossfades on wallpaper and color-scheme changes.
+// Assert a bounded quiet interval before checking foreground-only cache reuse.
+export async function settledMaterial(surface){
+    let stable=0,paints=surface.diagnostics.inputPaints;
+    for(let i=0;i<30&&stable<3;i++){
+        await Scripting.sleep(100);const next=surface.diagnostics.inputPaints;
+        stable=next===paints?stable+1:0;paints=next;
+    }
+    if(stable!==3)throw new Error('wallpaper input never settles after theme transition');
+}
