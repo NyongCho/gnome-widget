@@ -46,6 +46,7 @@ export class LocalWidgetSession implements WidgetDataSession {
     stop():void {if(this.dead)return;this.cards.clear();this.sync();}
     setCalendarWatchers(count:number):void{if(this.dead)return;this.watchers=Math.max(0,Math.trunc(count));this.sync();}
     setCalendarContext(context:CalendarContext,day:string):void {if(this.dead)return;this.context={...context};this.day=day;this.sync();}
+    calendarStatus(){return{state:this.options.store.get('calendar'),context:{...this.context},generation:this.schedulers.get('calendar')!.generation};}
     refresh(name:ProviderName):void{if(!this.dead)this.schedulers.get(name)?.refresh();}
     refreshAfterResume():void{if(!this.dead)for(const scheduler of this.schedulers.values())scheduler.resume();}
     destroy():void {

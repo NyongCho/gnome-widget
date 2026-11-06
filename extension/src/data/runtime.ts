@@ -1,5 +1,6 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
+import {CalendarStatusBridge} from '../calendar/statusBridge.js';
 import {CalendarProvider} from './providers/calendar.js';
 import {CalendarWorkerClient} from '../calendar/workerClient.js';
 import {MediaProvider} from './providers/media.js';
@@ -42,5 +43,7 @@ export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidg
     const art=new ArtworkLoader(services.http,new GioArtworkStore(GLib.build_filenamev([GLib.get_user_cache_dir(),getEdition('gjs').dataDirectory,'artwork'])),services.clock);
     const media=new MediaProvider(new GioMprisBus(Gio.DBus.session),art,services.clock);
     const calendar=new CalendarProvider({...services,files:services.cache,worker:new CalendarWorkerClient(options.extensionPath),uuid:GLib.uuid_string_random,digest:bytes=>GLib.compute_checksum_for_bytes(GLib.ChecksumType.SHA256,new GLib.Bytes(bytes))!});
-    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media,calendar},destroy:()=>services.destroy()});
+    let bridge:CalendarStatusBridge|null=null;
+    const session=new LocalWidgetSession({...options,changed(name){if(!name||name==='calendar')bridge?.update();options.changed(name);}},{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media,calendar},destroy(){bridge?.destroy();services.destroy();}});
+    bridge=new CalendarStatusBridge(session);return session;
 }

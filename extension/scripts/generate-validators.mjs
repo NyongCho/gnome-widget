@@ -15,6 +15,8 @@ ajv.addSchema(worker);
 for (const name of ['Header', 'Control', 'Reply']) exports[`worker${name}`] = `${worker.$id}#/$defs/${name}`;
 const dataConfig = JSON.parse(await readFile(new URL('../../protocol/data-config.schema.json', import.meta.url), 'utf8'));
 ajv.addSchema(dataConfig); exports.dataConfig = dataConfig.$id;
+const calendarStatus = JSON.parse(await readFile(new URL('../../protocol/calendar-status.schema.json', import.meta.url), 'utf8'));
+ajv.addSchema(calendarStatus); exports.calendarSummary = calendarStatus.$id;
 const dir = new URL('../generated/', import.meta.url);
 await mkdir(dir, {recursive: true});
 // Bundling replaces Ajv's tiny helper imports. No Node/Ajv/compiler at runtime.

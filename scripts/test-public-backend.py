@@ -179,7 +179,7 @@ def media_suite():
             subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/media.js'),tmp,f'http://127.0.0.1:{server.server_port}'],check=True,timeout=35)
     finally:server.shutdown()
 
-def calendar_feed_suite():
+def calendar_feed_suite(preferences=False):
     normal=b'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:synthetic\r\nDTSTART:20261104T130000Z\r\nDTEND:20261104T140000Z\r\nSUMMARY:Synthetic event\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n'
     sparse=('BEGIN:VCALENDAR\nVERSION:2.0\n'+''.join('BEGIN:VEVENT\nUID:budget-'+str(i)+'\nDTSTART:20240229T000000Z\nRRULE:FREQ=SECONDLY;BYMONTH=2;BYMONTHDAY=29;BYHOUR=0;BYMINUTE=0;BYSECOND=0;UNTIL=20261231T235959Z\nEND:VEVENT\n' for i in range(100))+'END:VCALENDAR\n').encode()
     class Handler(http.server.BaseHTTPRequestHandler):
@@ -198,23 +198,33 @@ def calendar_feed_suite():
             try:self.wfile.write(body)
             except (BrokenPipeError,ConnectionResetError):pass
     server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler);server.mode='normal';threading.Thread(target=server.serve_forever,daemon=True).start()
-    try:subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/calendarFeed.js'),str(ROOT/'extension/dist/tests'),f'http://127.0.0.1:{server.server_port}'],check=True,timeout=30)
+    try:subprocess.run(['gjs','-m',str(ROOT/('extension/dist/tests/preferencesData.js' if preferences else 'extension/dist/tests/calendarFeed.js')),str(ROOT/'extension/dist/tests'),f'http://127.0.0.1:{server.server_port}'],check=True,timeout=45)
     finally:server.shutdown()
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network','media','calendar-feed'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network','media','calendar-feed','preferences-data'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
         with tempfile.TemporaryDirectory(prefix='liquid-public-test-') as tmp:
-            env={**os.environ,'GIO_USE_VFS':'local','XDG_CONFIG_HOME':tmp+'/config','XDG_CACHE_HOME':tmp+'/cache','XDG_DATA_HOME':tmp+'/data'}
-            return subprocess.run(['dbus-run-session','--',sys.executable,__file__,'--private','--suite',args.suite],env=env).returncode
+            runtime=Path(tmp)/'runtime';runtime.mkdir(mode=0o700)
+            env={**os.environ,'GIO_USE_VFS':'local','GSETTINGS_BACKEND':'keyfile','GTK_A11Y':'none','GVFS_DISABLE_FUSE':'1','GDK_DEBUG':'no-portals','XDG_CONFIG_HOME':tmp+'/config','XDG_CACHE_HOME':tmp+'/cache','XDG_DATA_HOME':tmp+'/data','XDG_RUNTIME_DIR':str(runtime),'GNOME_KEYRING_CONTROL':str(runtime/'keyring')}
+            display=os.environ.get('WAYLAND_DISPLAY')
+            if display and not os.path.isabs(display):env['WAYLAND_DISPLAY']=str(Path(os.environ['XDG_RUNTIME_DIR'])/display)
+            try:return subprocess.run(['dbus-run-session','--',sys.executable,__file__,'--private','--suite',args.suite],env=env).returncode
+            finally:
+                for name in ['doc','gvfs']:
+                    mount=runtime/name
+                    if mount.is_mount():
+                        subprocess.run(['fusermount3','-uz',str(mount)],check=False,capture_output=True)
+                        if mount.is_mount():raise RuntimeError('Private test mount survived cleanup')
     if args.suite=='local-session':
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
     elif args.suite=='weather':weather_suite()
     elif args.suite=='system-network':system_network_suite()
     elif args.suite=='media':media_suite()
     elif args.suite=='calendar-feed':calendar_feed_suite()
+    elif args.suite=='preferences-data':calendar_feed_suite(True)
     else:(worker_suite if args.suite=='worker' else io_suite)()
     return 0
 if __name__=='__main__':sys.exit(main())

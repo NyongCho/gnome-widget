@@ -1,13 +1,12 @@
 import {onPreferencesClosed} from './language.js';
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk?version=4.0';
-import {SessionTransport,BUS_NAME} from '../dbus.js';
+import type {PreferencesDataSession} from '../backend/contracts.js';
 import {Cancellation} from '../shared/dataClient.js';
-import {parseSettings,parseLocationSearchResults} from '../shared/validation.js';
 import type {WeatherLocation} from '../types.js';
 import type {TextBindings} from '../shared/i18n.js';
-export function addWeatherSettings(window:Adw.PreferencesWindow,page:Adw.PreferencesPage,ui:TextBindings):void{
- const wire=new SessionTransport(),cancel=new Cancellation();let closed=false;
+export function addWeatherSettings(window:Adw.PreferencesWindow,page:Adw.PreferencesPage,ui:TextBindings,session:PreferencesDataSession):void{
+ const cancel=new Cancellation();let closed=false;
  onPreferencesClosed(window,()=>{closed=true;cancel.cancel();});
  const group=ui.bind(new Adw.PreferencesGroup(),{title:'날씨 지역',description:'선택한 도시의 현재 날씨와 앞으로 6시간 예보를 표시합니다.'});page.add(group);
  const current=ui.bind(new Adw.ActionRow(),{title:'선택한 지역',subtitle:'확인 중…'});group.add(current);
@@ -18,12 +17,12 @@ export function addWeatherSettings(window:Adw.PreferencesWindow,page:Adw.Prefere
  let rows:{row:Adw.ActionRow;button:Gtk.Button}[]=[];
  const empty=()=>{for(const {row,button} of rows){ui.unbind(button);results.remove(row);}rows=[];results.visible=false;};
  const load=async()=>{
-  try{const [raw]=await wire.call(BUS_NAME,'GetSettings',[],cancel);if(closed)return;const location=parseSettings(String(raw)).weatherLocation;ui.bind(current,{subtitle:()=>location?.label??ui.t('지역을 선택하지 않았어요.')});}
-  catch{if(!closed)ui.bind(current,{subtitle:'데이터 서비스를 시작한 뒤 다시 열어 주세요.'});}
+  try{const settings=await session.getSettings(cancel);if(closed)return;const location=settings.weatherLocation;ui.bind(current,{subtitle:()=>location?.label??ui.t('지역을 선택하지 않았어요.')});}
+  catch{if(!closed)ui.bind(current,{subtitle:'설정을 읽지 못했어요. 잠시 후 다시 시도해 주세요.'});}
  };
  const choose=async(location:WeatherLocation|null)=>{
   clear.sensitive=false;results.sensitive=false;ui.bind(message,{label:'지역을 저장하는 중…'});
-  try{await wire.call(BUS_NAME,'SetWeatherLocation',[JSON.stringify(location)],cancel);if(!closed){ui.bind(message,{label:location?'지역을 선택했어요. 날씨 동기화를 기다려 주세요.':'지역을 해제했어요.'});empty();}}
+  try{await session.setWeatherLocation(location,cancel);if(!closed){ui.bind(message,{label:location?'지역을 선택했어요. 날씨 동기화를 기다려 주세요.':'지역을 해제했어요.'});empty();}}
   catch{if(!closed)ui.bind(message,{label:'지역을 저장하지 못했어요. 다시 시도해 주세요.'});}
   if(!closed){clear.sensitive=true;results.sensitive=true;await load();}
  };
@@ -31,8 +30,7 @@ export function addWeatherSettings(window:Adw.PreferencesWindow,page:Adw.Prefere
   const query=entry.text.trim();if([...query].length<2){ui.bind(message,{label:'두 글자 이상 입력해 주세요.'});return;}
   empty();search.sensitive=false;entry.sensitive=false;ui.bind(message,{label:'도시를 찾는 중…'});
   try{
-   const [raw]=await wire.call(BUS_NAME,'SearchLocations',[query],cancel);if(closed)return;
-   const locations=parseLocationSearchResults(String(raw));
+   const locations=await session.searchLocations(query,cancel);if(closed)return;
    for(const location of locations){
     const row=new Adw.ActionRow({title:location.label,subtitle:location.timeZone,title_lines:2});
     const button=ui.bind(new Gtk.Button({valign:Gtk.Align.CENTER}),{label:'선택'});button.connect('clicked',()=>{void choose(location);});row.add_suffix(button);row.activatable_widget=button;results.add(row);rows.push({row,button});

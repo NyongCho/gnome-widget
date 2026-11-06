@@ -1,5 +1,12 @@
 /** App-owned messages only. Calendar, media and place names remain source data. */
 export const messages = {
+ '위젯 동기화':'Widget synchronization', '설정창 연결 확인':'Connection check in settings',
+ '연결 정보 저장됨 · 상태 확인 중':'Connection saved · Checking status',
+ '연결 확인 완료 · 일정 {count}개':'Connection verified · {count} events',
+ '연결을 확인하는 중…':'Verifying the connection…',
+ '연결 확인 중 · 마지막 데이터 표시':'Verifying connection · Showing last data',
+ '{message} · 마지막 확인 데이터 표시':'{message} · Showing last verified data',
+ '설정을 읽지 못했어요. 잠시 후 다시 시도해 주세요.':'Could not read settings. Please try again shortly.',
  '왼쪽 열':'Left column', '오른쪽 열':'Right column', '왼쪽 열로 이동':'Move to left column', '오른쪽 열로 이동':'Move to right column',
  '각 열 안에서 순서를 바꾸거나 반대쪽 열로 옮길 수 있습니다. 음악은 재생 중일 때만 표시됩니다.':'Reorder cards within each column or move them to the other column. Music appears only while playing.',
  '위로 이동':'Move up', '아래로 이동':'Move down',

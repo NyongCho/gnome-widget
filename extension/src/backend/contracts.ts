@@ -15,3 +15,16 @@ export interface WidgetSessionOptions {
     changed(provider?:ProviderName):void;
     connection(state:ConnectionState):void;
 }
+
+export interface PreferencesDataSession {
+    getSettings(cancel:import('../shared/dataClient.js').Cancellation):Promise<import('../types.js').Settings>;
+    setCalendarSecret(url:string,cancel:import('../shared/dataClient.js').Cancellation):Promise<void>;
+    clearCalendarSecret(cancel:import('../shared/dataClient.js').Cancellation):Promise<void>;
+    searchLocations(query:string,cancel:import('../shared/dataClient.js').Cancellation):Promise<import('../types.js').WeatherLocation[]>;
+    setWeatherLocation(location:import('../types.js').WeatherLocation|null,cancel:import('../shared/dataClient.js').Cancellation):Promise<void>;
+    setNetworkInterface(name:string,cancel:import('../shared/dataClient.js').Cancellation):Promise<void>;
+    listNetworkInterfaces(cancel:import('../shared/dataClient.js').Cancellation):Promise<string[]>;
+    watchCalendar(changed:(state:import('../shared/calendarSummary.js').CalendarSummary,origin:import('../shared/calendarSummary.js').CalendarOrigin)=>void):()=>void;
+    refreshCalendar(cancel:import('../shared/dataClient.js').Cancellation):Promise<void>;
+    destroy():void;
+}

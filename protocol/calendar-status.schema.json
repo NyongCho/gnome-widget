@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:liquid-widgets:calendar-status:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "instanceId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "context": {
+      "anyOf": [
+        {
+          "$ref": "urn:liquid-widgets:snapshot:v1#/$defs/CalendarContext"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hasData": {
+      "type": "boolean"
+    },
+    "eventCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "sourceId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "loading",
+        "ok",
+        "stale",
+        "unconfigured",
+        "unavailable"
+      ]
+    },
+    "updatedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 64,
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "errorCode": {
+      "anyOf": [
+        {
+          "enum": [
+            "NETWORK_ERROR",
+            "INVALID_DATA",
+            "PAYLOAD_TOO_LARGE",
+            "EXPANSION_LIMIT",
+            "UNSUPPORTED_CALENDAR",
+            "UNKNOWN_TIME_ZONE",
+            "KEYRING_LOCKED",
+            "SECRET_DELETION_FAILED",
+            "AUTH_ERROR",
+            "RATE_LIMITED",
+            "NO_PLAYER",
+            "NO_INTERFACE",
+            "SERVICE_UNAVAILABLE",
+            "INTERNAL_ERROR"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "version",
+    "instanceId",
+    "revision",
+    "generation",
+    "context",
+    "hasData",
+    "eventCount",
+    "sourceId",
+    "status",
+    "updatedAt",
+    "errorCode"
+  ]
+}

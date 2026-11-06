@@ -4,11 +4,12 @@ import Gio from 'gi://Gio';
 import {addWeatherSettings} from './weather.js';
 import {addCalendarSettings} from './calendar.js';
 import {addDisplaySettings,addNetworkSettings} from './placement.js';
-import {preferencesLanguage,addLanguageSettings} from './language.js';
+import {createPreferencesDataSession} from './dataSession.js';
+import {preferencesLanguage,addLanguageSettings,onPreferencesClosed} from './language.js';
 import {addCardSettings} from './cards.js';
 import {addClockSettings} from './clock.js';
-export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Settings):void{
- const ui=preferencesLanguage(window,settings);
+export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Settings,extensionPath:string):void{
+ const ui=preferencesLanguage(window,settings),session=createPreferencesDataSession(extensionPath);onPreferencesClosed(window,()=>session.destroy());
  window.set_default_size(600,720);
  const page=ui.bind(new Adw.PreferencesPage({name:'widgets',icon_name:'preferences-desktop-display-symbolic'}),{title:'위젯'});
  addLanguageSettings(page,settings,ui);
@@ -22,6 +23,6 @@ export function fillSettingsWindow(window:Adw.PreferencesWindow,settings:Gio.Set
  const low=ui.bind(new Adw.SwitchRow(),{title:'저전력 모드',subtitle:'굴절 대신 반투명 배경을 사용합니다.'});settings.bind('low-power',low,'active',Gio.SettingsBindFlags.DEFAULT);appearance.add(low);
  addDisplaySettings(window,page,settings,ui);
  const data=ui.bind(new Adw.PreferencesPage({name:'data',icon_name:'network-server-symbolic'}),{title:'데이터'});
- addCalendarSettings(window,data,ui);addWeatherSettings(window,data,ui);addNetworkSettings(window,data,ui);
+ addCalendarSettings(window,data,ui,session);addWeatherSettings(window,data,ui,session);addNetworkSettings(window,data,ui,session);
  window.add(page);window.add(data);
 }
