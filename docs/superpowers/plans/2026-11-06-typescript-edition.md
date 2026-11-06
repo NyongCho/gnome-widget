@@ -187,11 +187,13 @@ Task 5 검증(2026-11-07): 수명/상태 Node 8/8, 전체 Node 97/97, typecheck�
 
 **Interfaces:** `WeatherProvider implements ProviderDriver<'weather'>`; `searchLocations(query: string, cancel: Cancellation): Promise<WeatherLocation[]>`. Task 4 HttpClient/PrivateFiles/ConfigStore 주입. Shell과 prefs가 같은 search 함수를 호출한다.
 
-- [ ] 기존 Rust weather/weather_service tests를 이식해 null/0, 도시 시간대, 현재+6시간, 429, backoff, 도시 A의 늦은 응답 폐기, 오프라인 성공 시각 보존, 해제를 고정하고 FAIL 확인한다.
-- [ ] 고정 HTTPS endpoint, 256 KiB/15초, 정상 900초/실패 30→900초, 검색 동시 1회·최소 1초·최대 20개를 구현한다. 지역 선택은 DataSettingsService를 사용하고 출처 표시를 유지한다.
-- [ ] cache commit은 ConfigStore.mutate에서 source를 재확인한다. 지역 변경 뒤 이전 파일이 다시 현재 cache가 되지 않도록 한다.
-- [ ] `./scripts/dev npm --prefix extension test -- weatherProvider.test.ts`와 `./scripts/test-public-backend.py --suite weather` PASS. HTTP fixture만 사용한다.
-- [ ] 커밋: `feat: run weather collection inside Shell`.
+- [x] 기존 Rust weather/weather_service tests를 이식해 null/0, 도시 시간대, 현재+6시간, 429, backoff, 도시 A의 늦은 응답 폐기, 오프라인 성공 시각 보존, 해제를 고정하고 FAIL 확인한다.
+- [x] 고정 HTTPS endpoint, 256 KiB/15초, 정상 900초/실패 30→900초, 검색 동시 1회·최소 1초·최대 20개를 구현한다. 지역 선택은 DataSettingsService를 사용하고 출처 표시를 유지한다.
+- [x] cache commit은 ConfigStore.mutate에서 source를 재확인한다. 지역 변경 뒤 이전 파일이 다시 현재 cache가 되지 않도록 한다.
+- [x] `./scripts/dev npm --prefix extension test -- weatherProvider.test.ts`와 `./scripts/test-public-backend.py --suite weather` PASS. HTTP fixture만 사용한다.
+- [x] 커밋: `feat: run weather collection inside Shell`.
+
+Task 6 검증(2026-11-07): 기존 Rust weather/서비스 의미를 옮긴 6개 검사, 전체 Node 103/103, typecheck와 실제 GJS HTTP fixture 흐름을 통과했다. 검색/선택/현재+6시간/오프라인/429/해제·캐시 출처 fencing·검색 제한·backoff를 검증했다. GJS가 Soup get_status()의 429 enum을 거부하는 문제는 uint status_code 속성으로 수정했다.
 
 ## Task 7: 시스템·네트워크
 

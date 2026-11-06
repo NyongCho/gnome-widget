@@ -121,8 +121,22 @@ def io_suite():
         finally:
             keyring.terminate();keyring.wait(timeout=3);server.shutdown()
 
+def weather_suite():
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def log_message(self,*args):pass
+        def do_GET(self):
+            if self.path in ['/offline','/limited']:
+                self.server.mode=503 if self.path=='/offline' else 429;status=200;body=b'ok'
+            else:
+                status=self.server.mode;body=(ROOT/'tests/fixtures/weather'/('locations.json' if self.path=='/search' else 'forecast.json')).read_bytes()
+            self.send_response(status);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
+    server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler);server.mode=200
+    threading.Thread(target=server.serve_forever,daemon=True).start()
+    try:subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/weather.js'),f'http://127.0.0.1:{server.server_port}'],check=True,timeout=15)
+    finally:server.shutdown()
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
@@ -131,6 +145,7 @@ def main():
             return subprocess.run(['dbus-run-session','--',sys.executable,__file__,'--private','--suite',args.suite],env=env).returncode
     if args.suite=='local-session':
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
+    elif args.suite=='weather':weather_suite()
     else:(worker_suite if args.suite=='worker' else io_suite)()
     return 0
 if __name__=='__main__':sys.exit(main())

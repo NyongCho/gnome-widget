@@ -7,6 +7,7 @@ import {GioPrivateFiles} from './files.js';
 import {SoupHttpClient} from './http.js';
 import {SystemSecretStore} from './secrets.js';
 import {DataSettingsService} from './settings.js';
+import {WeatherProvider,LocationSearch} from './providers/weather.js';
 import {LocalWidgetSession,type SessionClock} from './localSession.js';
 export const gioClock:SessionClock={
     monotonic:()=>GLib.get_monotonic_time()/1000,
@@ -22,10 +23,11 @@ export function createPublicDataServices(){
         acquire:cancel=>acquireBusLease('io.github.NyongCho.LiquidWidgets.ConfigLock',30000,cancel)});
     const http=new SoupHttpClient(),secrets=new SystemSecretStore(undefined,edition.secretApplication);
     const settings=new DataSettingsService(config,secrets,cache,GLib.uuid_string_random);
-    return{config,cache,http,secrets,settings,clock:gioClock,destroy(){http.destroy();}};
+    const weather=new WeatherProvider(http,cache,config),locations=new LocationSearch(http,gioClock.monotonic);
+    return{config,cache,http,secrets,settings,weather,locations,clock:gioClock,destroy(){http.destroy();}};
 }
 export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidgetSession {
     const services=createPublicDataServices();
-    // Provider adapters are added in Tasks 6–9; no external service is started here.
-    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{},destroy:()=>services.destroy()});
+    // Remaining provider adapters are added in Tasks 7–9.
+    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather},destroy:()=>services.destroy()});
 }

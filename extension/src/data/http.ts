@@ -16,7 +16,9 @@ export class SoupHttpClient implements HttpClient {
             message.set_flags(message.get_flags()|Soup.MessageFlags.NO_REDIRECT);checkIO(io);
             const stream=await gioAsync(cb=>this.session.send_async(message,0,io,cb),r=>this.session.send_finish(r));
             try{
-                const status=Number(message.get_status());
+                // Soup.Status omits some valid HTTP codes (including 429); GJS rejects
+                // unknown enum values from get_status(). The uint property preserves them.
+                const status=message.status_code;
                 if(status===429)throw new DataFailure('RATE_LIMITED');if(status===401||status===403)throw new DataFailure('AUTH_ERROR');
                 if(status<200||status>=300)throw new DataFailure('NETWORK_ERROR');
                 const chunks:Uint8Array[]=[];let size=0;
