@@ -91,7 +91,7 @@ Two Rust trials failed during initial preparation, before any measured phase. Ca
 
 ```sh
 CARGO_TARGET_DIR=/path/to/rust-target ./scripts/benchmark-editions.py --runs 5 \
-  --output outputs/verification/edition-performance
+  --output outputs/verification/edition-performance-new
 ./scripts/test-public-backend.py --suite worker
 ./scripts/test-public-backend.py --suite local-session
 ./scripts/test-public-backend.py --suite preferences-data
@@ -101,5 +101,7 @@ LIQUID_LIFECYCLE_CYCLES=20 ./scripts/test-gnome.py --edition gjs --editions
 python3 -m unittest discover -s tests -p test_edition_benchmark.py
 gjs -m tests/benchmark_io.js
 ```
+
+Choose a fresh output directory for a new run; the committed archive is historical evidence. `--resume --skip-build` is only for an unfinished, uncompressed run with identical runtime hashes.
 
 `--smoke --runs 1` uses one-second warmup and 28-second phases. Its report always sets `releaseEligibleRuns: false`. Run the long measurement without other benchmarks/builds and keep the desktop/power state stable.

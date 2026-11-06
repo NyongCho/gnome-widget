@@ -1,0 +1,13 @@
+{
+  "artifact": "dist/liquid-widgets-public-development/liquid-widgets.shell-extension.zip",
+  "sha256": "e4a3a4e087dbce49eb6b89954c38d691888a7e6474490e2353ae367cce0c3431",
+  "bytes": 492404,
+  "developmentOnly": true,
+  "licensePresent": false,
+  "submitted": false,
+  "fullCheck": "PASS",
+  "nodeTests": 143,
+  "pythonTests": 26,
+  "calendarCasesPerEngine": 59,
+  "independentReview": "three Important findings fixed with failing regressions then full suite; one documentation minor deferred"
+}

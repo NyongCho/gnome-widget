@@ -14,6 +14,7 @@ export class LocalWidgetSession implements WidgetDataSession {
     readonly ready:Promise<void>;drained:Promise<void>=Promise.resolve();
     private dead=false;private initCancel=new Cancellation();private unwatch:(()=>void)|null=null;
     private configEpoch=0;private config=defaultConfig();private cards=new Set<ProviderName>();private watchers=0;
+    private retryInitialization:(()=>void)|null=null;private retryDelay=1000;
     private context:CalendarContext={month:'1970-01',timeZone:'UTC',weekStart:0};private day='';
     private schedulers=new Map<ProviderName,ProviderScheduler<ProviderName>>();
     constructor(private options:WidgetSessionOptions,private deps:LocalSessionDependencies){
@@ -24,15 +25,32 @@ export class LocalWidgetSession implements WidgetDataSession {
         this.ready=this.initialize();
     }
     private async initialize():Promise<void>{
+        const attemptEpoch=this.configEpoch;
         try{
             // First read creates the private directory; watching before the second
             // read closes the initialization/change race without polling.
             await this.deps.config.read(this.initCancel);if(this.dead)return;
-            this.unwatch=this.deps.config.watch(config=>{if(!this.dead){this.configEpoch++;this.config=config;this.sync();this.options.connection('connected');}});
+            if(!this.unwatch)this.unwatch=this.deps.config.watch(config=>{if(!this.dead){this.configEpoch++;this.applyConfig(config);this.recovered();}});
             const epoch=this.configEpoch;
             const config=await this.deps.config.read(this.initCancel);if(this.dead)return;
-            if(epoch===this.configEpoch)this.config=config;this.sync();this.options.connection('connected');
-        }catch{if(!this.dead){this.sync();this.options.connection('unavailable');}}
+            if(epoch===this.configEpoch)this.applyConfig(config);this.recovered();
+        }catch{if(!this.dead&&attemptEpoch===this.configEpoch){
+            this.sync();this.options.connection('unavailable');
+            this.retryInitialization?.();
+            this.retryInitialization=this.deps.clock.schedule(this.retryDelay,()=>{this.retryInitialization=null;void this.initialize();});
+            this.retryDelay=Math.min(30000,this.retryDelay*2);
+        }}
+    }
+    private recovered():void {
+        this.retryInitialization?.();this.retryInitialization=null;this.retryDelay=1000;
+        this.options.connection('connected');
+    }
+    private applyConfig(config:DataConfig):void {
+        const pendingChanged=this.config.calendar.deletionPending!==config.calendar.deletionPending;
+        this.config=config;this.sync();
+        // Invalidate preferences settings through the existing status channel;
+        // cleanup flags do not change the collector's source or restart work.
+        if(pendingChanged)this.options.changed('calendar');
     }
     private sync():void {
         if(this.dead)return;
@@ -50,7 +68,7 @@ export class LocalWidgetSession implements WidgetDataSession {
     refresh(name:ProviderName):void{if(!this.dead)this.schedulers.get(name)?.refresh();}
     refreshAfterResume():void{if(!this.dead)for(const scheduler of this.schedulers.values())scheduler.resume();}
     destroy():void {
-        if(this.dead)return;this.dead=true;this.initCancel.cancel();this.unwatch?.();this.unwatch=null;
+        if(this.dead)return;this.dead=true;this.initCancel.cancel();this.retryInitialization?.();this.retryInitialization=null;this.unwatch?.();this.unwatch=null;
         for(const scheduler of this.schedulers.values())scheduler.destroy();
         const cleanup:Promise<unknown>[]=[];
         for(const driver of Object.values(this.deps.drivers)){try{cleanup.push(Promise.resolve(driver?.destroy?.()));}catch{/* Cleanup continues for all providers. */}}

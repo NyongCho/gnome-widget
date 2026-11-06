@@ -16,7 +16,7 @@ For local artifact verification without a license selection:
 
 ```sh
 python3 scripts/package.py --edition gjs --development
-LIQUID_GNOME_WORK=outputs/verification/public-package ./scripts/test-gnome.py --edition gjs \
+LIQUID_GNOME_WORK=outputs/verification/public-package-final ./scripts/test-gnome.py --edition gjs \
   --package-zip dist/liquid-widgets-public-development/liquid-widgets.shell-extension.zip
 ```
 
@@ -63,9 +63,9 @@ Before a public submission, publish the exact matching source commit and retain 
 
 - Owner-selected project license: pending.
 - Final five-pair performance gate: PASS; 0/5 p95 regressions and 1/5 additional-stall pairs in each phase. All raw results are retained.
-- Complete `check.sh --edition all`: PASS, including Rust fmt/clippy/test, 141 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. Real external-account Rust tests remain intentionally ignored.
-- Exact development ZIP install/enable/collect/open production preferences/disable/uninstall in disposable GNOME 50: PASS, with no Rust service. Artifact SHA-256, logs and screenshots: [`outputs/verification/public-package`](../outputs/verification/public-package/).
+- Complete `check.sh --edition all`: PASS, including Rust fmt/clippy/test, 143 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. Real external-account Rust tests remain intentionally ignored.
+- Exact development ZIP install/enable/collect/open production preferences/disable/uninstall in disposable GNOME 50: PASS, with no Rust service. Artifact SHA-256, logs and screenshots: [`outputs/verification/public-package-final`](../outputs/verification/public-package-final/).
 - Personal Rust distribution build and separate UUID/ELF/service/installer: PASS. Installer preservation tests confirm personal removal leaves public settings and files untouched.
 - `run_dispose()` audit: removed the private WallClock. Native reproduction showed its timer and timezone monitor survive `run_dispose()` until GC. The controller now borrows GNOME 50's date-menu clock and disconnects only its own listeners/timer; it never disposes the Shell-owned clock. This preserves immediate realtime/timezone notifications. Twenty retained controllers in each edition left no owned sources/listeners, and both clock-footer regressions passed. The GNOME private field is a version-specific integration point. See [GNOME 50 date menu](https://github.com/GNOME/gnome-shell/blob/gnome-50/js/ui/dateMenu.js) and [WallClock finalization](https://github.com/GNOME/gnome-desktop/blob/44.5/libgnome-desktop/gnome-wall-clock.c).
-- Final whole-branch review after implementation: pending.
+- Final whole-branch review: complete. Three Important recovery/preferences findings were fixed with failing regressions followed by the passing full suite and a rebuilt exact-ZIP check. One implementation-plan checkbox cleanup is deferred. See [decisions and review record](typescript-implementation-decisions.md).
 - Actual private Google account, external Open-Meteo requests and physical login/lock behavior: not represented by the synthetic public-edition tests. Prior personal Rust checks are identified separately in the feature documents.

@@ -16,6 +16,7 @@ import {Cancellation} from '../../src/shared/dataClient.js';
 import {gioAsync} from '../../src/data/async.js';
 import type {CalendarSummary,CalendarOrigin} from '../../src/shared/calendarSummary.js';
 import type {SecretStore} from '../../src/data/contracts.js';
+import {verifyCalendarSettings,verifyTwoWindowCleanup} from './calendarSettings.js';
 const [directory,endpoint]=ARGV as [string,string],loop=new GLib.MainLoop(null,false);let exitCode=0;
 const URL='https://calendar.google.com/calendar/ical/synthetic/private-fixture/basic.ics',cancel=()=>new Cancellation();
 const wait=(ms:number)=>new Promise<void>(resolve=>GLib.timeout_add(0,ms,()=>{resolve();return GLib.SOURCE_REMOVE;}));
@@ -45,6 +46,9 @@ void(async()=>{
     // Use a real private GTK window for the window-close lifecycle. The full
     // production preference form and keyboard navigation are checked in Task 11.
     Adw.init();const app=new Adw.Application({application_id:'io.github.NyongCho.LiquidWidgets.PreferenceTest',flags:Gio.ApplicationFlags.NON_UNIQUE});app.register(null);const windowData=services();await windowData.mode('normal');const windowSession=new PublicPreferencesSession(directory,windowData);let displayed='';
+    await verifyCalendarSettings(app);
+    await verifyTwoWindowCleanup(app,directory,services,secrets);
+    await windowSession.setCalendarSecret(URL,cancel());
     const window=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets verification',default_width:400,default_height:200}),page=new Adw.PreferencesPage(),group=new Adw.PreferencesGroup(),row=new Adw.ActionRow({title:'Calendar status'});group.add(row);page.add(group);window.add(page);
     windowSession.watchCalendar((state,origin)=>{displayed=`${origin}: ${state.status}`;row.subtitle=displayed;});window.connect('close-request',()=>{windowSession.destroy();return false;});window.present();await until(()=>displayed==='preview: ok','GTK displays preview status');window.close();await wait(50);assert(!window.visible,'GTK closes');const reopened=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets verification reopened'});reopened.present();await wait(30);reopened.close();
     // Two settings windows contend for the same real calendar compute lease.

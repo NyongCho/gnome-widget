@@ -8,7 +8,7 @@ import {calendarSummaryStatus} from '../shared/calendarStatus.js';
 import type {TextBindings} from '../shared/i18n.js';
 import type {Settings} from '../types.js';
 export function addCalendarSettings(window:Adw.PreferencesWindow,page:Adw.PreferencesPage,ui:TextBindings,session:PreferencesDataSession):void{
- const cancel=new Cancellation();let closed=false,loaded:Settings|null=null,loadFailed=false,summary:CalendarSummary|null=null,origin:CalendarOrigin='unavailable';
+ const cancel=new Cancellation();let closed=false,loaded:Settings|null=null,loadFailed=false,summary:CalendarSummary|null=null,origin:CalendarOrigin='unavailable',loadEpoch=0;
  const subtitle=()=>loadFailed?ui.t('설정을 읽지 못했어요. 잠시 후 다시 시도해 주세요.'):loaded?calendarSummaryStatus(loaded,summary,origin,ui.language):ui.t('확인 중…');
  const title=()=>ui.t(origin==='preview'?'설정창 연결 확인':'위젯 동기화');
  const render=()=>{if(!closed)ui.bind(status,{title,subtitle});};
@@ -21,13 +21,15 @@ export function addCalendarSettings(window:Adw.PreferencesWindow,page:Adw.Prefer
  const clear=ui.bind(new Gtk.Button({valign:Gtk.Align.CENTER}),{label:'연결 해제'});controls.add_suffix(clear);controls.add_suffix(connect);group.add(controls);
  const notice=ui.bind(new Gtk.Label({wrap:true,xalign:0,margin_top:8,margin_bottom:8}),{label:'주소는 저장 후 다시 표시하지 않습니다.'});group.add(notice);
  const load=async()=>{
+  const epoch=++loadEpoch;
   try{
-   const settings=await session.getSettings(cancel);if(closed)return;
+   const settings=await session.getSettings(cancel);if(closed||epoch!==loadEpoch)return;
    loaded=settings;loadFailed=false;render();
    ui.bind(clear,{label:loaded.calendarSecretDeletionPending?'연결 정보 삭제':'연결 해제'});
-  }catch{if(!closed){loadFailed=true;render();}}
+  }catch{if(!closed&&epoch===loadEpoch){loadFailed=true;render();}}
  };
  const act=async(method:string,args:string[])=>{
+  ++loadEpoch; // A pre-mutation snapshot cannot describe the resulting state.
   connect.sensitive=false;clear.sensitive=false;entry.sensitive=false;ui.bind(notice,{label:'처리 중…'});
   try{
    if(method==='SetCalendarSecret')await session.setCalendarSecret(args[0]!,cancel);else await session.clearCalendarSecret(cancel);if(closed)return;
@@ -37,5 +39,7 @@ export function addCalendarSettings(window:Adw.PreferencesWindow,page:Adw.Prefer
  };
  connect.connect('clicked',()=>{const url=entry.text;entry.text='';void act('SetCalendarSecret',[url]);});
  clear.connect('clicked',()=>{entry.text='';void act('ClearCalendarSecret',[]);});
- let source:string|null|undefined;stopWatch=session.watchCalendar((state,nextOrigin)=>{summary=state;origin=nextOrigin;if(source!==state.sourceId){source=state.sourceId;void load();}render();});void load();
+ // Status revisions also invalidate connection-cleanup settings, even when
+ // sourceId stays null or the same connected source remains in use.
+ stopWatch=session.watchCalendar((state,nextOrigin)=>{summary=state;origin=nextOrigin;void load();render();});void load();
 }

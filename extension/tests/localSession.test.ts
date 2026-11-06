@@ -110,3 +110,44 @@ test('periodic network sampling retains the last complete graph until the next s
     assert.equal(f.store.get('network'),state,'network poll must not resize the graph card');
     assert.equal(f.changes.length,changes);f.session.destroy();
 });
+
+test('initial read and monitor failures recover with bounded backoff and destroy cancels recovery',async()=>{
+    for(const failure of ['read','watch'] as const){
+        const clock=new Clock(),store=new ProviderStore(),calls:(string|null)[]=[];
+        const driver:ProviderDriver<'calendar'>={async collect(c){calls.push(c.config.calendar.sourceId);return c.config.calendar.enabled?
+            {status:'ok',sourceId:c.config.calendar.sourceId,updatedAt:c.now,errorCode:null,data:{...c.calendarContext,events:[]}}:
+            {status:'unconfigured',sourceId:null,updatedAt:null,errorCode:null,data:null};}};
+        const config={...defaultConfig(),calendar:{enabled:true,sourceId:'recovered',deletionPending:false}};
+        let broken=true,reads=0,watches=0,activeWatches=0;
+        const session=new LocalWidgetSession({extensionPath:'/test',store,changed(){},connection(){}},{clock,drivers:{calendar:driver},config:{
+            async read(){reads++;if(broken&&failure==='read')throw new DataFailure('SERVICE_UNAVAILABLE');return config;},
+            watch(){watches++;if(broken&&failure==='watch')throw new DataFailure('SERVICE_UNAVAILABLE');activeWatches++;return()=>{activeWatches--;};},
+        }});
+        session.setCalendarWatchers(1);await session.ready;await flush();
+        const initial=reads;await clock.advance(999);assert.equal(reads,initial,'no busy retry loop');
+        await clock.advance(1);assert.ok(reads>initial,`${failure} failure must retry initialization`);
+        broken=false;await clock.advance(2000);
+        assert.equal(store.get('calendar').sourceId,'recovered');assert.equal(activeWatches,1);assert.ok(watches>=1);
+        assert.equal(calls.filter(source=>source==='recovered').length,1);
+        session.destroy();assert.equal(activeWatches,0);assert.equal(clock.timers.size,0);
+    }
+    const clock=new Clock();let reads=0;
+    const session=new LocalWidgetSession({extensionPath:'/test',store:new ProviderStore(),changed(){},connection(){}},{clock,drivers:{},config:{
+        async read(){reads++;throw new DataFailure('SERVICE_UNAVAILABLE');},watch(){throw new Error('unreachable');},
+    }});
+    await session.ready;await clock.advance(120000);assert.ok(reads<=10,'retry interval caps at a quiet cadence');
+    session.destroy();const before=reads;await clock.advance(120000);assert.equal(reads,before);assert.equal(clock.timers.size,0);
+});
+
+test('deletion-pending changes notify preferences without restarting the calendar collector',async()=>{
+    const clock=new Clock(),store=new ProviderStore();let watch!:(config:DataConfig)=>void,notifications=0,collections=0;
+    const config={...defaultConfig(),calendar:{enabled:true,sourceId:'same-source',deletionPending:false}};
+    const session=new LocalWidgetSession({extensionPath:'/test',store,changed(name){if(name==='calendar')notifications++;},connection(){}},{clock,config:{async read(){return config;},watch(fn){watch=fn;return()=>{};}},drivers:{calendar:{async collect(c){collections++;return{status:'ok',sourceId:c.config.calendar.sourceId,updatedAt:c.now,errorCode:null,data:{...c.calendarContext,events:[]}};}}}});
+    await session.ready;session.setCalendarWatchers(1);await flush();
+    const collected=collections,before=notifications;
+    watch({...config,calendar:{...config.calendar,deletionPending:true}});await flush();
+    assert.ok(notifications>before,'a cleanup failure must reach other open settings windows');
+    const pending=notifications;watch(config);await flush();
+    assert.ok(notifications>pending,'successful cleanup must clear other windows warnings');
+    assert.equal(collections,collected,'settings-only changes must not restart computation');session.destroy();
+});
