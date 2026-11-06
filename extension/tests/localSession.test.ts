@@ -19,12 +19,12 @@ class Driver<K extends ProviderName> implements ProviderDriver<K>{
     reset(){this.resets++;}destroy(){this.destroyed++;}
 }
 function fixture(){
-    const clock=new Clock(),store=new ProviderStore(),calendar=new Driver<'calendar'>(),weather=new Driver<'weather'>(),system=new Driver<'system'>();
+    const clock=new Clock(),store=new ProviderStore(),calendar=new Driver<'calendar'>(),weather=new Driver<'weather'>(),system=new Driver<'system'>(),network=new Driver<'network'>();
     let config:DataConfig={...defaultConfig(),calendar:{enabled:true,sourceId:'source-a',deletionPending:false},weather:{sourceId:'city-a',location:{id:'a',label:'A',latitude:1,longitude:2,timeZone:'UTC'}}};
     let watcher:(c:DataConfig)=>void=()=>{};let unwatch=0,cleanups=0;const changes:string[]=[];
-    const session=new LocalWidgetSession({extensionPath:'/test',store,changed:name=>changes.push(name??'all'),connection(){}},{clock,config:{async read(){return config;},watch(fn){watcher=fn;return()=>{unwatch++;};}},drivers:{calendar,weather,system},destroy(){cleanups++;}});
+    const session=new LocalWidgetSession({extensionPath:'/test',store,changed:name=>changes.push(name??'all'),connection(){}},{clock,config:{async read(){return config;},watch(fn){watcher=fn;return()=>{unwatch++;};}},drivers:{calendar,weather,system,network},destroy(){cleanups++;}});
     session.setCalendarContext({month:'2026-11',timeZone:'Asia/Seoul',weekStart:1},'2026-11-03');
-    return{clock,store,calendar,weather,system,session,changes,get unwatch(){return unwatch;},get cleanups(){return cleanups;},change(source:string){config={...config,calendar:{...config.calendar,sourceId:source},weather:{...config.weather,sourceId:source}};watcher(config);}};
+    return{clock,store,calendar,weather,system,network,session,changes,get unwatch(){return unwatch;},get cleanups(){return cleanups;},change(source:string){config={...config,calendar:{...config.calendar,sourceId:source},weather:{...config.weather,sourceId:source}};watcher(config);}};
 }
 function calendarResult(call:Driver<'calendar'>['calls'][number]):ProviderMap['calendar']{return{status:'ok',sourceId:call.context.config.calendar.sourceId,updatedAt:call.context.now,errorCode:null,data:{...call.context.calendarContext,events:[]}};}
 function weatherResult(call:Driver<'weather'>['calls'][number]):ProviderMap['weather']{return{status:'ok',sourceId:call.context.config.weather.sourceId,updatedAt:call.context.now,errorCode:null,data:{location:'A',timeZone:'UTC',current:{temperatureC:0,code:0},hourly:[],attributionUrl:'https://open-meteo.com/'}};}
@@ -84,4 +84,29 @@ test('initial config snapshot cannot overwrite a newer file-watch update',async(
 test('hiding sampled cards resets their baseline before the next subscription',async()=>{
     const f=fixture();await f.session.ready;f.session.start(['system']);await flush();assert.equal(f.system.resets,0);
     f.session.stop();assert.equal(f.system.resets,1);f.session.start(['system']);f.session.destroy();
+});
+
+test('periodic system sampling retains the last complete presentation until its replacement arrives',async()=>{
+    const f=fixture();await f.session.ready;f.session.start(['system']);await flush();
+    const first=f.system.calls[0]!;
+    first.resolve({status:'ok',sourceId:'system',updatedAt:first.context.now,errorCode:null,data:{cpuPercent:25,memoryUsedBytes:1024,memoryTotalBytes:4096,temperatureC:40}});
+    await flush();const state=f.store.get('system'),changes=f.changes.length;
+    await f.clock.advance(2000);
+    assert.equal(f.system.calls.length,2,'periodic collection still runs');
+    assert.equal(f.store.get('system'),state,'polling must not flash a loading footer and resize the card');
+    assert.equal(f.changes.length,changes,'UI is published when the new sample arrives');
+    f.system.calls[1]!.reject(new DataFailure('SERVICE_UNAVAILABLE'));await flush();
+    assert.equal(f.store.get('system').status,'stale','failures still reach the UI');
+    f.session.destroy();
+});
+
+
+test('periodic network sampling retains the last complete graph until the next sample',async()=>{
+    const f=fixture();await f.session.ready;f.session.start(['network']);await flush();
+    const first=f.network.calls[0]!;
+    first.resolve({status:'ok',sourceId:'network-6175746f',updatedAt:first.context.now,errorCode:null,data:{interface:'eth0',rxBytesPerSec:1,txBytesPerSec:2,history:[]}});
+    await flush();const state=f.store.get('network'),changes=f.changes.length;
+    await f.clock.advance(2000);assert.equal(f.network.calls.length,2);
+    assert.equal(f.store.get('network'),state,'network poll must not resize the graph card');
+    assert.equal(f.changes.length,changes);f.session.destroy();
 });

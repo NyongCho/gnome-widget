@@ -25,7 +25,7 @@ if(values.edition==='gjs'){
 }
 if(values.edition==='rust'||values.tests){
     await build({...common,entryPoints:['src/shared/validation.ts'],outdir:`${outdir}/shared`});
-    await build({...common,entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js'},outdir:`${outdir}/tests`});
+    await build({...common,entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js',benchmark:'tests/gnome/benchmark.js'},outdir:`${outdir}/tests`});
 }
 await writeFile(`${outdir}/metadata.json`,JSON.stringify(metadata,null,2)+'\n');
 await copyFile('stylesheet.css',`${outdir}/stylesheet.css`);

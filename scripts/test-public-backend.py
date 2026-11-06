@@ -202,7 +202,7 @@ def calendar_feed_suite(preferences=False):
     finally:server.shutdown()
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network','media','calendar-feed','preferences-data'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['presentation','worker','io','local-session','weather','system-network','media','calendar-feed','preferences-data'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
@@ -220,6 +220,7 @@ def main():
                         if mount.is_mount():raise RuntimeError('Private test mount survived cleanup')
     if args.suite=='local-session':
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
+    elif args.suite=='presentation':subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/calendarPresentation.js')],check=True,timeout=10)
     elif args.suite=='weather':weather_suite()
     elif args.suite=='system-network':system_network_suite()
     elif args.suite=='media':media_suite()

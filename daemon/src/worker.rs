@@ -62,6 +62,10 @@ impl BlockingWorker {
         context: CalendarContext,
         now: String,
     ) -> Result<Result<Vec<CalendarEvent>, CalendarError>, WorkerError> {
-        self.run(move || expand_ics(&ics, &context, &now)).await
+        // CPU/network may occupy both slots during simultaneous activation.
+        // Keep this cancellable calendar request queued instead of losing it
+        // until the provider's next five-minute poll.
+        self.run_when_available(move || expand_ics(&ics, &context, &now))
+            .await
     }
 }

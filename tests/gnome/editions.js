@@ -1,5 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+import System from 'system';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Scripting from 'resource:///org/gnome/shell/ui/scripting.js';
 import {capture} from './helpers.js';
@@ -33,13 +34,21 @@ export async function run(){
     Gio.Subprocess.new(['gnome-extensions','prefs',uuid],Gio.SubprocessFlags.NONE);
     let prefs;await until(()=>{prefs=global.get_window_actors().find(a=>a.mapped&&a.meta_window.get_title()==='Liquid Widgets');return prefs;},'production preferences did not open');
     await until(()=>extension.stateObj.client.watchers===1,'GTK did not acquire calendar demand');
+    const fdCount=()=>{const e=Gio.File.new_for_path('/proc/self/fd').enumerate_children('standard::name',0,null);let n=0;while(e.next_file(null))n++;e.close(null);return n;};
+    const cycles=Number(GLib.getenv('LIQUID_LIFECYCLE_CYCLES')||1);
+    await Scripting.sleep(300);System.gc();const beforeFds=fdCount();
+    for(let cycle=0;cycle<cycles;cycle++){
     const previous=extension.stateObj.client;
     Main.extensionManager.disableExtension(uuid);await until(()=>extension.state===2,'disable with GTK open failed');await previous.drained;
     check(previous.dead&&previous.unwatch===null&&!await owned(BUS),'Shell resources survived with preferences open');
     check([...previous.schedulers.values()].every(s=>s.dead&&s.timer===null&&s.event===null),'Shell provider sources survived with GTK open');
     check(!await owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'unconfigured preview spawned a worker');
-    check(prefs.mapped,'preferences closed with the extension');await capture('public-preferences-shell-off');
+    check(prefs.mapped,'preferences closed with the extension');if(cycle===0)await capture('public-preferences-shell-off');
     Main.extensionManager.enableExtension(uuid);await until(()=>extension.state===1&&extension.stateObj.client.watchers===1,'GTK did not attach to the new Shell session');
+    }
+    System.gc();await Scripting.sleep(300);const afterFds=fdCount();
+    check(afterFds<=beforeFds,`actual Shell session FD growth: ${beforeFds} -> ${afterFds}`);
+    print(`EDITION_LIFECYCLE: ${cycles} disable/enable cycles with real GTK open; FD ${beforeFds} -> ${afterFds}`);
     prefs.meta_window.delete(global.get_current_time());await until(()=>extension.stateObj.client.watchers===0,'closing real GTK leaked a watch');
     print('EDITION_TEST: public factory, hidden preferences demand, disable/reenable ownership and real GTK handoff passed');
 }

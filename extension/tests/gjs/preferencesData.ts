@@ -47,5 +47,30 @@ void(async()=>{
     Adw.init();const app=new Adw.Application({application_id:'io.github.NyongCho.LiquidWidgets.PreferenceTest',flags:Gio.ApplicationFlags.NON_UNIQUE});app.register(null);const windowData=services();await windowData.mode('normal');const windowSession=new PublicPreferencesSession(directory,windowData);let displayed='';
     const window=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets verification',default_width:400,default_height:200}),page=new Adw.PreferencesPage(),group=new Adw.PreferencesGroup(),row=new Adw.ActionRow({title:'Calendar status'});group.add(row);page.add(group);window.add(page);
     windowSession.watchCalendar((state,origin)=>{displayed=`${origin}: ${state.status}`;row.subtitle=displayed;});window.connect('close-request',()=>{windowSession.destroy();return false;});window.present();await until(()=>displayed==='preview: ok','GTK displays preview status');window.close();await wait(50);assert(!window.visible,'GTK closes');const reopened=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets verification reopened'});reopened.present();await wait(30);reopened.close();
+    // Two settings windows contend for the same real calendar compute lease.
+    const leftData=services();await leftData.mode('sparse');
+    const left=new PublicPreferencesSession(directory,leftData);left.watchCalendar(()=>{});
+    await until(()=>owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'first settings window owns the slot');
+    const rightData=services();await rightData.mode('normal');const right=new PublicPreferencesSession(directory,rightData);let rightReady=false;
+    right.watchCalendar(state=>{rightReady=state.status==='ok';});await until(()=>rightData.requests>0,'second settings window requested data');await wait(100);
+    assert(!rightReady,'second window computed before the existing slot was released');
+    left.destroy();await until(()=>rightReady,'second settings window takes the released slot');right.destroy();
+    await until(async()=>!await owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'both windows leave no worker');
+    const fdCount=()=>{const e=Gio.File.new_for_path('/proc/self/fd').enumerate_children('standard::name',0,null);let n=0;while(e.next_file(null))n++;e.close(null);return n;};
+    async function windowCycle(){
+        const d=services(),session=new PublicPreferencesSession(directory,d);let ready=false,late=0,closed=false;
+        const w=new Adw.PreferencesWindow({application:app,title:'Liquid Widgets lifecycle'});
+        session.watchCalendar(state=>{if(closed)late++;if(state.status==='ok')ready=true;});
+        w.connect('close-request',()=>{closed=true;session.destroy();return false;});w.present();
+        await until(()=>ready,'settings cycle preview completes');w.close();
+        await until(async()=>!await owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'settings cycle worker exits');
+        await wait(30);assert(!w.visible&&late===0,'closed window received an update');
+    }
+    // Warm GTK/GIO connection setup before measuring descriptors.
+    await windowCycle();await windowCycle();System.gc();await wait(100);const beforeFds=fdCount();
+    for(let i=0;i<20;i++)await windowCycle();System.gc();await wait(200);
+    const afterFds=fdCount();assert(afterFds<=beforeFds,`settings FD growth: ${beforeFds} -> ${afterFds}`);
+    assert(!await owned(STATUS_BUS)&&!await owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'settings loop retained a bridge/worker name');
+    print(JSON.stringify({test:'20 actual GTK preview open/close cycles and two-window compute contention',success:true,beforeFds,afterFds}));
     print(JSON.stringify({test:'prefs off/on, hidden demand, preview cancellation, late token, same owner new instance, two-window mutations, close during worker and real GTK display/close',success:true}));
 })().then(()=>loop.quit(),error=>{printerr(`${String(error)}\n${error instanceof Error?error.stack:''}`);exitCode=1;loop.quit();});loop.run();System.exit(exitCode);

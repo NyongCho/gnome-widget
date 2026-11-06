@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "releaseEligibleRuns": true,
+  "phases": [
+    {
+      "name": "idle",
+      "p95Regressions": 0,
+      "stallRegressions": 1,
+      "pairs": [
+        {
+          "run": 0,
+          "p95IncreaseMs": 0.13500000000000156,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 1,
+          "p95IncreaseMs": 0.021000000000000796,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 2,
+          "p95IncreaseMs": 0.012000000000000455,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 3,
+          "p95IncreaseMs": 0.2779999999999987,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 4,
+          "p95IncreaseMs": -0.0920000000000023,
+          "p95LimitMs": 2,
+          "newStalls": 3
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "all",
+      "p95Regressions": 0,
+      "stallRegressions": 1,
+      "pairs": [
+        {
+          "run": 0,
+          "p95IncreaseMs": 0.23300000000000054,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 1,
+          "p95IncreaseMs": -0.31200000000000117,
+          "p95LimitMs": 2,
+          "newStalls": 3
+        },
+        {
+          "run": 2,
+          "p95IncreaseMs": 0.09299999999999997,
+          "p95LimitMs": 2,
+          "newStalls": 0
+        },
+        {
+          "run": 3,
+          "p95IncreaseMs": -1.2489999999999988,
+          "p95LimitMs": 2.1435,
+          "newStalls": -3
+        },
+        {
+          "run": 4,
+          "p95IncreaseMs": -0.4330000000000034,
+          "p95LimitMs": 2.0077000000000003,
+          "newStalls": -2
+        }
+      ],
+      "passed": true
+    }
+  ]
+}

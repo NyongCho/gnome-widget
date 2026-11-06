@@ -1,0 +1,1 @@
+{"current": {"temperature_2m": 16, "weather_code": 2}, "hourly": {"time": [1793994991, 1793998591, 1794002191, 1794005791, 1794009391, 1794012991, 1794016591], "temperature_2m": [16, 15, 14, 13, 12, 11, 10], "precipitation_probability": [0, 10, 20, 30, 40, 50, 60]}}

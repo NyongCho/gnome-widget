@@ -59,6 +59,48 @@ async fn calendar_expansion_runs_on_bounded_worker() {
 }
 
 #[tokio::test]
+async fn calendar_expansion_waits_for_busy_collectors() {
+    let worker = BlockingWorker::new(1);
+    let (release, wait) = std::sync::mpsc::channel();
+    let (started, ready) = tokio::sync::oneshot::channel();
+    let busy = tokio::spawn({
+        let worker = worker.clone();
+        async move {
+            worker
+                .run(move || {
+                    started.send(()).unwrap();
+                    wait.recv_timeout(Duration::from_secs(3)).unwrap();
+                })
+                .await
+                .unwrap();
+        }
+    });
+    ready.await.unwrap();
+    let mut expansion = Box::pin(worker.expand(
+        include_str!("../../tests/fixtures/calendar/weekly-exdate.ics").into(),
+        liquid_widgets_daemon::types::CalendarContext {
+            month: "2026-11".into(),
+            time_zone: "Asia/Seoul".into(),
+            week_start: 1,
+        },
+        "2026-11-01T00:00:00Z".into(),
+    ));
+    let pending = futures_util::poll!(expansion.as_mut()).is_pending();
+    release.send(()).unwrap();
+    busy.await.unwrap();
+    assert!(
+        pending,
+        "temporary CPU/network contention must not discard the calendar until its next five-minute poll"
+    );
+    let events = tokio::time::timeout(Duration::from_secs(1), expansion)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    assert_eq!(events.len(), 2);
+}
+
+#[tokio::test]
 async fn queued_work_waits_for_capacity_and_drops_cancelled_tasks() {
     let worker = BlockingWorker::new(1);
     let (release, wait) = std::sync::mpsc::channel();

@@ -1,0 +1,17 @@
+{
+  "kernel": "7.0.0-42-generic",
+  "machine": "x86_64",
+  "powerProfile": "performance",
+  "shell": "GNOME Shell 50.1",
+  "processor": "12th Gen Intel(R) Core(TM) i7-12700F",
+  "warmupSeconds": 30,
+  "phaseSeconds": 120,
+  "smoke": false,
+  "memorySamplingMs": 50,
+  "clock": "CLOCK_MONOTONIC / GNOME stagePaintStart interval, not paint duration",
+  "rustBuild": "release",
+  "cpuGovernors": [
+    "powersave"
+  ],
+  "gpu": "NVIDIA GeForce RTX 3080, 595.99.02"
+}

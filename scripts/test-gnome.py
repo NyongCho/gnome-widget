@@ -16,7 +16,7 @@ if EDITION not in EDITIONS: raise SystemExit('Expected --edition rust or gjs')
 EDITION_INFO = EDITIONS[EDITION]
 BUILD = ROOT/'extension'/EDITION_INFO['output']
 WORK = Path(os.environ.get('LIQUID_GNOME_WORK',ROOT/'.superpowers/gnome-tests'))
-SHOT_MODE = next((flag[2:] for flag in ('--editions', '--dynamic-wallpaper', '--clock-footer', '--clock-styles', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
+SHOT_MODE = next((flag[2:] for flag in ('--edition-benchmark', '--editions', '--dynamic-wallpaper', '--clock-footer', '--clock-styles', '--card-order', '--system', '--media-art', '--compact', '--blur', '--preferences', '--visual', '--lifecycle', '--benchmark', '--soak', '--spike') if flag in sys.argv), 'functional')
 SHOTS = WORK / 'screenshots' / EDITION / SHOT_MODE
 
 
@@ -101,7 +101,7 @@ def main():
         raise SystemExit('mutter-devkit missing; see docs/shader-spike.md')
     shell = subprocess.Popen([
         'gnome-shell-test-tool', '--devkit', '--wrap', str(ROOT / 'scripts/gnome-test-env.py'),
-        '--extension', str(archive), str(ROOT / ('tests/gnome/editions.js' if '--editions' in sys.argv else 'tests/gnome/dynamic-wallpaper.js' if '--dynamic-wallpaper' in sys.argv else 'tests/gnome/clock-footer.js' if '--clock-footer' in sys.argv else 'tests/gnome/clock-styles.js' if '--clock-styles' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
+        '--extension', str(archive), str(ROOT / ('tests/gnome/edition-benchmark.js' if '--edition-benchmark' in sys.argv else 'tests/gnome/editions.js' if '--editions' in sys.argv else 'tests/gnome/dynamic-wallpaper.js' if '--dynamic-wallpaper' in sys.argv else 'tests/gnome/clock-footer.js' if '--clock-footer' in sys.argv else 'tests/gnome/clock-styles.js' if '--clock-styles' in sys.argv else 'tests/gnome/card-order.js' if '--card-order' in sys.argv else 'tests/gnome/system.js' if '--system' in sys.argv else 'tests/gnome/media-art.js' if '--media-art' in sys.argv else 'tests/gnome/compact.js' if '--compact' in sys.argv else 'tests/gnome/blur.js' if '--blur' in sys.argv else 'tests/gnome/glass-spike.js' if '--spike' in sys.argv else 'tests/gnome/preferences.js' if '--preferences' in sys.argv else 'tests/gnome/visual.js' if '--visual' in sys.argv else 'tests/gnome/lifecycle.js' if '--lifecycle' in sys.argv else 'tests/gnome/benchmark.js' if '--benchmark' in sys.argv or '--soak' in sys.argv else 'tests/gnome/widgets.js')),
     ], env=env, start_new_session=True)
     viewer = None
     try:
@@ -109,7 +109,7 @@ def main():
         # Mutter launches the system viewer itself. Only supplement a missing binary.
         if not system_viewer.exists():
             viewer = subprocess.Popen([str(local_viewer)], env=env)
-        result = shell.wait(timeout=2300 if '--soak' in sys.argv else 300 if '--benchmark' in sys.argv else 120)
+        result = shell.wait(timeout=600 if '--edition-benchmark' in sys.argv else 2300 if '--soak' in sys.argv else 300 if '--benchmark' in sys.argv else 120)
         if result:
             return result
         if '--spike' in sys.argv: verify_images()

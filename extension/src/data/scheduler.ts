@@ -42,7 +42,10 @@ export class ProviderScheduler<K extends ProviderName> {
         this.pending=false;this.timer?.();this.timer=null;
         const generation=++this.generation,cancel=new Cancellation(),context={...this.context,now:this.clock.now(),cancel},source=this.source;
         const current=()=>!this.dead&&this.enabled&&generation===this.generation&&!cancel.cancelled;
-        this.emit(loadingState(this.name,source,this.previous(),context.calendarContext));
+        // Fast periodic samples keep their previous presentation until completion.
+        // A transient loading footer would resize these cards every two seconds.
+        if((this.name!=='system'&&this.name!=='network')||this.previous().data===null)
+            this.emit(loadingState(this.name,source,this.previous(),context.calendarContext));
         const accept=(state:ProviderMap[K])=>{
             if(!current())return;
             try{const checked=checkedState(this.name,state,source,context.calendarContext);this.failures=checked.status==='ok'?0:this.failures+1;this.emit(checked);}
