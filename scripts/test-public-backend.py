@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exercise the public edition on a private bus with synthetic data only."""
-import argparse,ctypes,json,os,select,struct,subprocess,sys,tempfile,time
+import argparse,ctypes,gzip,http.server,json,os,select,struct,subprocess,sys,tempfile,threading,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 HEADER={'version':1,'jobId':'test','sourceId':'synthetic','generation':1,'context':{'month':'2026-11','timeZone':'UTC','weekStart':1},'now':'2026-11-03T00:00:00Z'}
@@ -90,13 +90,44 @@ time.sleep(60)
     assert child.wait(timeout=11)!=0;assert time.monotonic()-start<11;child.stdin.close()
     print('PASS internal 9 second deadline while awaiting input')
 
+def io_suite():
+    entry=str(ROOT/'extension/dist/tests/leaseHolder.js')
+    holder=subprocess.Popen(['gjs','-m',entry,'hold'],stdout=subprocess.PIPE,text=True)
+    assert holder.stdout.readline().strip()=='acquired'
+    waiter=subprocess.Popen(['gjs','-m',entry,'wait'],stdout=subprocess.PIPE,text=True)
+    time.sleep(.15);assert waiter.poll() is None,'second process must wait for lock'
+    holder.kill();holder.wait();assert waiter.wait(timeout=2)==0
+    assert waiter.stdout.read().strip()=='acquired'
+    print('PASS ConfigLock owner death releases another process')
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def log_message(self,*args):pass
+        def do_GET(self):
+            if self.path=='/slow':time.sleep(.3)
+            body=gzip.compress(b'a'*10000) if self.path=='/compressed' else b'ok'
+            self.send_response(302 if self.path=='/redirect' else 200)
+            if self.path=='/compressed':self.send_header('Content-Encoding','gzip')
+            if self.path=='/redirect':self.send_header('Location','/ok')
+            self.send_header('Content-Length',str(len(body)));self.end_headers()
+            try:self.wfile.write(body)
+            except BrokenPipeError:pass
+    server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler)
+    threading.Thread(target=server.serve_forever,daemon=True).start()
+    with tempfile.TemporaryDirectory(prefix='liquid-io-') as tmp:
+        root=Path(tmp);(root/'unsafe').mkdir(mode=0o700);(root/'unsafe/symlink').symlink_to('/dev/null');os.mkfifo(root/'unsafe/fifo')
+        keyring=subprocess.Popen(['gnome-keyring-daemon','--unlock','--foreground','--components=secrets',f'--control-directory={tmp}/keyring'],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
+        keyring.stdin.write(b'synthetic-test-password\n');keyring.stdin.close()
+        try:
+            subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/io.js'),tmp,f'http://127.0.0.1:{server.server_port}'],check=True,timeout=35)
+        finally:
+            keyring.terminate();keyring.wait(timeout=3);server.shutdown()
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
         with tempfile.TemporaryDirectory(prefix='liquid-public-test-') as tmp:
             env={**os.environ,'GIO_USE_VFS':'local','XDG_CONFIG_HOME':tmp+'/config','XDG_CACHE_HOME':tmp+'/cache','XDG_DATA_HOME':tmp+'/data'}
             return subprocess.run(['dbus-run-session','--',sys.executable,__file__,'--private','--suite',args.suite],env=env).returncode
-    worker_suite();return 0
+    (worker_suite if args.suite=='worker' else io_suite)();return 0
 if __name__=='__main__':sys.exit(main())

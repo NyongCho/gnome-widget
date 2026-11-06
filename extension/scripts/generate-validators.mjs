@@ -13,6 +13,8 @@ for (const name of ['Calendar','Weather','System','Network','Media']) exports[na
 const worker = JSON.parse(await readFile(new URL('../../protocol/calendar-worker.schema.json', import.meta.url), 'utf8'));
 ajv.addSchema(worker);
 for (const name of ['Header', 'Control', 'Reply']) exports[`worker${name}`] = `${worker.$id}#/$defs/${name}`;
+const dataConfig = JSON.parse(await readFile(new URL('../../protocol/data-config.schema.json', import.meta.url), 'utf8'));
+ajv.addSchema(dataConfig); exports.dataConfig = dataConfig.$id;
 const dir = new URL('../generated/', import.meta.url);
 await mkdir(dir, {recursive: true});
 // Bundling replaces Ajv's tiny helper imports. No Node/Ajv/compiler at runtime.

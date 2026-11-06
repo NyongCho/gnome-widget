@@ -26,3 +26,7 @@ Rust zbus 서비스와 GJS 비동기 클라이언트를 구현했다. GetSnapsho
 ready 이후 부모는 header frame, u32 길이+raw ICS bytes(5 MiB 이하), EOF를 순서대로 쓴다. URL·비밀은 프로토콜에 없다. child는 한 reply와 EOF를 남기고 종료한다. 부모는 version, job/source/generation/context, schema, EOF와 exit 0을 모두 확인한 뒤에만 반영한다. 취소된 결과는 반영하지 않는다.
 
 내부 계산·입력 대기 기한은 시작 후 9초, 부모 watchdog은 spawn 후 10초다. 부모는 취소 즉시 kill을 요청하고 취소하지 않은 wait_async로 실제 종료를 확인한다. 세션 slot 대기는 30초 이내이며, 부모는 name 소멸을 관찰할 뿐 계산 lease를 소유하지 않는다. `scripts/test-public-backend.py --suite worker`가 private bus에서 경계·경쟁·강제 종료를 검사한다.
+
+공개용 `data-config.schema.json`은 별도 private `settings.json`의 계약이다. calendar/weather source UUID와 revision UUID를 저장하며 비공개 URL은 포함하지 않는다. 변경은 전용 ConfigLock 연결 아래 직렬화하고, 캐시 최종 쓰기도 같은 락 안에서 현재 source를 확인해야 한다. `extension/src/data/contracts.ts`는 GI 없이 공통 I/O 계약을 정의한다.
+
+Secret.Service는 달력 기능에서만 지연 로드한다. 검색은 LOAD_SECRETS/ALL만 사용하고 UNLOCK을 제외한다. libsecret의 [Item.delete](https://gnome.pages.gitlab.gnome.org/libsecret/method.Item.delete.html)는 프롬프트를 실행할 수 있으므로, 생성/삭제는 암호화된 Secret session을 유지하면서 raw D-Bus CreateItem/Delete 결과의 prompt 경로를 검사하고 실행하지 않는다. 전체 작업 기한은 초기화부터 8초다. 삭제는 조회한 item path 스냅샷에만 적용해 늦은 작업이 미래의 source를 삭제하지 않는다.

@@ -157,13 +157,15 @@ interface PrivateFiles {
 ```
 PrivateFiles는 고정 baseDir의 basename만 받으며 read의 null은 파일 부재에만 사용한다. `SecretStore.lookup(sourceId: string,cancel: Cancellation): Promise<string|null>`, `save(sourceId: string,url: string,cancel: Cancellation): Promise<void>`, `remove(sourceId: string,cancel: Cancellation): Promise<void>`, `clearAll(cancel: Cancellation): Promise<void>`는 공개용 앱 namespace에 한정한다. DataSettingsService는 Task 10 PreferencesDataSession의 getSettings 및 네 mutation 메서드와 동일한 시그니처를 구현한다.
 
-- [ ] `concurrent_connect_clear`, `write_failure_preserves_old_source`, `delete_pending_survives_reconnect`, `stale_cache_writer_after_clear`, `locked_keyring_no_prompt`, `compressed_body_limit`, `reject_symlink_fifo`를 작성하고 FAIL 확인한다. `missing_secret_gi_only_disables_calendar`는 나머지 카드/설정 로드 성공, `unresponsive_keyring_releases_lock`는 SecretStore 8초 제한 뒤 두 번째 writer 진행을 검사한다.
-- [ ] 설정 JSON 최대 64 KiB·schema 검증, 0700/0600·atomic replace, ConfigLock 30초 대기/취소와 종료 후 tx 재사용 거부를 구현한다. revision은 매 commit UUID로 새로 발급한다. 모든 데이터 설정 writer와 calendar/weather cache 최종 commit/삭제가 같은 lock 규칙을 따른다.
-- [ ] secret 저장→config commit→직전 source secret 제거, disable/source 무효화→cache 삭제→secret 전체 정리 순서를 구현한다. lock 내부에서 키링 unlock prompt를 기다리지 않는다. background lookup은 search(LOAD_SECRETS), UNLOCK 제외. 이전 삭제 실패는 새 연결 성공으로 해제하지 않으며 clearAll은 명시적 연결 해제에서만 호출한다. 자동 재시도로 새 source의 비밀을 삭제하지 않는다.
-- [ ] SecretStore에서 GI를 지연 import하고 메서드 전체에 8초 deadline/cancellable을 연결한다. 취소는 remote mutation의 rollback으로 취급하지 않는다. 늦은 source별 save/remove가 새 source를 바꾸지 않고, 불확실한 삭제는 pending을 유지하며, finally에서 ConfigLock과 timeout을 해제하는 fixture를 검증한다.
-- [ ] Soup send_async의 압축 해제 stream을 제한하고 redirect를 금지한다. 공급자 URL allowlist는 각 공급자가 정한다. raw URI·본문·exception 원문을 로그/설정/DTO에 넣지 않는다.
-- [ ] `./scripts/dev npm --prefix extension test -- config.test.ts`와 `./scripts/test-public-backend.py --suite io` PASS. private bus에서 lock 보유 프로세스 종료 후 다른 writer가 진행되는 것도 검사한다.
-- [ ] 커밋: `feat: share public settings and private IO safely`.
+- [x] `concurrent_connect_clear`, `write_failure_preserves_old_source`, `delete_pending_survives_reconnect`, `stale_cache_writer_after_clear`, `locked_keyring_no_prompt`, `compressed_body_limit`, `reject_symlink_fifo`를 작성하고 FAIL 확인한다. `missing_secret_gi_only_disables_calendar`는 나머지 카드/설정 로드 성공, `unresponsive_keyring_releases_lock`는 SecretStore 8초 제한 뒤 두 번째 writer 진행을 검사한다.
+- [x] 설정 JSON 최대 64 KiB·schema 검증, 0700/0600·atomic replace, ConfigLock 30초 대기/취소와 종료 후 tx 재사용 거부를 구현한다. revision은 매 commit UUID로 새로 발급한다. 모든 데이터 설정 writer와 calendar/weather cache 최종 commit/삭제가 같은 lock 규칙을 따른다.
+- [x] secret 저장→config commit→직전 source secret 제거, disable/source 무효화→cache 삭제→secret 전체 정리 순서를 구현한다. lock 내부에서 키링 unlock prompt를 기다리지 않는다. background lookup은 search(LOAD_SECRETS), UNLOCK 제외. 이전 삭제 실패는 새 연결 성공으로 해제하지 않으며 clearAll은 명시적 연결 해제에서만 호출한다. 자동 재시도로 새 source의 비밀을 삭제하지 않는다.
+- [x] SecretStore에서 GI를 지연 import하고 메서드 전체에 8초 deadline/cancellable을 연결한다. 취소는 remote mutation의 rollback으로 취급하지 않는다. 늦은 source별 save/remove가 새 source를 바꾸지 않고, 불확실한 삭제는 pending을 유지하며, finally에서 ConfigLock과 timeout을 해제하는 fixture를 검증한다.
+- [x] Soup send_async의 압축 해제 stream을 제한하고 redirect를 금지한다. 공급자 URL allowlist는 각 공급자가 정한다. raw URI·본문·exception 원문을 로그/설정/DTO에 넣지 않는다.
+- [x] `./scripts/dev npm --prefix extension test -- config.test.ts`와 `./scripts/test-public-backend.py --suite io` PASS. private bus에서 lock 보유 프로세스 종료 후 다른 writer가 진행되는 것도 검사한다.
+- [x] 커밋: `feat: share public settings and private IO safely`.
+
+Task 4 검증(2026-11-07): 설정 계약 9/9, 전체 Node 89/89, typecheck와 private-bus I/O suite 통과. 실제 격리 키링·압축 HTTP·권한/파일 유형·8초 제한·프로세스 사망 후 잠금 회수를 검사했다. Secret/Soup 타입은 기존 GNOME Shell 타입과 같은 4.9.0으로 고정했다.
 
 ## Task 5: Shell 로컬 제공자 수명과 상태
 

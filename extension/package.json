@@ -18,6 +18,8 @@
   },
   "devDependencies": {
     "@girs/gnome-shell": "50.0.4",
+    "@girs/secret-1": "4.9.0",
+    "@girs/soup-3.0": "4.9.0",
     "@types/node": "24.19.2",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
