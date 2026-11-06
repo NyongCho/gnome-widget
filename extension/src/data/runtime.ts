@@ -1,5 +1,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
+import {CalendarProvider} from './providers/calendar.js';
+import {CalendarWorkerClient} from '../calendar/workerClient.js';
 import {MediaProvider} from './providers/media.js';
 import {ArtworkLoader} from './providers/mediaArt.js';
 import {GioMprisBus} from './mpris.js';
@@ -39,6 +41,6 @@ export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidg
     const services=createPublicDataServices();
     const art=new ArtworkLoader(services.http,new GioArtworkStore(GLib.build_filenamev([GLib.get_user_cache_dir(),getEdition('gjs').dataDirectory,'artwork'])),services.clock);
     const media=new MediaProvider(new GioMprisBus(Gio.DBus.session),art,services.clock);
-    // Calendar adapter is added in Task 9.
-    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media},destroy:()=>services.destroy()});
+    const calendar=new CalendarProvider({...services,files:services.cache,worker:new CalendarWorkerClient(options.extensionPath),uuid:GLib.uuid_string_random,digest:bytes=>GLib.compute_checksum_for_bytes(GLib.ChecksumType.SHA256,new GLib.Bytes(bytes))!});
+    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media,calendar},destroy:()=>services.destroy()});
 }

@@ -1,11 +1,12 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import {Cancellation} from '../shared/dataClient.js';
+import {DataCancelled} from './errors.js';
 
 export interface BusLease {release(): void}
 export class LeaseBusyError extends Error {constructor(){super('LEASE_BUSY');}}
 export class LeaseTimeoutError extends Error {constructor(){super('LEASE_TIMEOUT');}}
-export class CancelledError extends Error {constructor(){super('CANCELLED');}}
+export class CancelledError extends DataCancelled {}
 const BUS='org.freedesktop.DBus', PATH='/org/freedesktop/DBus';
 
 function close(connection:Gio.DBusConnection):void {
