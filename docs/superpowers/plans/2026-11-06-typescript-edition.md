@@ -18,6 +18,7 @@
 - 기존 Rust D-Bus v1과 provider schema v1 유지. 새 worker 및 Status1 프로토콜은 별도 version 1이다.
 - ICS 5 MiB, worker header/control 16 KiB, 최종 reply 512 KiB, 후보/결과 10,000건, iterator 호출 100,000회.
 - worker 내부 deadline 9초, 부모 watchdog 10초, 취소 후 1초 이내 종료, 부모 비정상 종료 후 11초 이내 종료. 계산 슬롯/설정 lock 대기는 각각 최대 30초.
+- SecretStore 메서드별 전체 예산 8초. 선택적인 Secret GI는 지연 import하며 부재가 전체 확장/설정창 로드를 막지 않는다.
 - 세션 전체 계산 worker 1개. busy 경쟁자는 입력 수신 전에 종료하며 상시 서비스가 없다. 부모별 활성 1개+최신 대기 1개.
 - URL/ICS를 argv·환경변수·일반 로그에 넣지 않는다. worker에는 URL을 보내지 않는다. calendar raw bytes를 Shell에서 거대한 JSON 문자열로 변환하지 않는다.
 - 테스트는 합성 데이터/private bus/임시 XDG/격리 키링. 현재 개인용 설치와 `docs/hyprland-research.md`를 변경하지 않는다.
@@ -27,7 +28,7 @@
 
 1. worker가 `next()` 내부에서 멈추거나 부모가 죽음: 실제 자식 종료·reap와 deadline 보장 — Task 1·2·12.
 2. 이전 출처/월의 결과가 늦게 도착함: 새 상태/캐시를 덮지 않고 clear 이후 파일을 복구하지 않음 — Task 4·5·9.
-3. 두 설정창의 연결/삭제 경쟁과 Shell on/off 전환: 비밀·설정 충돌 없이 실제 동기화 상태 유지 — Task 4·10.
+3. 두 설정창의 연결/삭제 경쟁과 Shell on/off 전환: 늦은 구독 토큰을 회수하고 snapshot/신호 역순으로 상태가 돌아가지 않음 — Task 4·10·11.
 4. DST gap/fold·취소·중복/잘못된 날짜: 현재 발견한 8개 차이와 전체 기존 의미를 보정 — Task 1·9.
 5. 큰/잘린/압축된 입력·counter reset·늦은 표지: 제한 우회·Shell stall·오래된 결과 반영 없음 — Task 2·6·7·8·12.
 
@@ -47,7 +48,7 @@
 | `protocol/{calendar-worker,calendar-status}.schema.json`, `protocol/io.github.NyongCho.LiquidWidgets.Status1.xml` | 새 좁은 경계 계약 |
 | `extension/tests/gjs/`, `scripts/test-public-backend.py` | private bus/XDG 실제 GJS 검증 |
 
-기존 `types.ts`의 ProviderName/ProviderMap/CalendarContext/CalendarData/Settings/WeatherLocation, `shared/providerStore.ts`의 ProviderStore, `shared/dataClient.ts`의 Cancellation/ConnectionState를 재사용한다. 새 공통 모듈은 St/Clutter/Gtk/Adw를 import하지 않는다. 인터페이스의 callback과 promise는 종료 후 UI 객체에 접근하지 않는다.
+기존 `types.ts`의 ProviderName/ProviderMap/CalendarContext/CalendarData/Settings/WeatherLocation, `shared/providerStore.ts`의 ProviderStore, `shared/dataClient.ts`의 Cancellation/ConnectionState를 재사용한다. 새 공통 모듈은 St/Clutter/Meta/Shell/Gtk/Gdk/Adw를 import하지 않는다. 인터페이스의 callback과 promise는 종료 후 UI 객체에 접근하지 않는다.
 
 ## Task 1: 일정 의미 보정과 계산 예산
 
@@ -150,9 +151,10 @@ interface PrivateFiles {
 ```
 PrivateFiles는 고정 baseDir의 basename만 받으며 read의 null은 파일 부재에만 사용한다. `SecretStore.lookup(sourceId: string,cancel: Cancellation): Promise<string|null>`, `save(sourceId: string,url: string,cancel: Cancellation): Promise<void>`, `remove(sourceId: string,cancel: Cancellation): Promise<void>`, `clearAll(cancel: Cancellation): Promise<void>`는 공개용 앱 namespace에 한정한다. DataSettingsService는 Task 10 PreferencesDataSession의 getSettings 및 네 mutation 메서드와 동일한 시그니처를 구현한다.
 
-- [ ] `concurrent_connect_clear`, `write_failure_preserves_old_source`, `delete_pending_survives_reconnect`, `stale_cache_writer_after_clear`, `locked_keyring_no_prompt`, `compressed_body_limit`, `reject_symlink_fifo`를 작성하고 FAIL 확인한다.
+- [ ] `concurrent_connect_clear`, `write_failure_preserves_old_source`, `delete_pending_survives_reconnect`, `stale_cache_writer_after_clear`, `locked_keyring_no_prompt`, `compressed_body_limit`, `reject_symlink_fifo`를 작성하고 FAIL 확인한다. `missing_secret_gi_only_disables_calendar`는 나머지 카드/설정 로드 성공, `unresponsive_keyring_releases_lock`는 SecretStore 8초 제한 뒤 두 번째 writer 진행을 검사한다.
 - [ ] 설정 JSON 최대 64 KiB·schema 검증, 0700/0600·atomic replace, ConfigLock 30초 대기/취소와 종료 후 tx 재사용 거부를 구현한다. revision은 매 commit UUID로 새로 발급한다. 모든 데이터 설정 writer와 calendar/weather cache 최종 commit/삭제가 같은 lock 규칙을 따른다.
 - [ ] secret 저장→config commit→직전 source secret 제거, disable/source 무효화→cache 삭제→secret 전체 정리 순서를 구현한다. lock 내부에서 키링 unlock prompt를 기다리지 않는다. background lookup은 search(LOAD_SECRETS), UNLOCK 제외. 이전 삭제 실패는 새 연결 성공으로 해제하지 않으며 clearAll은 명시적 연결 해제에서만 호출한다. 자동 재시도로 새 source의 비밀을 삭제하지 않는다.
+- [ ] SecretStore에서 GI를 지연 import하고 메서드 전체에 8초 deadline/cancellable을 연결한다. 취소는 remote mutation의 rollback으로 취급하지 않는다. 늦은 source별 save/remove가 새 source를 바꾸지 않고, 불확실한 삭제는 pending을 유지하며, finally에서 ConfigLock과 timeout을 해제하는 fixture를 검증한다.
 - [ ] Soup send_async의 압축 해제 stream을 제한하고 redirect를 금지한다. 공급자 URL allowlist는 각 공급자가 정한다. raw URI·본문·exception 원문을 로그/설정/DTO에 넣지 않는다.
 - [ ] `./scripts/dev npm --prefix extension test -- config.test.ts`와 `./scripts/test-public-backend.py --suite io` PASS. private bus에서 lock 보유 프로세스 종료 후 다른 writer가 진행되는 것도 검사한다.
 - [ ] 커밋: `feat: share public settings and private IO safely`.
@@ -222,7 +224,8 @@ PrivateFiles는 고정 baseDir의 basename만 받으며 read의 null은 파일 �
 **Interfaces:**
 ```ts
 interface CalendarSummary {
-  version: 1; sourceId: string|null; generation: number;
+  version: 1; instanceId: string; revision: number;
+  sourceId: string|null; generation: number;
   context: CalendarContext|null; status: ProviderMap['calendar']['status'];
   updatedAt: string|null; errorCode: string|null; hasData: boolean; eventCount: number;
 }
@@ -241,8 +244,11 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 ```
 `fillSettingsWindow(window,settings,extensionPath)`는 창당 세션 하나를 모든 데이터 페이지에 전달한다. Rust는 기존 D-Bus+DataClient를 감싼다. 공개용은 직접 설정/검색과 Status1 또는 local preview를 사용한다. preview의 context는 현재 현지 월·GLib 현지 시간대·weekStart=0으로 고정한다. Shell 전용 ClockController를 GTK에 import하지 않는다. Shell 연결 후에는 summary의 실제 context를 그대로 사용한다.
 
-- [ ] `prefs_while_extension_off`, `hidden_card_with_prefs_demand`, `shell_appears_cancels_preview`, `shell_disappears_starts_preview`, `two_windows_connect_clear`, `close_during_job`, `foreign_watch_token`을 작성하고 FAIL 확인한다.
+- [ ] `prefs_while_extension_off`, `hidden_card_with_prefs_demand`, `shell_appears_cancels_preview`, `shell_disappears_starts_preview`, `two_windows_connect_clear`, `close_during_job`, `foreign_watch_token`을 작성하고 FAIL 확인한다. `close_before_watch_reply`와 `owner_change_before_watch_reply`는 shared prefs bus를 살려 둔 채 늦은 token을 원래 unique owner에 해제하고, watch 수/수집 수요가 0이며 새 owner/UI에 반영되지 않음을 검사한다.
+- [ ] `newer_signal_beats_watch_snapshot`은 같은 generation에서 revision 2의 ok 신호 뒤 revision 1의 loading 응답이 와도 ok를 유지한다. `completion_during_watch_setup`은 완료를 놓치지 않으며, `reenable_same_owner_new_instance`는 같은 bus unique owner라도 이전 instance 응답/신호가 새 상태를 덮지 않음을 검사한다.
 - [ ] spec의 bus/path/interface에 WatchCalendar→token+summary, UnwatchCalendar, RefreshCalendar, CalendarStatusChanged를 구현한다. summary ≤16 KiB, sender별 token 8/전체 128, sender 소멸 정리, source/generation 검사와 UI 밖의 error enum 검증을 적용한다.
+- [ ] Shell enable마다 instanceId UUID를 만들고 모든 summary 변화에 uint32 revision을 증가시킨다. prefs는 signal 연결→WatchCalendar 순서를 지킨다. 초기 reply 전 최신 signal 한 건을 보관하고 reply의 instance가 같은 값 중 최고 revision만 적용한다. attachment 세대가 바뀐 이전 callback은 상태를 갱신하지 않는다. Rust/preview adapter도 연결/수명별 instance와 revision을 생성한다.
+- [ ] WatchCalendar는 계산을 기다리지 않고 즉시 응답한다. 발견한 unique owner로 호출하며 10초 응답은 창 닫힘/owner 교체에도 받아서 late token을 원래 owner에 해제한다. shared session 연결은 닫지 않는다. 서버의 sender 소멸/지연 등록 경합도 검사한다. 기존 `client.test.ts`의 late Subscribe 동작을 보존 기준으로 삼는다.
 - [ ] bridge는 Shell enable에 export, disable에 unexport한다. 구독 수는 localSession.setCalendarWatchers에 반영한다. prefs는 owner가 있으면 실제 Shell 상태, 없으면 300초 local preview를 사용한다. owner 교체 시 이전 작업을 취소하고 새 상태로 전환하며 원문 이벤트 대신 eventCount를 유지한다.
 - [ ] 모든 prefs의 직접 SessionTransport/BUS_NAME 호출을 API로 교체한다. 네트워크 목록은 async listNetworkInterfaces를 쓴다. 한/영에 위젯 동기화/설정창 연결 확인을 구분하는 문구를 추가한다. 다른 설정은 데이터 실패 중에도 동작한다.
 - [ ] `./scripts/test-public-backend.py --suite preferences-data`와 기존 calendarStatus/i18n tests PASS. 임시 GTK 창에서 실제 표시·닫기·다시 열기를 검사한다.
@@ -254,7 +260,8 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 
 **Interfaces:** `test-gnome.py --edition rust|gjs --editions`; 기존 `--clock-styles`, `--visual`, `--dynamic-wallpaper`, `--media-art`, `--system`, `--preferences`에 edition 선택을 전달한다. 기본은 rust를 유지한다.
 
-- [ ] 실제 extension의 생성 지점을 createWidgetDataSession으로 바꾸기 전 양쪽 factory 경로를 검사하는 harness를 추가해 gjs 경로 FAIL을 확인한다.
+- [ ] 실제 extension의 생성 지점을 createWidgetDataSession으로 바꾸기 전 양쪽 factory 경로를 검사하는 harness를 추가해 gjs 경로 FAIL을 확인한다. `disable_with_preferences_open`에서는 Shell session의 child/config watch/bridge name/token/source가 모두 정리되는지 검사한다. prefs가 새 preview를 시작하는 것은 별도 소유 작업으로 구분한다.
+- [ ] `extension.ts`의 `syncProviders()`는 카드 수요가 0일 때 `stop()`을 유지하고, `disable()`의 기존 `client.stop()`은 **`client.destroy()`로 교체한 뒤 null**로 만든다. 새 enable은 새 세션을 만들고 이전 비동기 응답은 무시한다. Rust wrapper의 destroy는 기존 stop 동작을 유지한다.
 - [ ] 현재 WidgetHost/ClockController·설정 UI·GLSL을 그대로 연결한다. 화면 구성·도넛·시계 날짜 고정·오늘 표시·이미지 비율·좌우 배치·언어·테마·유리 설정·시간별 배경 변경을 기존 fixture로 검증한다.
 - [ ] 실제 private GTK에서 Shell off 설정, owner 전환, worker 오류/stale 표시를 확인한다. Google Calendar 클릭은 격리 URI handler를 사용한다. 사용자 개인 브라우저/피드로 자동 검증하지 않는다.
 - [ ] 양쪽 edition의 관련 GNOME suites PASS. 결과 캡처와 문서에 검증한 화면·실패/미검증 범위를 남긴다. 개인용 설치로 확인을 대신하지 않는다.
@@ -277,10 +284,10 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 
 **Interfaces:** `python3 scripts/package.py --edition rust|gjs` (기본 rust); `./scripts/check.sh --edition rust|gjs|all` (기본 all). public ZIP은 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. public build/check 경로는 cargo/libical 없이 완료되어야 한다.
 
-- [ ] artifact allowlist 검사에 extension/prefs/calendar-worker JS·timezone·schema/CSS/GLSL·고지만 허용한다. Rust ELF/.so/systemd/installer/Node import/테스트 fixture/개인 설정과 worker 코드의 Shell 번들 혼입을 거부하는 테스트를 먼저 작성해 FAIL 확인한다.
+- [ ] artifact allowlist 검사에 metadata.json·extension/prefs/calendar-worker JS·timezone·schema/CSS/GLSL·고지만 허용한다. Rust ELF/.so/systemd/installer/Node import/테스트 fixture/개인 설정과 worker 코드의 Shell 번들 혼입을 거부하는 테스트를 먼저 작성해 FAIL 확인한다. worker 첫 줄 `#!@GJS@ -m`, `<schema-id>.gschema.xml` 동봉, Shell의 Gtk/Gdk/Adw 및 prefs의 St/Clutter/Meta/Shell import 금지를 검사한다.
 - [ ] 두 빌드의 metadata·UUID/schema/path·URL(`https://github.com/NyongCho/gnome-widget`)·출력 디렉터리를 일치시킨다. 공개용 README 설치를 기본으로, Rust 개인용 설치·복귀는 별도 안내한다. 다운로드/설치 시 npm이나 shell 설치 스크립트를 실행하지 않는다.
 - [ ] 프로젝트 GPL 호환 라이선스 선택, ical.js MPL-2.0 수정 소스/고지와 timezone provenance를 정리한다. 아직 라이선스가 없으면 출시 준비 완료로 표시하지 않는다.
-- [ ] 심사 설명에 일회성 worker의 범위·약 0.7초 stall 실측·종료 검증·전송/저장/삭제·지원 범위를 기록한다. GI 누락은 해당 기능 안내로 처리하고 자동 설치하지 않는다.
+- [ ] 심사 설명에 일회성 worker의 범위·약 0.7초 stall 실측·종료 검증·전송/저장/삭제·지원 범위를 기록한다. 공유 UI의 run_dispose 필요성을 확인하고 필수 호출은 이유를 주석으로 남긴다. 유지보수자의 코드 이해/관리와 읽기 좋은 출력 여부를 확인한다. GI 누락은 해당 기능 안내로 처리하고 자동 설치하지 않는다.
 - [ ] `./scripts/check.sh --edition all`, `python3 -m unittest discover -s tests -p 'test_*package.py'`, GNOME 50 깨끗한 사용자 환경의 ZIP 설치/활성화/제거 PASS. 외부 공개 API·실제 계정 확인은 자동 fixture 결과와 구분한다.
 - [ ] 커밋: `build: package the public edition with calendar workers`. 최종 변경을 검토하고 결과를 보고한다. EGO 업로드·개인용 설치 교체는 별도 요청 시 수행한다.
 
@@ -289,5 +296,7 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 기본 순서: `1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13`. 실제 구현 시작 시 별도 작업 브랜치/격리 작업 공간을 사용한다. task마다 해당 파일만 커밋한다. 외부 서비스 전체를 복제하는 이전 계획으로 되돌아가지 않는다.
 
 설계 대응: calendar 의미는 1, 프로세스/프로토콜은 2, 빌드/Rust 보존은 3·13, 비밀/삭제 경쟁은 4·9·10, 가벼운 제공자는 5–8, 실제 동기화 상태와 off 상태 설정창은 10, 모든 시각 기능은 11, 최대 입력/수명/성능은 12다. Review Focus 다섯 항목은 각 소유 task에 테스트가 있다. 독립 설계 검토와 계획 self-review를 마쳤으며, 대기 중 deadline·삭제 재시도·preview context·공유 I/O 시그니처를 명시했다.
+
+2026-11-06 재검토: 기존 계약 기준 검토는 late WatchCalendar token 정리 누락 1건, 요구사항 검토는 같은 항목과 disable→destroy 연결·snapshot/신호 순서 누락까지 3건을 확인했다(중복 제외 3건). Task 10·11과 설계에 반영했다. 현재 `client.test.ts` 11개가 통과해 기존 보존 기준을 확인했으며 새 bridge 검증은 구현 task에서 수행한다. 추가로 Task 4의 키링 8초 제한/선택 GI 지연 로드와 Task 13의 metadata·worker header·schema/import 심사 검사를 명시했다.
 
 완료는 **기존 기능이 양쪽 에디션에서 유지되고, 공개 ZIP이 Rust 없이 동작하며, 정확성·프레임·종료 검증을 통과한 상태**다. 이번 문서 작성은 구현 완료나 GNOME Extensions 승인을 의미하지 않는다.

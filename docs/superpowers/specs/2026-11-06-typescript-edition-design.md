@@ -36,6 +36,8 @@ worker는 달력 계산만 한다. HTTPS·키링·캐시·UI·자식 프로세�
 
 public UI는 로컬 `WidgetDataSession`을 사용하고 Rust UI는 기존 DataClient를 감싼 adapter를 사용한다. 공개용에 가짜 D-Bus owner를 만드는 Transport 구현이나 기존 서비스 전체의 복제는 추가하지 않는다. `ProviderStore`와 JSON schema v1은 유지한다. 기존 `protocol/org.local.LiquidWidgets1.xml`은 Rust 경로에 남는다.
 
+수명 호출 지점도 함께 변경한다. 카드가 모두 숨겨지면 `stop()`으로 카드 수요만 해제하고 설정창 수요는 유지한다. 확장의 `disable()`은 반드시 `destroy()`를 호출한 뒤 참조를 비운다. destroy는 상태 bridge의 export/이름/토큰, config watch, timer, HTTP와 worker를 정리한다. GTK 설정창이 계속 열려 있으면 이후 자신의 preview로 전환할 수 있지만, 종료된 Shell 세션의 작업은 남지 않는다. [현재 disable 호출 지점](../../../extension/src/extension.ts), [현재 구독 수명](../../data-service.md)
+
 ## 에디션과 파일 범위
 
 | 항목 | rust | gjs |
@@ -86,7 +88,7 @@ IANA 데이터는 전체 지원 지역을 고정된 파일로 동봉한다. 첫 
 
 새 URL 연결은 락 안에서 새 source UUID의 비밀 저장 → 설정 atomic commit → 직전 source 비밀 제거 순서다. commit 전 실패 시 기존 설정을 유지하고, commit 후 옛 비밀 제거 실패는 새 연결을 유지하며 삭제 대기를 표시한다. 삭제는 설정 비활성화와 source 변경을 먼저 확정하고 calendar 캐시를 제거한다. 이 앱 namespace의 키링 정리가 실패하면 삭제 대기를 남긴다. 다른 창의 새 연결과 앱 전체 삭제를 같은 락으로 직렬화한다. 삭제 대기는 새 연결 성공만으로 사라지지 않으며 namespace 전체 정리는 명시적 연결 해제에서만 수행한다. 자동 재시도로 현재 연결의 비밀을 제거하지 않는다.
 
-Shell은 source별 비밀을 무프롬프트 조회한다. Secret.Service.search에서 UNLOCK을 제외하고 LOAD_SECRETS를 사용한다. Secret GI/provider 부재는 달력의 오류로 표시하고 다른 카드를 막지 않는다. [Secret 검색 flags](https://gnome.pages.gitlab.gnome.org/libsecret/flags.SearchFlags.html)
+Shell은 source별 비밀을 무프롬프트 조회한다. Secret.Service.search에서 UNLOCK을 제외하고 LOAD_SECRETS를 사용한다. Secret GI는 달력 경로에서 지연 import하고 실패를 해당 기능의 `SERVICE_UNAVAILABLE`로 처리한다. 정적 import 실패로 확장/설정창 전체가 로드되지 않는 구조를 금지한다. SecretStore의 lookup/save/remove/clearAll은 현재 Rust와 같이 호출 전체 8초 예산을 적용한다. 무응답 키링 때문에 ConfigLock을 계속 잡지 않도록 취소·락 해제를 검사한다. 이미 제출한 비밀 변경이 취소로 롤백되었다고 가정하지 않고 source UUID와 삭제 대기 규칙으로 처리한다. [기존 키링 제한](../../../daemon/src/secrets.rs), [Secret 검색 flags](https://gnome.pages.gitlab.gnome.org/libsecret/flags.SearchFlags.html)
 
 원본 calendar cache의 정기 writer는 Shell 하나다. commit 직전 락을 얻어 설정 source/revision을 다시 확인한다. 삭제가 먼저 끝났다면 이전 작업은 파일을 복구하지 않는다. weather cache는 source ID로 분리하며 변경 시 동일한 재확인 원칙을 적용한다. 시스템·네트워크·미디어 상태는 디스크에서 복원하지 않는다. 앨범 이미지만 제한된 캐시로 보관한다.
 
@@ -94,7 +96,11 @@ Shell은 source별 비밀을 무프롬프트 조회한다. Secret.Service.search
 
 Shell이 활성 상태이면 그 프로세스가 `io.github.NyongCho.LiquidWidgets.Status` 이름, `/io/github/NyongCho/LiquidWidgets/Status` 경로에 `io.github.NyongCho.LiquidWidgets.Status1`을 export한다. 별도 프로세스를 띄우지 않는다. 메서드는 `WatchCalendar() → (token,summaryJson)`, `UnwatchCalendar(token)`, `RefreshCalendar()`와 `CalendarStatusChanged(summaryJson)` 시그널이다. 토큰은 sender 귀속, sender 소멸/disable 시 회수하며 sender당 8개·전체 128개 제한이다.
 
-summary는 version 1, sourceId, generation, context, status, updatedAt, errorCode, hasData, eventCount를 포함하고 최대 16 KiB다. URL이나 일정 제목/본문은 없다. 설정창의 이벤트 개수·loading/ok/stale/오류 표시를 유지한다. 달력 카드가 숨겨져 있어도 설정창 구독이 있으면 calendar 수집 수요로 계산한다.
+WatchCalendar는 provider 계산을 기다리지 않고 즉시 현재 요약을 반환한다. prefs는 발견한 **unique Shell owner**를 호출 대상으로 고정한다. 서버에 토큰을 만드는 호출은 창 닫힘/owner 교체 때 응답 수신을 취소하지 않는다(호출 제한 10초). 늦게 받은 토큰은 UI에 적용하지 않고 **원래 unique owner**에 UnwatchCalendar로 해제한다. 창 닫힘과 bus sender 소멸은 같지 않다. 서버는 sender 소멸을 구독 등록보다 먼저 관찰한 경우도 정리한다. 서버가 토큰 생성 후 응답 자체를 잃는 예외에서는 기존 Rust와 같이 sender/서비스 종료까지 정리가 지연될 수 있음을 구분한다. [기존 late-token 처리](../../../extension/src/shared/dataClient.ts)
+
+summary는 version 1, instanceId, revision, sourceId, generation, context, status, updatedAt, errorCode, hasData, eventCount를 포함하고 최대 16 KiB다. instanceId는 Shell enable마다 새 UUID, revision은 그 instance에서 모든 상태 변화마다 증가하는 uint32다. 작업 generation과 별개로 같은 작업의 loading→ok/stale도 순서가 있다. URL이나 일정 제목/본문은 없다. 설정창의 이벤트 개수·loading/ok/stale/오류 표시를 유지한다. 달력 카드가 숨겨져 있어도 설정창 구독이 있으면 calendar 수집 수요로 계산한다.
+
+prefs는 해당 unique owner의 신호를 먼저 연결한 뒤 WatchCalendar를 호출한다. 초기 응답 전 신호는 제한된 최신 요약 한 건으로 보관하고, 응답의 instanceId를 확정한 후 같은 instance의 가장 높은 revision만 반영한다. 이후 오래되거나 같은 revision은 무시한다. 재연결마다 client attachment 세대를 바꾸며 이전 응답은 토큰 해제만 수행한다. 같은 GNOME Shell unique owner에서 disable/enable되더라도 새 instanceId와 attachment로 이전 상태를 섞지 않는다. Rust adapter와 prefs preview도 자신의 연결/수명별 instanceId와 상태 revision을 생성한다. [현재 snapshot/신호 순서 검사](../../../extension/tests/client.test.ts)
 
 Shell 비활성 시 prefs가 자신의 프로세스에서 설정 조회·도시 검색·키링 변경을 수행한다. 열린 달력 페이지는 같은 fetch/worker 모듈로 연결을 검증하고, 300초 주기로 상태를 갱신한다. preview는 현재 현지 월·GLib 현지 시간대·weekStart=0으로 계산하며 Shell 전용 ClockController를 import하지 않는다. Shell에 연결되면 그 summary의 실제 context를 사용하므로 연결 확인과 실제 동기화의 일정 개수는 다를 수 있다. 캐시는 읽되 정기 캐시 writer 역할은 맡지 않는다. prefs 결과는 창 메모리에만 있다. 여러 창의 계산은 CalendarJob 이름으로 직렬화한다.
 
@@ -112,7 +118,7 @@ Soup streaming으로 압축 해제 후 byte 수를 제한한다. /proc/sysfs와 
 
 성능은 같은 GNOME/해상도/위젯/배경에서 Rust와 공개용을 번갈아 5회 측정한다. 30초 준비 후 유휴·전체 카드 각 120초, 1천/1만 일정·5 MiB·긴 next()를 비교한다. frame interval p95/p99, 50ms 초과 stall, 총 CPU, Shell 증가분+worker peak PSS/RSS, 시작/갱신 시간, 20회 lifecycle 뒤 process/FD/watch를 기록한다. 5회 중 3회 이상 새 50ms stall 또는 p95가 Rust 대비 max(2ms,10%) 이상 악화되면 조사 후 출시를 보류한다. idle worker 0, 취소 1초/부모 사망 11초, 누수 0을 요구한다. 이는 목표이며 아직 통과한 결과가 아니다.
 
-공개 ZIP에는 읽기 가능한 JS, calendar-worker.js와 고정 시간대 데이터, schema/CSS/GLSL, 라이선스/고지만 담는다. Rust 바이너리·libical·Node runtime·systemd unit·실험 fixtures·개인 설정은 제외한다. Node는 빌드 도구이며 공개용 빌드에서 cargo를 호출하지 않는다. 홈페이지는 `https://github.com/NyongCho/gnome-widget`다. 제출 시 worker의 필요성·수명·실측 근거를 설명한다.
+공개 ZIP에는 metadata.json, 읽기 가능한 JS, calendar-worker.js와 고정 시간대 데이터, schema/CSS/GLSL, 라이선스/고지만 담는다. Rust 바이너리·libical·Node runtime·systemd unit·실험 fixtures·개인 설정은 제외한다. 독립 worker 파일 첫 줄은 공식 지침의 `#!@GJS@ -m`으로 표시하고 실제 실행은 명시적 `gjs -m` argv를 사용한다. schema XML은 `<schema-id>.gschema.xml` 이름으로 반드시 포함한다. Shell/GTK 금지 import를 번들에서 검사하고, 기존 공유 UI의 `run_dispose()` 호출에는 불가피한 이유가 있는지 확인한다. Node는 빌드 도구이며 공개용 빌드에서 cargo를 호출하지 않는다. 홈페이지는 `https://github.com/NyongCho/gnome-widget`다. 제출 시 worker의 필요성·수명·실측 근거를 설명하며 유지보수자가 코드와 의존성의 동작을 설명·관리할 수 있어야 한다. [공식 심사 지침](https://gjs.guide/extensions/review-guidelines/review-guidelines.html)
 
 프로젝트 라이선스는 아직 선택되지 않았다. 구현·검증을 막지 않지만 최종 공개 배포 준비 시 소유자가 GPL 호환 라이선스를 선택하고 MPL-2.0 ical.js 수정본 및 시간대 데이터의 고지를 확인해야 한다. GNOME Extensions 제출과 기존 설치 교체는 이번 계획 작성에 포함되지 않는다.
 
