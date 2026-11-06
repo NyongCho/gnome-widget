@@ -173,11 +173,13 @@ Task 4 검증(2026-11-07): 설정 계약 9/9, 전체 Node 89/89, typecheck와 pr
 
 **Interfaces:** `LocalWidgetSession implements WidgetDataSession`; `ProviderContext {config: DataConfig; calendarContext: CalendarContext; now: string; cancel: Cancellation}`; `ProviderDriver<K extends ProviderName>.collect(context: ProviderContext): Promise<ProviderMap[K]>`. 미디어는 Task 8의 signal driver를 사용한다. scheduler가 source/generation/revision과 모든 collection 취소를 소유한다. `setCalendarWatchers(count: number): void`가 Task 10 bridge 수요를 전달한다.
 
-- [ ] `late_reply_ignored`, `source_change_clears_old_data`, `last_good_same_source_only`, `stop_cards_keeps_prefs_calendar`, `destroy_cancels_everything`, `resume_resets_samples`를 fake clock/driver로 작성하고 FAIL 확인한다.
-- [ ] 카드와 prefs 수요를 합쳐 필요한 provider만 시작한다. weather 900초, calendar 300초, system/network 2초; 겹치는 수집은 만들지 않는다. manual Refresh는 weather 60초/나머지 5초 제한. clock의 context/day 변경·resume를 수집 조건에 반영한다.
-- [ ] 기존 ProviderStore/schema로 결과를 검증한다. source/generation/context가 맞는 결과만 publish하고 last-good/stale/updatedAt 의미를 유지한다. 설정/Secret 부재는 해당 provider만 실패시킨다.
-- [ ] `destroy()`는 모든 HTTP/source/watch를 해제하고 child dispose를 요청한다. 비동기 reap callback은 UI나 새 세션에 접근하지 않는다. `./scripts/dev npm --prefix extension test -- localSession.test.ts`와 `./scripts/test-public-backend.py --suite local-session` PASS.
-- [ ] 커밋: `feat: manage public providers inside GNOME Shell`.
+- [x] `late_reply_ignored`, `source_change_clears_old_data`, `last_good_same_source_only`, `stop_cards_keeps_prefs_calendar`, `destroy_cancels_everything`, `resume_resets_samples`를 fake clock/driver로 작성하고 FAIL 확인한다.
+- [x] 카드와 prefs 수요를 합쳐 필요한 provider만 시작한다. weather 900초, calendar 300초, system/network 2초; 겹치는 수집은 만들지 않는다. manual Refresh는 weather 60초/나머지 5초 제한. clock의 context/day 변경·resume를 수집 조건에 반영한다.
+- [x] 기존 ProviderStore/schema로 결과를 검증한다. source/generation/context가 맞는 결과만 publish하고 last-good/stale/updatedAt 의미를 유지한다. 설정/Secret 부재는 해당 provider만 실패시킨다.
+- [x] `destroy()`는 모든 HTTP/source/watch를 해제하고 child dispose를 요청한다. 비동기 reap callback은 UI나 새 세션에 접근하지 않는다. `./scripts/dev npm --prefix extension test -- localSession.test.ts`와 `./scripts/test-public-backend.py --suite local-session` PASS.
+- [x] 커밋: `feat: manage public providers inside GNOME Shell`.
+
+Task 5 검증(2026-11-07): 수명/상태 Node 8/8, 전체 Node 97/97, typecheck와 실제 GJS 20회 시작·종료/파일 감시 검사를 통과했다. 감시와 읽기 사이의 chmod 피드백(1.2초에 15,516회)을 제거해 1회로 줄였고, 늦은 초기 설정 snapshot이 새 watch 결과를 덮는 경합도 고쳤다. 실제 제공자는 Task 6–9에서 연결한다.
 
 ## Task 6: 날씨와 지역 검색
 

@@ -7,6 +7,7 @@
   "include": [
     "src/prefs.ts",
     "src/prefs-env.d.ts",
-    "src/shared/**/*.ts"
+    "src/shared/**/*.ts",
+    "src/data-env.d.ts"
   ]
 }

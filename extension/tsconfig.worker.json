@@ -9,6 +9,7 @@
     "src/calendar-worker/**/*.ts",
     "src/calendar/**/*.ts",
     "src/data/**/*.ts",
-    "tests/gjs/**/*.ts"
+    "tests/gjs/**/*.ts",
+    "src/data-env.d.ts"
   ]
 }

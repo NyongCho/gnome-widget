@@ -17,6 +17,7 @@
     "src/widgets/**/*.ts",
     "tests/gnome/*.ts",
     "src/backend/**/*.ts",
-    "src/edition.ts"
+    "src/edition.ts",
+    "src/data-env.d.ts"
   ]
 }

@@ -14,14 +14,16 @@ export class GioPrivateFiles implements PrivateFiles {
     constructor(baseDir:string){if(!GLib.path_is_absolute(baseDir))throw new DataFailure('INVALID_DATA');this.base=Gio.File.new_for_path(baseDir);}
     private file(name:string):Gio.File {if(!name||name==='.'||name==='..'||name.includes('/')||name.includes('\0'))throw new DataFailure('INVALID_DATA');return this.base.get_child(name);}
     private async directory(io:Gio.Cancellable):Promise<void>{
-        const ensure=async(file:Gio.File):Promise<void>=>{
-            try{const data=await info(file,io);if(data.has_attribute('standard::is-symlink')&&data.get_is_symlink()||data.get_file_type()!==Gio.FileType.DIRECTORY)throw new DataFailure('INVALID_DATA');}
+        const ensure=async(file:Gio.File):Promise<Gio.FileInfo>=>{
+            try{const data=await info(file,io);if(data.has_attribute('standard::is-symlink')&&data.get_is_symlink()||data.get_file_type()!==Gio.FileType.DIRECTORY)throw new DataFailure('INVALID_DATA');return data;}
             catch(error){if(!isIoError(error,Gio.IOErrorEnum.NOT_FOUND))throw error;const parent=file.get_parent();if(!parent)throw error;await ensure(parent);checkIO(io);
                 try{await gioAsync(cb=>file.make_directory_async(0,io,cb),r=>file.make_directory_finish(r));}catch(e){if(!isIoError(e,Gio.IOErrorEnum.EXISTS))throw e;}
-                const created=await info(file,io);if(created.has_attribute('standard::is-symlink')&&created.get_is_symlink()||created.get_file_type()!==Gio.FileType.DIRECTORY)throw new DataFailure('INVALID_DATA');
+                const created=await info(file,io);if(created.has_attribute('standard::is-symlink')&&created.get_is_symlink()||created.get_file_type()!==Gio.FileType.DIRECTORY)throw new DataFailure('INVALID_DATA');return created;
             }
         };
-        await ensure(this.base);const attributes=new Gio.FileInfo();attributes.set_attribute_uint32('unix::mode',0o700);checkIO(io);
+        const directory=await ensure(this.base);
+        if((directory.get_attribute_uint32('unix::mode')&0o777)===0o700)return;
+        const attributes=new Gio.FileInfo();attributes.set_attribute_uint32('unix::mode',0o700);checkIO(io);
         await gioAsync(cb=>this.base.set_attributes_async(attributes,Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,0,io,cb),r=>this.base.set_attributes_finish(r));
     }
     private async safe<T>(cancel:Cancellation,fn:(io:Gio.Cancellable)=>Promise<T>):Promise<T>{
@@ -65,7 +67,9 @@ export class GioPrivateFiles implements PrivateFiles {
     });}
     watch(changed:()=>void):()=>void {
         const monitor=this.base.monitor_directory(Gio.FileMonitorFlags.NONE,null);
-        const id=monitor.connect('changed',()=>changed());
+        const id=monitor.connect('changed',(_monitor,file,other)=>{
+            if(file.get_basename()==='settings.json'||other?.get_basename()==='settings.json')changed();
+        });
         return()=>{monitor.disconnect(id);monitor.cancel();};
     }
 }

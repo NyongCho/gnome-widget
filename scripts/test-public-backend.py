@@ -122,12 +122,15 @@ def io_suite():
             keyring.terminate();keyring.wait(timeout=3);server.shutdown()
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
         with tempfile.TemporaryDirectory(prefix='liquid-public-test-') as tmp:
             env={**os.environ,'GIO_USE_VFS':'local','XDG_CONFIG_HOME':tmp+'/config','XDG_CACHE_HOME':tmp+'/cache','XDG_DATA_HOME':tmp+'/data'}
             return subprocess.run(['dbus-run-session','--',sys.executable,__file__,'--private','--suite',args.suite],env=env).returncode
-    (worker_suite if args.suite=='worker' else io_suite)();return 0
+    if args.suite=='local-session':
+        subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
+    else:(worker_suite if args.suite=='worker' else io_suite)()
+    return 0
 if __name__=='__main__':sys.exit(main())
