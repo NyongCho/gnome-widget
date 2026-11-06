@@ -80,3 +80,8 @@ test('initial config snapshot cannot overwrite a newer file-watch update',async(
     session.start(['calendar']);await flush();watch(newer);finish(old);await session.ready;await flush();
     assert.equal(store.get('calendar').sourceId,'new');session.destroy();
 });
+
+test('hiding sampled cards resets their baseline before the next subscription',async()=>{
+    const f=fixture();await f.session.ready;f.session.start(['system']);await flush();assert.equal(f.system.resets,0);
+    f.session.stop();assert.equal(f.system.resets,1);f.session.start(['system']);f.session.destroy();
+});

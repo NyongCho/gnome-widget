@@ -50,7 +50,7 @@ export class DataSettingsService {
         },cancel);
     }
     async setNetworkInterface(name:string,cancel:Cancellation):Promise<void>{
-        if(!name||name.length>64||/[\s/\x00-\x1f]/.test(name))throw new DataFailure('INVALID_DATA');
+        if(!/^[A-Za-z0-9_.:-]{1,15}$/.test(name))throw new DataFailure('INVALID_DATA');
         await this.config.mutate(async tx=>{await tx.replace({...tx.current,networkInterface:name});},cancel);
     }
 }

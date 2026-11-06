@@ -7,6 +7,9 @@ import {GioPrivateFiles} from './files.js';
 import {SoupHttpClient} from './http.js';
 import {SystemSecretStore} from './secrets.js';
 import {DataSettingsService} from './settings.js';
+import {GioLinuxFiles} from './linux.js';
+import {SystemProvider} from './providers/system.js';
+import {NetworkProvider,listNetworkInterfaces} from './providers/network.js';
 import {WeatherProvider,LocationSearch} from './providers/weather.js';
 import {LocalWidgetSession,type SessionClock} from './localSession.js';
 export const gioClock:SessionClock={
@@ -24,10 +27,11 @@ export function createPublicDataServices(){
     const http=new SoupHttpClient(),secrets=new SystemSecretStore(undefined,edition.secretApplication);
     const settings=new DataSettingsService(config,secrets,cache,GLib.uuid_string_random);
     const weather=new WeatherProvider(http,cache,config),locations=new LocationSearch(http,gioClock.monotonic);
-    return{config,cache,http,secrets,settings,weather,locations,clock:gioClock,destroy(){http.destroy();}};
+    const linux=new GioLinuxFiles(),system=new SystemProvider(linux,gioClock),network=new NetworkProvider(linux,gioClock.monotonic);
+    return{config,cache,http,secrets,settings,weather,locations,system,network,listNetworkInterfaces:(cancel:import('../shared/dataClient.js').Cancellation)=>listNetworkInterfaces(linux,cancel),clock:gioClock,destroy(){http.destroy();}};
 }
 export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidgetSession {
     const services=createPublicDataServices();
-    // Remaining provider adapters are added in Tasks 7–9.
-    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather},destroy:()=>services.destroy()});
+    // Remaining provider adapters are added in Tasks 8–9.
+    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network},destroy:()=>services.destroy()});
 }

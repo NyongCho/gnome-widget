@@ -11,3 +11,7 @@ export interface SecretStore {
     clearAll(cancel:Cancellation):Promise<void>;
 }
 export interface HttpClient {get(url:string,limits:{maxBytes:number;timeoutMs:number},cancel:Cancellation):Promise<Uint8Array>}
+export interface LinuxFiles {
+    readText(path:string,maxBytes:number,cancel:Cancellation):Promise<string>;
+    listNames(path:string,maxEntries:number,cancel:Cancellation):Promise<string[]>;
+}

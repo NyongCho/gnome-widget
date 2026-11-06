@@ -5,7 +5,10 @@ import {DataFailure,type DataErrorCode} from './errors.js';
 export function providerSource(name:ProviderName,config:DataConfig):string|null {
     if(name==='calendar')return config.calendar.enabled?config.calendar.sourceId:null;
     if(name==='weather')return config.weather.location?config.weather.sourceId:null;
-    if(name==='network')return `network:${config.networkInterface}`;
+    if(name==='network'){
+        const selected=config.networkInterface;
+        return /^[A-Za-z0-9_.:-]{1,15}$/.test(selected)?`network-${[...selected].map(char=>char.charCodeAt(0).toString(16).padStart(2,'0')).join('')}`:'network-invalid';
+    }
     return name==='media'?'mpris':'system';
 }
 export function sameContext(name:ProviderName,state:ProviderMap[ProviderName],context:CalendarContext):boolean {

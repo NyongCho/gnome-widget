@@ -20,8 +20,9 @@ export class ProviderScheduler<K extends ProviderName> {
     configure(context:Context,key:string,enabled:boolean):void {
         if(this.dead)return;this.context=context;
         if(key===this.key&&enabled===this.enabled)return;
-        const changed=key!==this.key;this.key=key;this.enabled=enabled;this.source=providerSource(this.name,context.config);this.failures=0;
+        const changed=key!==this.key,wasEnabled=this.enabled;this.key=key;this.enabled=enabled;this.source=providerSource(this.name,context.config);this.failures=0;
         this.invalidate();
+        if(wasEnabled&&!enabled)this.driver?.reset?.();
         if(changed||enabled)this.emit(loadingState(this.name,this.source,this.previous(),context.calendarContext));
         if(enabled&&this.source!==null)this.request();
     }

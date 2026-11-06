@@ -135,8 +135,21 @@ def weather_suite():
     try:subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/weather.js'),f'http://127.0.0.1:{server.server_port}'],check=True,timeout=15)
     finally:server.shutdown()
 
+def system_network_suite():
+    with tempfile.TemporaryDirectory(prefix='liquid-linux-') as tmp:
+        root=Path(tmp)
+        def put(path,value):
+            target=root/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_text(value)
+        put('proc/stat',(ROOT/'tests/fixtures/system/stat-first.txt').read_text());put('stat-next.txt',(ROOT/'tests/fixtures/system/stat-next.txt').read_text())
+        put('proc/meminfo',(ROOT/'tests/fixtures/system/meminfo.txt').read_text());put('proc/net/route',(ROOT/'tests/fixtures/network/route.txt').read_text());put('proc/net/ipv6_route','')
+        put('sys/class/hwmon/hwmon0/name','coretemp');put('sys/class/hwmon/hwmon0/temp1_label','Package id 0');put('sys/class/hwmon/hwmon0/temp1_input','38000')
+        for name in ['enp5s0','tailscale0','lo']:
+            for counter in ['rx_bytes','tx_bytes']:put(f'sys/class/net/{name}/statistics/{counter}',str(2**60))
+        put('proc/oversize','too long');os.mkfifo(root/'proc/fifo')
+        subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/systemNetwork.js'),tmp],check=True,timeout=15)
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
@@ -146,6 +159,7 @@ def main():
     if args.suite=='local-session':
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
     elif args.suite=='weather':weather_suite()
+    elif args.suite=='system-network':system_network_suite()
     else:(worker_suite if args.suite=='worker' else io_suite)()
     return 0
 if __name__=='__main__':sys.exit(main())

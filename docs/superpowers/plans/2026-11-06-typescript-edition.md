@@ -201,10 +201,12 @@ Task 6 검증(2026-11-07): 기존 Rust weather/서비스 의미를 옮긴 6개 �
 
 **Interfaces:** `SystemProvider implements ProviderDriver<'system'>`, `NetworkProvider implements ProviderDriver<'network'>`; `listNetworkInterfaces(cancel: Cancellation): Promise<string[]>`를 prefs와 공유한다.
 
-- [ ] 기존 system/network fixtures에 2^53 초과 counter, 장치 소멸, suspend, counter reset을 추가한다. 최초 표본 null, MemAvailable, 센서 우선순위, IPv4/IPv6 fallback, 자동 Tailscale 제외/수동 허용을 검사하고 FAIL 확인한다.
-- [ ] 비동기·크기 제한 proc/sysfs 읽기, 제한된 열거/병렬 수, BigInt 차이→안전한 DTO 변환, monotonic 속도·60초 기록을 구현한다. 온도는 최소 5초 후 재측정한다. 명령행 도구를 spawn하지 않는다.
-- [ ] `./scripts/dev npm --prefix extension test -- systemNetwork.test.ts`와 `./scripts/test-public-backend.py --suite system-network` PASS. 구독 0/disable 뒤 센서 읽기·timer 0을 확인한다.
-- [ ] 커밋: `feat: collect system and network data with Gio`.
+- [x] 기존 system/network fixtures에 2^53 초과 counter, 장치 소멸, suspend, counter reset을 추가한다. 최초 표본 null, MemAvailable, 센서 우선순위, IPv4/IPv6 fallback, 자동 Tailscale 제외/수동 허용을 검사하고 FAIL 확인한다.
+- [x] 비동기·크기 제한 proc/sysfs 읽기, 제한된 열거/병렬 수, BigInt 차이→안전한 DTO 변환, monotonic 속도·60초 기록을 구현한다. 온도는 최소 5초 후 재측정한다. 명령행 도구를 spawn하지 않는다.
+- [x] `./scripts/dev npm --prefix extension test -- systemNetwork.test.ts`와 `./scripts/test-public-backend.py --suite system-network` PASS. 구독 0/disable 뒤 센서 읽기·timer 0을 확인한다.
+- [x] 커밋: `feat: collect system and network data with Gio`.
+
+Task 7 검증(2026-11-07): system/network 7개, 전체 Node 111/111, typecheck와 실제 GIO fixture 수집 통과. 2^53 초과 counter 차이, MemAvailable, CPU 센서 우선순위/오류, IPv4/IPv6, Tailscale 선택 정책, 장치 소멸/초기화, 60초 기록, 5초 온도 제한과 수요 종료 후 I/O·timer 0을 확인했다.
 
 ## Task 8: MPRIS·앨범 이미지
 
