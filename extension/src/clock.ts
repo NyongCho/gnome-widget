@@ -1,12 +1,16 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import GnomeDesktop from 'gi://GnomeDesktop?version=4.0';
+import type GnomeDesktop from 'gi://GnomeDesktop?version=4.0';
 import Shell from 'gi://Shell';
 import * as LoginManager from 'resource:///org/gnome/shell/misc/loginManager.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {millisecondsToNextMinute} from './shared/clockValues.js';
 export class ClockController {
     private timer=0;
-    private clock=new GnomeDesktop.WallClock();
+    // GNOME 50 owns this clock for the panel. Creating a private WallClock
+    // leaves its native timer/monitor alive until GC: run_dispose() does not
+    // finalize them. Borrow its real-time/timezone notifications instead.
+    private clock=(Main.panel.statusArea.dateMenu as unknown as {_clock:GnomeDesktop.WallClock})._clock;
     private settings=new Gio.Settings({schema_id:'org.gnome.desktop.interface'});
     private login=LoginManager.getLoginManager();
     private signals:{object:{disconnect:(id:number)=>void};id:number}[]=[];
@@ -31,6 +35,6 @@ export class ClockController {
     destroy():void {
         if(this.timer)GLib.source_remove(this.timer);this.timer=0;
         for(const {object,id} of this.signals)object.disconnect(id);this.signals=[];
-        this.callback=null;this.clock.run_dispose();
+        this.callback=null; // Never dispose the Shell-owned clock.
     }
 }

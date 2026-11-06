@@ -28,6 +28,14 @@ class Installation(unittest.TestCase):
   with zipfile.ZipFile(self.artifacts/'liquid-widgets.shell-extension.zip','a') as z:z.writestr('../escape','bad')
   with self.assertRaises(ValueError):install(self.artifacts,self.paths,self.runner,activate=False)
   self.assertEqual((self.paths.extension/'extension.js').read_text(),'old extension');self.assertFalse((self.paths.extension.parent/'escape').exists())
+ def test_public_zip_cannot_replace_the_personal_installation(self):
+  self.old_install()
+  with zipfile.ZipFile(self.artifacts/'liquid-widgets.shell-extension.zip','w') as z:
+   z.writestr('metadata.json',json.dumps({'uuid':'liquid-widgets@nyongcho.github.io','shell-version':['50']}))
+  with self.assertRaises(ValueError):install(self.artifacts,self.paths,self.runner,activate=False)
+  self.assertEqual((self.paths.extension/'extension.js').read_text(),'old extension')
+  self.assertEqual((self.paths.app/'liquid-widgets-daemon').read_text(),'old binary')
+  self.assertEqual(self.runner.calls,[])
  def test_failed_service_start_restores_previous_files(self):
   self.old_install();runner=Runner(lambda args:'enable' in args)
   with self.assertRaises(RuntimeError):install(self.artifacts,self.paths,runner)
@@ -48,4 +56,10 @@ class Installation(unittest.TestCase):
   self.old_install();data=self.paths.config/'liquid-widgets';data.mkdir();cache=self.paths.cache/'liquid-widgets';cache.mkdir(parents=True);other=self.paths.cache/'other';other.mkdir()
   uninstall(self.artifacts,self.paths,self.runner,purge=True)
   self.assertFalse(data.exists());self.assertFalse(cache.exists());self.assertTrue(other.exists());self.assertTrue(any('--clear-calendar' in c for c in self.runner.calls))
+ def test_personal_uninstall_preserves_public_extension_and_data(self):
+  self.old_install()
+  public=[self.paths.extension.parent/'liquid-widgets@nyongcho.github.io',self.paths.config/'liquid-widgets-public',self.paths.cache/'liquid-widgets-public']
+  for directory in public:directory.mkdir(parents=True);(directory/'keep').write_text('public data')
+  uninstall(self.artifacts,self.paths,self.runner,activate=False)
+  for directory in public:self.assertEqual((directory/'keep').read_text(),'public data')
 if __name__=='__main__':unittest.main()

@@ -1,12 +1,54 @@
-# Rust 데이터 서비스
+# 에디션별 데이터 구조
 
-2026-11-04. Task 1의 GNOME 렌더링 위에 로컬 데이터 서비스와 GJS 통신 경계를 연결했다. Task 4에서 실제 Google iCal·키링·오프라인 캘린더 provider를 연결했다. Task 5의 Open-Meteo 날씨·지역 검색도 연결했다. 시스템 측정은 후속 task이며, 구현되지 않은 측정값을 예시 수치로 채우지 않는다.
+UI·설정 화면·GLSL·provider DTO v1은 공유한다. `extension/editions.json`이 빌드할 backend와 UUID/schema/저장 이름을 결정한다. 공개용은 TypeScript에서 읽기 좋은 GJS로 빌드하며, 개인용 Rust 서비스와 IPC는 그대로 유지한다.
 
-## 실행과 소유권
+## 공개용 수집과 수명
+
+시계·날씨·시스템·네트워크·MPRIS는 Shell 프로세스 안의 세션이 관리한다. HTTP와 파일·D-Bus I/O는 비동기다. 달력 원문은 `Uint8Array`로 보관하고, Shell/설정창이 ICS 파서나 전체 시간대 라이브러리를 import하지 않는다.
+
+각 활성 세션이 설정 watch, provider scheduler, 취소 토큰과 타이머를 소유한다. 카드가 숨겨지면 해당 수집을 멈추고, 마지막 달력 카드와 설정창 수요가 모두 사라지면 달력도 멈춘다. 시스템·네트워크는 2초, 달력은 5분, 날씨는 15분 주기이고 음악은 MPRIS 이벤트로 갱신한다. 정기 시스템·네트워크 수집 중에는 이전 표본을 유지해 loading footer가 깜박이지 않는다.
+
+`stop()`은 카드 수요를 끄고 `destroy()`는 세션 전체를 종료한다. 확장의 `disable()`은 `destroy()`를 호출해 수집·watch·status bridge·child·timer를 정리한다. 늦게 끝난 이전 출처/컨텍스트의 응답은 generation과 source UUID로 버린다.
+
+## 일회성 달력 계산
+
+작업마다 `gjs -m calendar-worker.js`를 실행한다. URL이나 원본 ICS를 argv/환경/일반 로그에 넣지 않는다. 파이프로 versioned header와 원문 bytes를 보내며, worker는 HTTP·키링·설정 저장을 하지 않는다. 정상 응답과 EOF, 성공 exit를 모두 확인한 뒤 결과를 반영한다.
+
+| 제한 | 값 |
+| --- | --- |
+| Header/control | 16 KiB |
+| Raw ICS | 5 MiB |
+| Result | 512 KiB |
+| Candidate/result events | 10,000 |
+| Iterator calls | 100,000 |
+| Internal deadline / parent watchdog | 9초 / 10초 |
+| 취소 후 종료 / 부모 사망 후 종료 | 1초 이내 / 11초 이내 |
+| 계산 슬롯·설정 lock 대기 | 각각 30초 이내 |
+
+child가 `io.github.NyongCho.LiquidWidgets.CalendarJob` bus name을 소유해 세션 전체 동시 계산을 하나로 제한한다. 다른 child는 원문을 받기 전에 busy로 종료한다. 부모별 활성 작업 하나와 최신 대기 작업 하나만 유지한다. 취소 시 force-exit 뒤 취소되지 않는 wait로 reap하며, 상시 worker나 사용자 서비스는 없다.
+
+## 설정창과 공개용 상태 bridge
+
+설정창은 자신의 `PreferencesDataSession`을 소유한다. 설정/키링 변경을 직접 수행하고, 위젯이 켜져 있으면 `io.github.NyongCho.LiquidWidgets.Status`의 `Status1`을 통해 실제 달력 상태만 구독한다. UUID token은 sender별로 관리되며 다른 sender가 해제할 수 없다. 오래된 Watch 응답도 원래 owner에 Unwatch해 회수한다.
+
+요약에는 instance/revision/source/context/status/성공 시각/오류 코드/이벤트 수만 담는다. URL·일정 제목·전체 event payload는 보내지 않는다. 먼저 도착한 높은 revision을 늦은 snapshot으로 되돌리지 않는다.
+
+위젯이 꺼져 있으면 설정창이 같은 달력 모듈로 연결을 검증하고 ‘설정창 연결 확인’으로 표시한다. 이 preview는 공유 캐시를 쓰지 않는다. 위젯이 나타나면 preview를 취소하고 bridge에 붙으며, 사라지면 preview로 돌아간다. 창이 닫히면 timer·subscription·worker를 정리한다. 두 창의 계산도 동일한 단일 슬롯을 사용한다.
+
+## 공개용 저장·비밀
+
+설정은 `$XDG_CONFIG_HOME/liquid-widgets-public/settings.json`, 캐시는 `$XDG_CACHE_HOME/liquid-widgets-public/`다. XDG가 없으면 `~/.config`와 `~/.cache`를 사용한다. 디렉터리 0700·파일 0600, 크기·파일 종류·경로 동일성을 검사하며 임시 파일을 원자적으로 교체한다. private cache는 같은 사용자 프로세스를 격리하는 경계는 아니다.
+
+설정 변경과 캐시 commit은 세션 bus의 `ConfigLock`으로 직렬화한다. HTTP/달력 계산 동안 lock을 붙잡지 않는다. 저장 직전 source/revision을 다시 읽고 현재 출처만 commit한다. raw ICS와 metadata의 SHA-256을 대조해 중간에 끊긴 저장을 현재 cache로 오인하지 않는다.
+
+Secret GI는 달력 경로에서 지연 로드하고, 없으면 해당 기능의 `SERVICE_UNAVAILABLE`로 처리한다. 메서드 전체 예산은 8초다. 잠금 해제/Prompt를 실행하지 않으며, 비밀은 키링의 application `io.github.NyongCho.LiquidWidgets`와 source UUID로 구분한다. 연결 해제는 설정을 먼저 비활성화하고 cache와 namespace 내 비밀을 지운다. 실패 시 삭제 대기를 남겨 재시도한다. Rust namespace의 비밀은 건드리지 않는다.
+
+## 개인용 Rust: 실행과 소유권
+
 
 서비스는 사용자 세션 D-Bus의 `org.local.LiquidWidgets`, object `/org/local/LiquidWidgets`, interface `org.local.LiquidWidgets1`을 제공한다. HTTP 서버나 외부 포트를 열지 않는다. GJS는 기존 공유 session connection을 사용하며 확장 해제 시 그 연결을 닫지 않는다. 서비스 프로세스도 직접 실행하지 않는다.
 
-`packaging/liquid-widgets.service`는 systemd 사용자 서비스 템플릿이다. 시작 소유자는 systemd 하나이며, 설치·활성화는 Task 7에서 다룬다. 이번 단계에서는 사용자 세션에 설치하지 않았다. 확장은 연결이 없으면 연결 필요 상태와 사용자 서비스 설치·시작 안내를 표시한다.
+`packaging/liquid-widgets.service`는 systemd 사용자 서비스 템플릿이다. 시작 소유자는 systemd 하나이며, 개인용 설치기가 이를 설치·활성화한다. 확장은 연결이 없으면 연결 필요 상태와 사용자 서비스 설치·시작 안내를 표시한다.
 
 `GetSnapshot`으로 초기 상태를 읽고 `ProviderChanged`로 provider 하나씩 갱신한다. GJS는 신호를 먼저 연결하고 `Subscribe`가 끝난 뒤 snapshot을 요청한다. 먼저 도착한 높은 revision은 늦은 snapshot에 덮이지 않는다. owner가 바뀌면 revision과 응답 세대를 초기화하되 연결이 끊긴 동안 마지막 값은 유지한다. 새로운 snapshot을 받으면 현재 owner의 상태로 교체한다. 같은 owner가 살아 있어도 일시적인 Subscribe/snapshot 실패 뒤 1초부터 최대 30초까지 간격을 늘려 자동 재연결한다. disable과 owner 변경은 이전 재시도 타이머를 취소한다.
 
@@ -24,7 +66,7 @@ GJS 요청은 비동기이며 snapshot 요청은 disable/owner 변경 때 취소
 
 유효한 마지막 성공 데이터와 오프라인 재계산 결과를 캐시에 저장한다. 재시작 시 일치하는 캐시는 stale 상태와 원래 성공 시각으로 복원한다. 같은 출처의 일시 실패도 마지막 성공 값을 유지한다. provider가 비정상 형식을 반환하거나 개별/전체 JSON이 512KiB 한도를 넘으면 정해진 오류 코드로 처리하며 공급자 오류 원문은 보내지 않는다. 새 응답이 너무 커도 기존 값이 예산 안에 있으면 stale로 유지하며 마지막 성공 시각을 바꾸지 않는다.
 
-ICS 계산에는 공용 bounded blocking worker를 제공한다. 최대 2개의 native 작업만 허용하고 대기열이 가득 차면 Busy로 거절한다. Tokio executor에서 ICS를 직접 계산하지 않는다. 기존 5MiB 입력·10000개 결과·100000회 반복 제한도 유지한다. 이미 시작한 native 작업을 강제로 중단하는 하드 시간 제한은 아니다.
+ICS 계산에는 공용 bounded blocking worker를 제공한다. 최대 2개의 native 작업만 허용한다. 달력과 표지 저장은 슬롯을 비동기로 기다리며 대기 future를 취소할 수 있다. CPU·네트워크의 즉시 작업 요청은 슬롯이 가득 차면 Busy로 거절한다. Tokio executor에서 ICS를 직접 계산하지 않는다. 기존 5MiB 입력·10000개 결과·100000회 반복 제한도 유지한다. 이미 시작한 native 작업을 강제로 중단하는 하드 시간 제한은 아니다.
 
 ## 현재 지원하는 설정 IPC
 

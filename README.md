@@ -1,46 +1,60 @@
 # GNOME Liquid Glass Widgets
 
-Ubuntu GNOME 바탕화면에 macOS Liquid Glass에서 영감을 받은 개인 위젯을 만드는 프로젝트다.
+GNOME Shell 50 바탕화면용 유리 위젯이다. 날짜·시계, 월간 달력, 다가오는 일정, 날씨, CPU·RAM·온도, 네트워크, 재생 중 음악을 표시한다. 한국어·영어, 네 가지 시계, 라이트·다크 모드, 좌우 열 배치와 배경화면 굴절을 지원한다.
 
-## 현재 상태
+## 두 에디션
 
-GNOME Shell 50용 Rust 서비스·TypeScript 확장·GLSL 굴절을 구현했다. 시계, Google iCal 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, MPRIS 음악을 표시한다. 사용자 영역 설치와 서비스 기동까지 완료했다. 로그아웃·로그인 후 개인 캘린더와 날씨 지역을 설정한다.
+| | 공개용 TypeScript/GJS | 개인용 Rust |
+| --- | --- | --- |
+| 확장 UUID | `liquid-widgets@nyongcho.github.io` | `liquid-widgets@local` |
+| 데이터 처리 | 확장 내부 비동기 수집 + 요청별 GJS 달력 계산 | Rust 사용자 서비스 |
+| 추가 런타임 | GNOME/GJS 환경과 달력용 Secret Service | Rust 실행 파일, libical, 사용자 서비스 |
+| 설정·캐시 이름 | `liquid-widgets-public` | `liquid-widgets` |
+| 빌드 선택 | `--edition gjs` | `--edition rust` |
 
-빌드된 배포본 설치: `./dist/liquid-widgets/install.py`. 새 확장 코드는 로그아웃·로그인 후 적용될 수 있다. [설치·설정·제거 안내](docs/setup.md), [검증 결과와 남은 인수 항목](docs/verification.md)을 참고한다. extensions.gnome.org에는 게시하지 않았다.
+UI·GLSL·카드 기능은 공유한다. 공개용 실행에는 Rust, Node.js, npm 또는 별도 systemd 서비스 설치가 필요 없다. 두 에디션의 설정과 비밀 주소는 자동으로 복사하지 않는다. 전환할 때 기존 에디션을 비활성화하면 카드가 겹치지 않는다.
 
-개발 검증: `./scripts/check.sh`. 실제 GPU의 격리 GNOME 검사: `./scripts/test-gnome.py`. 아키텍처와 제약은 [데이터 서비스](docs/data-service.md), [캘린더](docs/calendar.md), [날씨](docs/weather.md), [실시간 측정](docs/live-data.md), [굴절 검증](docs/shader-spike.md)에 있다.
+## 공개용 설치
 
-## 먼저 읽을 문서
+아직 extensions.gnome.org에 게시하지 않았다. 프로젝트 라이선스 선택과 최종 배포 검증이 남아 있으며, 개발 검증 ZIP을 제출용으로 사용하지 않는다.
 
-1. [PRD: 제품 요구사항과 완료 기준](outputs/liquid-glass-prd.md) — 승인된 v1.0 기준. 초기 기본값과 후속 시각·연동 확인을 구분한다.
-2. [기술 설계](outputs/liquid-glass-design.md)
-3. [저장소 조사와 로컬 API 검증 결과](outputs/liquid-glass-repository-review.md)
-4. [구현 계획](outputs/liquid-glass-plan.md) — PRD의 기능·품질 요구를 task와 검증에 연결했다.
-5. [HTML 디자인 미리보기](outputs/liquid-glass-preview.html) — 배치 참고용이며 GNOME 실행 결과가 아니다.
+라이선스가 포함된 공개용 ZIP을 받은 경우:
 
-## 이어받을 핵심 맥락
-
-- Rust 사용자 서비스 + TypeScript로 작성해 GJS에서 실행하는 GNOME 확장 + GLSL 효과를 사용한다.
-- 날짜·시계, 월간 달력·다음 일정, 날씨, 네트워크, CPU·RAM·온도, 재생 중 음악을 표시한다.
-- Google Calendar는 비공개 iCal 읽기 전용이며, 클릭하면 기본 브라우저에서 Google Calendar를 연다. 비밀 주소와 날씨 지역은 아직 설정하지 않았다.
-- 대상 환경은 Ubuntu 26.04.1 / GNOME Shell 50.1 / Wayland다. 새 환경에서 작업하면 버전을 다시 확인한다.
-- 단일 굴절 카드와 DING 아이콘의 클릭 공존을 검증했다. 배경화면만 처리하며 글자는 별도 레이어에 표시한다.
-- 로컬에 없는 ShaderEffect API를 사용하지 않는다. Cogl API 존재 확인을 실제 렌더링 성공으로 간주하지 않는다.
-- ICS 반복 일정·취소·시간대 처리는 libical 기반 엔진과 적합성 테스트를 사용한다.
-- 검증은 실제 개인 계정 없이 실행한다. 개인 계정·물리 세션 전환의 최종 확인은 사용자 단계다.
-
-## Codex CLI에서 대화 이어가기
-
-현재 대화 ID: `01a1a040-e613-7390-961e-298fc097bd2e`
-
-터미널에서:
-
-```bash
-codex resume 01a1a040-e613-7390-961e-298fc097bd2e -C /home/nyong/projet/gnome-widget
+```sh
+gnome-extensions install --force liquid-widgets.shell-extension.zip
 ```
 
-2026-11-03에 Codex의 thread/settings/update 기능으로 이 대화의 이후 작업 경로를 `/home/nyong/projet/gnome-widget`으로 변경했고, 저장된 세션 정보에서도 확인했다.
+처음 설치하거나 코드를 업데이트했다면 로그아웃 후 다시 로그인한다. 이어서:
 
-현재 폴더의 resume 목록에서 찾지 못하면 터미널의 `codex resume --all` 또는 위의 정확한 ID를 사용한다. 셸에서 현재 경로를 확인하는 명령은 `pwd`다. `/pwd`나 `/cd`를 셸 명령으로 실행하지 않는다.
+```sh
+gnome-extensions enable liquid-widgets@nyongcho.github.io
+gnome-extensions prefs liquid-widgets@nyongcho.github.io
+```
 
-대화 기록은 사용자 Codex 저장소에서 관리되고 프로젝트 파일은 이 폴더에 있다. 이전 outputs와 미리보기 원본은 백업으로 남겨 두었다. 이후 문서 수정은 이 프로젝트의 outputs를 기준으로 한다.
+설정의 데이터 탭에서 Google Calendar iCal 주소와 날씨 지역을 연결한다. 달력·일정을 클릭하면 기본 브라우저에서 Google Calendar를 연다. 비밀 주소는 키링에 저장하며 채팅이나 저장소에 넣지 않는다.
+
+[설치·설정·제거 및 Rust판 복귀](docs/setup.md), [Google Calendar](docs/calendar.md), [날씨](docs/weather.md), [시스템·네트워크·음악](docs/live-data.md)을 참고한다.
+
+## 개발
+
+공개용 빌드에는 Node 24 이상, npm, GJS, GLib schema 도구와 GNOME 50 개발 환경을 사용한다. 저장소의 `.tools`가 준비되어 있으면 `scripts/dev`가 해당 도구를 선택한다.
+
+```sh
+./scripts/dev npm --prefix extension ci
+./scripts/check.sh --edition gjs
+python3 scripts/package.py --edition gjs
+```
+
+소유자가 라이선스를 선택하기 전에는 마지막 명령이 중단된다. 로컬 검증 전용으로는 `--development`를 추가하며 출력은 `dist/liquid-widgets-public-development/`다. 제출용 기본 출력은 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`이다.
+
+개인용은 `python3 scripts/package.py --edition rust`로 기존 `dist/liquid-widgets/` 배포본을 만든다. 이 경로에는 Rust·libical 개발 환경이 필요하다. `package.py`의 기본 선택은 기존 호환성을 위해 Rust이며, `check.sh`의 기본 선택은 두 에디션을 검사하는 `all`이다.
+
+검증 자료:
+
+- [에디션 구조와 수명](docs/data-service.md)
+- [공개용 화면·설정 검증](docs/public-edition-verification.md)
+- [반응성·CPU·메모리·자식 종료 측정](docs/typescript-performance.md)
+- [GNOME Extensions 심사 준비 상태](docs/gnome-extensions-release.md)
+- [외부 코드·데이터 고지](THIRD_PARTY_NOTICES.md)
+
+실제 GPU 검사는 격리된 GNOME 세션과 합성 데이터를 사용한다. 개인 Google 계정, 실제 날씨 요청, 물리 로그인·잠금 전환은 별도 확인 항목이다. 현재 개인용 설치를 자동으로 교체하지 않는다.

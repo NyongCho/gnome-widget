@@ -1,0 +1,12 @@
+{
+  "artifact": "dist/liquid-widgets-public-development/liquid-widgets.shell-extension.zip",
+  "sha256": "ef1f7e8c2ca32b6109a93fcb40edfa66e75c8018d6b5311fcee14e0af13af45c",
+  "bytes": 492028,
+  "developmentOnly": true,
+  "licensePresent": false,
+  "submitted": false,
+  "fullCheck": "PASS",
+  "nodeTests": 141,
+  "pythonTests": 26,
+  "calendarCasesPerEngine": 59
+}

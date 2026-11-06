@@ -287,10 +287,10 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 
 **Interfaces:** `./scripts/benchmark-editions.py --runs 5 --output outputs/verification/edition-performance`가 spec의 30초 준비·유휴/전체 카드 각 120초·1천/1만/5 MiB/sparse 규칙을 두 에디션에서 번갈아 실행한다.
 
-- [ ] 동일 애니메이션/배경/해상도/전원 상태를 고정하고 frame interval p95/p99·50ms stall·총 CPU·Shell 증가분+worker peak PSS/RSS·cold start/갱신 시간을 수집한다. paint duration을 frame gap으로 잘못 표기하지 않는다. parser만이 아니라 reply 검증/직렬화/UI 적용까지 포함한다.
-- [ ] 20회 enable/disable와 설정창 on/off, 바쁜 child의 취소·parent SIGKILL, 느린/과대 stdout, 두 창 슬롯 경쟁을 실행한다. 유휴 child 0·일반 취소 ≤1초·부모 사망 ≤11초·process/FD/watch 누수 0을 확인한다.
-- [ ] 5회 중 3회 이상 새 50ms stall 또는 p95의 Rust 대비 max(2ms,10%) 이상 악화를 조사한다. 성공 fixture가 9/10초 예산에 걸리면 기능 축소로 해결하지 않는다. 전체 semantics/worker gate가 실패하면 배포 task로 넘어가지 않는다.
-- [ ] raw 측정·기기·변동·제약과 gate 결과를 기록하고 관련 회귀만 재실행한다. 모두 PASS일 때 커밋: `test: validate public edition responsiveness and lifecycle`.
+- [x] 동일 애니메이션/배경/해상도/전원 상태를 고정하고 frame interval p95/p99·50ms stall·총 CPU·Shell 증가분+worker peak PSS/RSS·cold start/갱신 시간을 수집한다. paint duration을 frame gap으로 잘못 표기하지 않는다. parser만이 아니라 reply 검증/직렬화/UI 적용까지 포함한다.
+- [x] 20회 enable/disable와 설정창 on/off, 바쁜 child의 취소·parent SIGKILL, 느린/과대 stdout, 두 창 슬롯 경쟁을 실행한다. 유휴 child 0·일반 취소 ≤1초·부모 사망 ≤11초·process/FD/watch 누수 0을 확인한다.
+- [x] 5회 중 3회 이상 새 50ms stall 또는 p95의 Rust 대비 max(2ms,10%) 이상 악화를 조사한다. 성공 fixture가 9/10초 예산에 걸리면 기능 축소로 해결하지 않는다. 전체 semantics/worker gate가 실패하면 배포 task로 넘어가지 않는다.
+- [x] raw 측정·기기·변동·제약과 gate 결과를 기록하고 관련 회귀만 재실행한다. 모두 PASS일 때 커밋: `test: validate public edition responsiveness and lifecycle`.
 
 ## Task 13: 패키징·사용 문서·심사 준비
 
@@ -298,12 +298,14 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 
 **Interfaces:** `python3 scripts/package.py --edition rust|gjs` (기본 rust); `./scripts/check.sh --edition rust|gjs|all` (기본 all). public ZIP은 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. public build/check 경로는 cargo/libical 없이 완료되어야 한다.
 
-- [ ] artifact allowlist 검사에 metadata.json·extension/prefs/calendar-worker JS·timezone·schema/CSS/GLSL·고지만 허용한다. Rust ELF/.so/systemd/installer/Node import/테스트 fixture/개인 설정과 worker 코드의 Shell 번들 혼입을 거부하는 테스트를 먼저 작성해 FAIL 확인한다. worker 첫 줄 `#!@GJS@ -m`, `<schema-id>.gschema.xml` 동봉, Shell의 Gtk/Gdk/Adw 및 prefs의 St/Clutter/Meta/Shell import 금지를 검사한다.
-- [ ] 두 빌드의 metadata·UUID/schema/path·URL(`https://github.com/NyongCho/gnome-widget`)·출력 디렉터리를 일치시킨다. 공개용 README 설치를 기본으로, Rust 개인용 설치·복귀는 별도 안내한다. 다운로드/설치 시 npm이나 shell 설치 스크립트를 실행하지 않는다.
+- [x] artifact allowlist 검사에 metadata.json·extension/prefs/calendar-worker JS·timezone·schema/CSS/GLSL·고지만 허용한다. Rust ELF/.so/systemd/installer/Node import/테스트 fixture/개인 설정과 worker 코드의 Shell 번들 혼입을 거부하는 테스트를 먼저 작성해 FAIL 확인한다. worker 첫 줄 `#!@GJS@ -m`, `<schema-id>.gschema.xml` 동봉, Shell의 Gtk/Gdk/Adw 및 prefs의 St/Clutter/Meta/Shell import 금지를 검사한다.
+- [x] 두 빌드의 metadata·UUID/schema/path·URL(`https://github.com/NyongCho/gnome-widget`)·출력 디렉터리를 일치시킨다. 공개용 README 설치를 기본으로, Rust 개인용 설치·복귀는 별도 안내한다. 다운로드/설치 시 npm이나 shell 설치 스크립트를 실행하지 않는다.
 - [ ] 프로젝트 GPL 호환 라이선스 선택, ical.js MPL-2.0 수정 소스/고지와 timezone provenance를 정리한다. 아직 라이선스가 없으면 출시 준비 완료로 표시하지 않는다.
-- [ ] 심사 설명에 일회성 worker의 범위·약 0.7초 stall 실측·종료 검증·전송/저장/삭제·지원 범위를 기록한다. 공유 UI의 run_dispose 필요성을 확인하고 필수 호출은 이유를 주석으로 남긴다. 유지보수자의 코드 이해/관리와 읽기 좋은 출력 여부를 확인한다. GI 누락은 해당 기능 안내로 처리하고 자동 설치하지 않는다.
-- [ ] `./scripts/check.sh --edition all`, `python3 -m unittest discover -s tests -p 'test_*package.py'`, GNOME 50 깨끗한 사용자 환경의 ZIP 설치/활성화/제거 PASS. 외부 공개 API·실제 계정 확인은 자동 fixture 결과와 구분한다.
-- [ ] 커밋: `build: package the public edition with calendar workers`. 최종 변경을 검토하고 결과를 보고한다. EGO 업로드·개인용 설치 교체는 별도 요청 시 수행한다.
+- [x] 심사 설명에 일회성 worker의 범위·약 0.7초 stall 실측·종료 검증·전송/저장/삭제·지원 범위를 기록한다. 공유 UI의 run_dispose 필요성을 확인하고 필수 호출은 이유를 주석으로 남긴다. 유지보수자의 코드 이해/관리와 읽기 좋은 출력 여부를 확인한다. GI 누락은 해당 기능 안내로 처리하고 자동 설치하지 않는다.
+- [x] `./scripts/check.sh --edition all`, `python3 -m unittest discover -s tests -p 'test_*package.py'`, GNOME 50 깨끗한 사용자 환경의 ZIP 설치/활성화/제거 PASS. 외부 공개 API·실제 계정 확인은 자동 fixture 결과와 구분한다.
+- [x] 커밋: `build: package the public edition with calendar workers`. 최종 변경을 검토하고 결과를 보고한다. EGO 업로드·개인용 설치 교체는 별도 요청 시 수행한다.
+
+라이선스 항목은 소유자 선택을 기다린다. 설계에 따라 구현/검증은 개발용 ZIP으로 완료하며 공개 배포 준비 완료로 표시하지 않는다.
 
 ## 실행 순서와 계획 점검
 

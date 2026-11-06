@@ -6,5 +6,6 @@
     "50"
   ],
   "version": 1,
-  "settings-schema": "org.gnome.shell.extensions.liquid-widgets"
+  "settings-schema": "org.gnome.shell.extensions.liquid-widgets",
+  "url": "https://github.com/NyongCho/gnome-widget"
 }

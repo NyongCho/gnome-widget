@@ -63,7 +63,7 @@ The public edition used less total CPU in this workload, but had higher transien
 
 The public pair-2 all-card gaps occurred at approximately 33.75, 43.75 and 103.75 seconds, away from calendar request/publication boundaries. Public pair 5 also had three idle gaps. Rust pair 4 had one idle and three all-card gaps; pair 5 had two all-card gaps. All are retained. Their cause is not established by these data.
 
-Raw timestamps, memory samples, synthetic input bytes, environment hashes and failed pre-measurement startup logs are in [`outputs/verification/edition-performance`](../outputs/verification/edition-performance/). Files over 20 KiB with JSON/log/ICS content are losslessly gzip-compressed; read them with `gzip -cd` or Python `gzip.open`. `gate.json` and `environment.json` remain plain. `results.json.gz` contains the complete ten-trial measurements, not just this table.
+Raw timestamps, memory samples, synthetic input bytes, environment hashes and failed pre-measurement startup logs are in [`outputs/verification/edition-performance`](../outputs/verification/edition-performance/). Built test ZIPs, logs, and files over 20 KiB with JSON/ICS content are losslessly gzip-compressed; read them with `gzip -cd` or Python `gzip.open`. `gate.json` and `environment.json` remain plain. `results.json.gz` contains the complete ten-trial measurements, not just this table.
 
 ## Lifecycle and correctness gates
 
