@@ -8,11 +8,12 @@
   },
   "scripts": {
     "test": "node scripts/test.mjs",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json && tsc -p tsconfig.prefs.json",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json && tsc -p tsconfig.prefs.json && tsc -p tsconfig.worker.json",
     "build": "node scripts/build.mjs",
     "generate": "node scripts/generate-validators.mjs",
     "pretest": "npm run generate",
-    "pretypecheck": "npm run generate"
+    "pretypecheck": "npm run generate",
+    "test:calendar": "python3 ../scripts/test-calendar-parity.py --engine gjs"
   },
   "devDependencies": {
     "@girs/gnome-shell": "50.0.4",
@@ -20,6 +21,7 @@
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "esbuild": "0.28.2",
+    "ical.js": "2.2.1",
     "tsx": "4.23.15",
     "typescript": "7.0.2"
   }

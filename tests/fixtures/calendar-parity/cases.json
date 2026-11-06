@@ -1,0 +1,595 @@
+[
+  {
+    "name": "all-day",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:holiday\nDTSTART;VALUE=DATE:20261104\nDTEND;VALUE=DATE:20261107\nRRULE:FREQ=WEEKLY;COUNT=2\nSUMMARY:Three days\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "cancelled",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nDTSTART;TZID=Asia/Seoul:20261102T090000\nDTEND;TZID=Asia/Seoul:20261102T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nSUMMARY:Original\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nRECURRENCE-ID;TZID=Asia/Seoul:20261109T090000\nSTATUS:CANCELLED\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "custom-fold",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VTIMEZONE\nTZID:Custom/Political\nBEGIN:STANDARD\nDTSTART:19700101T000000\nTZOFFSETFROM:+0400\nTZOFFSETTO:+0400\nEND:STANDARD\nBEGIN:STANDARD\nDTSTART:20261101T020000\nTZOFFSETFROM:+0400\nTZOFFSETTO:+0300\nEND:STANDARD\nEND:VTIMEZONE\nBEGIN:VEVENT\nUID:custom-fold\nDTSTART;TZID=Custom/Political:20261101T013000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "custom-zone",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VTIMEZONE\nTZID:Custom/Office\nBEGIN:STANDARD\nDTSTART:19700101T000000\nTZOFFSETFROM:+0530\nTZOFFSETTO:+0530\nTZNAME:Office\nEND:STANDARD\nEND:VTIMEZONE\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:custom\nDTSTART;TZID=Custom/Office:20261104T090000\nDTEND;TZID=Custom/Office:20261104T100000\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "default-end",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:day\nDTSTART;VALUE=DATE:20261104\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:instant\nDTSTART:20261104T090000Z\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "dense",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:dense\nDTSTART:20261101T000000Z\nDTEND:20261101T000001Z\nRRULE:FREQ=SECONDLY;COUNT=10001\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "dst",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:dst\nDTSTART;TZID=America/New_York:20261025T090000\nDTEND;TZID=America/New_York:20261025T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-10",
+      "timeZone": "America/New_York",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "duration",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:duration\nDTSTART;TZID=America/New_York:20261031T090000\nDURATION:P1D\nRRULE:FREQ=DAILY;COUNT=2\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "floating",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:floating\nDTSTART:20261104T090000\nDTEND:20261104T100000\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "gap-start",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nUID:gap-first\nDTSTAMP:20261001T000000Z\nDTSTART;TZID=America/New_York:20260308T023000\nDURATION:PT1H\nRRULE:FREQ=DAILY;COUNT=3\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-03",
+      "timeZone": "America/New_York",
+      "weekStart": 1
+    },
+    "now": "2026-03-01T00:00:00-05:00"
+  },
+  {
+    "name": "master-cancelled",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nDTSTART;TZID=Asia/Seoul:20261102T090000\nDTEND;TZID=Asia/Seoul:20261102T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nSUMMARY:Original\nSTATUS:CANCELLED\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "midnight-gap",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:a\nDTSTART;VALUE=DATE:20260906\nDTEND;VALUE=DATE:20260907\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-09",
+      "timeZone": "America/Santiago",
+      "weekStart": 1
+    },
+    "now": "2026-09-01T00:00:00-04:00"
+  },
+  {
+    "name": "moved",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nDTSTART;TZID=Asia/Seoul:20261102T090000\nDTEND;TZID=Asia/Seoul:20261102T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nSUMMARY:Original\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nRECURRENCE-ID;TZID=Asia/Seoul:20261109T090000\nDTSTART;TZID=Asia/Seoul:20261110T140000\nDTEND;TZID=Asia/Seoul:20261110T150000\nSUMMARY:Moved\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "ongoing",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:ongoing\nDTSTART:20261020T000000Z\nDTEND:20261102T000000Z\nSUMMARY:Already started\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:past\nDTSTART:20261001T000000Z\nDTEND:20261002T000000Z\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:future\nDTSTART:20270101T000000Z\nDTEND:20270102T000000Z\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "range",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nDTSTART;TZID=Asia/Seoul:20261102T090000\nDTEND;TZID=Asia/Seoul:20261102T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nSUMMARY:Original\nEND:VEVENT\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:repeated\nRECURRENCE-ID;RANGE=THISANDFUTURE;TZID=Asia/Seoul:20261109T090000\nDTSTART;TZID=Asia/Seoul:20261110T140000\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "rdate",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:extra\nDTSTART:20261102T000000Z\nDTEND:20261102T010000Z\nRDATE:20261105T000000Z,20261109T000000Z\nEXDATE:20261105T000000Z\nSUMMARY:Extra\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "unknown-zone",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nDTSTAMP:20261001T000000Z\nUID:unknown\nDTSTART;TZID=Unknown/Zone:20261104T090000\nDTEND;TZID=Unknown/Zone:20261104T100000\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "weekly-exdate",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Liquid Widgets Test//EN\nBEGIN:VEVENT\nUID:weekly-seoul\nDTSTAMP:20261001T000000Z\nDTSTART;TZID=Asia/Seoul:20261102T090000\nDTEND;TZID=Asia/Seoul:20261102T100000\nRRULE:FREQ=WEEKLY;COUNT=3\nEXDATE;TZID=Asia/Seoul:20261109T090000\nSUMMARY:Weekly meeting\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "grid-end",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;VALUE=DATE:20261207\nDTEND;VALUE=DATE:20261208\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "before-grid",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;VALUE=DATE:20261025\nDTEND;VALUE=DATE:20261026\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "last-grid-day",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;VALUE=DATE:20261206\nDTEND;VALUE=DATE:20261207\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-date",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261131T090000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "period-rdate",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261103T090000Z\nRDATE;VALUE=PERIOD:20261104T090000Z/20261104T100000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-rule",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261103T090000Z\nRRULE:FREQ=NONEXISTENT\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "unbounded-daily",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261101T090000Z\nRRULE:FREQ=DAILY\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "deduplicate",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261101T090000Z\nRRULE:FREQ=DAILY;COUNT=4\nRDATE:20261102T090000Z,20261102T090000Z\nEXDATE:20261103T090000Z,20261104T090000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "recurring-gap",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;TZID=America/New_York:20260307T023000\nDURATION:PT1H\nRRULE:FREQ=DAILY;COUNT=3\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-03",
+      "timeZone": "America/New_York",
+      "weekStart": 1
+    },
+    "now": "2026-03-01T00:00:00-05:00"
+  },
+  {
+    "name": "ambiguous-first",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;TZID=America/New_York:20261101T013000\nDURATION:PT1H\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "utc-until",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART;TZID=America/New_York:20261101T090000\nRRULE:FREQ=DAILY;UNTIL=20261103T140000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "historical-budget",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20200101T000000Z\nRRULE:FREQ=SECONDLY\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "folded-text",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:\n Folded title\nDESCRIPTION:\nLOCATION: \r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "empty-description",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261104T090000Z\nDESCRIPTION:\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "empty-start",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:\nSUMMARY:invalid\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "exrule",
+    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:boundary\r\nDTSTART:20261101T090000Z\nRRULE:FREQ=DAILY;COUNT=3\nEXRULE:FREQ=DAILY;COUNT=1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "input-too-large",
+    "ics": {
+      "repeat": " ",
+      "count": 5242881
+    },
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-week-start",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 7
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-month",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-13",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-now",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "no-offset"
+  },
+  {
+    "name": "empty-location",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nLOCATION: \nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "empty-language",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nDESCRIPTION;LANGUAGE=ko:\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "empty-summary",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "old-warning",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:Retained title\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for LOCATION property. Removing entire property\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "old-warning-colon",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:Retained title\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for LOCATION property. Removing entire property:\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "old-warning-context",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:Retained title\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for LOCATION property. Removing entire property: synthetic parser context\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "fatal-start-warning",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:Retained title\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for DTSTART property. Removing entire property\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "fatal-warning-suffix",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nSUMMARY:Retained title\nX-LIC-ERROR;X-LIC-ERRORTYPE=VALUE-PARSE-ERROR:No value for LOCATION property. Removing entire property unexpectedly\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "duplicate-uid",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nEND:VEVENT\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261105T090000Z\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "negative-duration",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDURATION:-PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "both-end-duration",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART:20261104T090000Z\nDTEND:20261104T100000Z\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "date-time-rdate-mismatch",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:boundary\nDTSTART;VALUE=DATE:20261104\nRDATE:20261105T090000Z\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "invalid-now-date",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART:20261104T090000Z\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-02-30T09:00:00Z"
+  },
+  {
+    "name": "impossible-yearly-date",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART:20260201T090000Z\nRRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=30\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-03",
+      "timeZone": "UTC",
+      "weekStart": 1
+    },
+    "now": "2026-03-01T00:00:00Z"
+  },
+  {
+    "name": "iana-Europe-Berlin",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Europe/Berlin:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Europe/Berlin",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "iana-Australia-Lord_Howe",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Australia/Lord_Howe:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Australia/Lord_Howe",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "iana-Asia-Kathmandu",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Asia/Kathmandu:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Kathmandu",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "iana-US-Eastern",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=US/Eastern:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "US/Eastern",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "iana-Pacific-Apia",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Pacific/Apia:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Pacific/Apia",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "iana-Africa-Casablanca",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Africa/Casablanca:20261104T090000\nDURATION:PT1H\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Africa/Casablanca",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  },
+  {
+    "name": "custom-zone-does-not-leak",
+    "ics": "BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:extra\nDTSTART;TZID=Custom/Office:20261104T090000\nEND:VEVENT\nEND:VCALENDAR\n",
+    "context": {
+      "month": "2026-11",
+      "timeZone": "Asia/Seoul",
+      "weekStart": 1
+    },
+    "now": "2026-11-03T12:00:00+09:00"
+  }
+]

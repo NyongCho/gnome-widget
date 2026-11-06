@@ -1,0 +1,108 @@
+{
+  "weekly_exdate_has_two_occurrences": [
+    "weekly-exdate"
+  ],
+  "moved_occurrence_replaces_original": [
+    "moved"
+  ],
+  "cancelled_occurrence_is_absent": [
+    "cancelled",
+    "master-cancelled"
+  ],
+  "rdate_adds_and_exdate_removes": [
+    "rdate"
+  ],
+  "all_day_end_is_exclusive": [
+    "all-day"
+  ],
+  "dst_keeps_local_start": [
+    "dst"
+  ],
+  "ongoing_event_overlaps_window": [
+    "ongoing"
+  ],
+  "custom_vtimezone_is_resolved": [
+    "custom-zone"
+  ],
+  "floating_time_uses_requested_zone": [
+    "floating"
+  ],
+  "unknown_zone_is_an_error": [
+    "unknown-zone"
+  ],
+  "expansion_limit_returns_error": [
+    "dense"
+  ],
+  "input_limit_and_invalid_context_are_errors": [
+    "input-too-large",
+    "invalid-week-start",
+    "invalid-month",
+    "invalid-now"
+  ],
+  "nominal_day_duration_crosses_dst": [
+    "duration"
+  ],
+  "default_end_matches_ical_rules": [
+    "default-end"
+  ],
+  "unsupported_range_is_explicit_error": [
+    "range"
+  ],
+  "all_day_grid_end_boundary_is_exclusive_in_context_zone": [
+    "grid-end",
+    "before-grid",
+    "last-grid-day"
+  ],
+  "invalid_dates_and_unsupported_periods_are_not_normalized": [
+    "invalid-date",
+    "period-rdate",
+    "invalid-rule"
+  ],
+  "unbounded_recurrence_stops_at_window_end": [
+    "unbounded-daily"
+  ],
+  "duplicate_rdates_and_multiple_exdates_are_deduplicated": [
+    "deduplicate"
+  ],
+  "recurrence_in_a_dst_gap_skips_nonexistent_local_time": [
+    "recurring-gap"
+  ],
+  "ambiguous_local_time_uses_first_occurrence": [
+    "ambiguous-first"
+  ],
+  "utc_until_is_inclusive_for_local_recurrence": [
+    "utc-until"
+  ],
+  "historical_iteration_budget_returns_error_without_partial_results": [
+    "historical-budget"
+  ],
+  "explicit_gap_start_uses_pre_gap_offset_and_counts_as_first_occurrence": [
+    "gap-start"
+  ],
+  "all_day_dates_survive_midnight_offset_transition": [
+    "midnight-gap"
+  ],
+  "non_dst_offset_fold_uses_first_occurrence": [
+    "custom-fold"
+  ],
+  "explicit_gap_start_consumes_count_once": [
+    "gap-start"
+  ],
+  "empty_optional_google_text_does_not_reject_calendar": [
+    "empty-description",
+    "empty-location",
+    "empty-language",
+    "empty-summary"
+  ],
+  "folded_nonempty_text_is_preserved_and_invalid_event_dates_still_fail": [
+    "folded-text",
+    "empty-start"
+  ],
+  "historical_empty_text_warning_is_not_a_fatal_event_error": [
+    "old-warning",
+    "old-warning-colon",
+    "old-warning-context",
+    "fatal-start-warning",
+    "fatal-warning-suffix"
+  ]
+}

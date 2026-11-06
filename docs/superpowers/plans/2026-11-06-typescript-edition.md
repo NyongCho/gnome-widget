@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript/GJS, Gio/GLib, Soup 3, Secret 1, ical.js 2.2.1와 고정 패치/시간대 데이터, esbuild/Ajv/GLSL, Rust oracle.
 
-**Spec:** [달력 계산만 분리하는 설계](../specs/2026-11-06-typescript-edition-design.md). 기준 `1b0d2d9`. **전체 13개 task, 모두 미구현.** 기존 전체 GJS 서비스 기반 12-task 계획을 대체한다. [실측 결과](../../typescript-shell-feasibility.md)는 선행 근거이며 제품 검증 완료가 아니다.
+**Spec:** [달력 계산만 분리하는 설계](../specs/2026-11-06-typescript-edition-design.md). 기준 `1b0d2d9`. **전체 13개 task.** 구현 진행은 아래 체크박스로 기록한다. 기존 전체 GJS 서비스 기반 12-task 계획을 대체한다. [실측 결과](../../typescript-shell-feasibility.md)는 선행 근거이며 제품 검증 완료가 아니다.
 
 ## Global Constraints
 
@@ -56,13 +56,15 @@
 
 **Interfaces:** `EngineBudget { check(): void }`; `expandCalendar(ics: string, context: CalendarContext, now: string, budget: EngineBudget): CalendarData`. `CalendarFailure.code`는 `INVALID_DATA | UNSUPPORTED_CALENDAR | UNKNOWN_TIME_ZONE | PAYLOAD_TOO_LARGE | EXPANSION_LIMIT`. `createBudget(deadlineUs: number): EngineBudget`는 GLib monotonic deadline을 검사한다.
 
-- [ ] 기존 `daemon/tests/calendar.rs` 30개 검사 전체와 spike의 34개 비교 사례를 명시적 기대값으로 이식한다. 겹치는 입력은 합치되 source 테스트 대응표를 남긴다. 오류도 code까지 비교한다. `scripts/test-calendar-parity.py --engine rust|gjs|both`와 실제 GJS test build를 추가한다.
-- [ ] Rust oracle가 기대값을 통과하고 현재 GJS adapter가 알려진 8개 범주에서 실패하는 것을 기록한다. UTC 정규화로 instant를 비교하되 all-day 날짜·occurrenceKey·COUNT·종료 차이는 숨기지 않는다.
-- [ ] ical.js 2.2.1을 고정한다. upstream timezone 생성 경로의 입력 tzdb 버전·generator commit·SHA-256·고지를 manifest로 고정하고 전체 IANA/alias 데이터를 준비한다. 결과물 없이 세 지역 fixture만으로 완료 처리하지 않는다.
-- [ ] `normalize.ts`에서 raw 날짜 검증, 취소 예외 전처리, 기본 DTSTART/RDATE union과 중복 제거, UID/RECURRENCE-ID 관계를 구현한다. `engine.ts`/`timezones.ts`에서 지역 반복 날짜→gap/fold 변환→COUNT/UNTIL 및 DURATION/DTEND 의미를 기존 Rust와 맞춘다. custom VTIMEZONE은 작업 범위 밖으로 남지 않는다.
-- [ ] 5 MiB/10,000/100,000 제한을 적용한다. 고정 라이브러리의 초기화/내부 탐색 루프에도 `budget.check()`를 넣고 9초를 넘는 계산은 부분 결과 없이 실패시킨다. sparse leap/불가능한 날짜 규칙·큰 property의 deadline 우회 경로를 검사한다.
-- [ ] `./scripts/test-calendar-parity.py --engine both` PASS와 원본 library regression suite의 관련 테스트 PASS. 알려진 8개 차이와 부모 없는 deadline 시험을 통과하기 전 공개용 전체 이식으로 넘어가지 않는다.
-- [ ] 명시된 파일만 커밋: `feat: preserve calendar semantics in the GJS engine`.
+- [x] 기존 `daemon/tests/calendar.rs` 30개 검사 전체와 spike의 34개 비교 사례를 명시적 기대값으로 이식한다. 겹치는 입력은 합치되 source 테스트 대응표를 남긴다. 오류도 code까지 비교한다. `scripts/test-calendar-parity.py --engine rust|gjs|both`와 실제 GJS test build를 추가한다.
+- [x] Rust oracle가 기대값을 통과하고 현재 GJS adapter가 알려진 8개 범주에서 실패하는 것을 기록한다. UTC 정규화로 instant를 비교하되 all-day 날짜·occurrenceKey·COUNT·종료 차이는 숨기지 않는다.
+- [x] ical.js 2.2.1을 고정한다. upstream timezone 생성 경로의 입력 tzdb 버전·generator commit·SHA-256·고지를 manifest로 고정하고 전체 IANA/alias 데이터를 준비한다. 결과물 없이 세 지역 fixture만으로 완료 처리하지 않는다.
+- [x] `normalize.ts`에서 raw 날짜 검증, 취소 예외 전처리, 기본 DTSTART/RDATE union과 중복 제거, UID/RECURRENCE-ID 관계를 구현한다. `engine.ts`/`timezones.ts`에서 지역 반복 날짜→gap/fold 변환→COUNT/UNTIL 및 DURATION/DTEND 의미를 기존 Rust와 맞춘다. custom VTIMEZONE은 작업 범위 밖으로 남지 않는다.
+- [x] 5 MiB/10,000/100,000 제한을 적용한다. 고정 라이브러리의 초기화/내부 탐색 루프에도 `budget.check()`를 넣고 9초를 넘는 계산은 부분 결과 없이 실패시킨다. sparse leap/불가능한 날짜 규칙·큰 property의 deadline 우회 경로를 검사한다.
+- [x] `./scripts/test-calendar-parity.py --engine both` PASS와 원본 library regression suite의 관련 테스트 PASS. 알려진 8개 차이와 부모 없는 deadline 시험을 통과하기 전 공개용 전체 이식으로 넘어가지 않는다.
+- [x] 명시된 파일만 커밋: `feat: preserve calendar semantics in the GJS engine`.
+
+Task 1 검증(2026-11-07): Rust/GJS 각각 59/59 기대값, 기존 TypeScript 68/68, Rust 전체 suite, 수정한 ical.js upstream 1,016 unit + 5 acceptance 통과. 597개 IANA 지역·별칭을 동봉했다. US/Eastern은 기존 libical이 거부하지만 설계의 전체 별칭 지원을 따라 공개용에서 허용하는 명시적 기대값 차이다. 실제 child 수명 검증은 Task 2에서 수행한다.
 
 ## Task 2: 일회성 worker 프로토콜과 종료
 

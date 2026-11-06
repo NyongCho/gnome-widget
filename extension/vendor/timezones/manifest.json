@@ -1,0 +1,17 @@
+{
+  "tzdb": "2026e",
+  "source": "https://data.iana.org/time-zones/releases/tzdata2026e.tar.gz",
+  "sourceSha256": "b26882805f26aac59d5b222978e6580484b834ccdc98be89df2f05a6dc53a652",
+  "generator": "https://github.com/libical/vzic",
+  "generatorCommit": "42f509c9a613874a04af0d35be166c703a77389f",
+  "icalWorkflowCommit": "277d52c8db379f133a88957793e03997a65307f4",
+  "options": [
+    "--pure",
+    "TZID_PREFIX=",
+    "CREATE_SYMLINK=0",
+    "IGNORE_TOP_LEVEL_LINK=0"
+  ],
+  "zoneCount": 597,
+  "zonesSha256": "91bad32c456cedb17a848a51387cb35524ffe81d1518efbb0411f11a076fe4ff",
+  "license": "IANA public domain; generator GPL-2.0-or-later is build-only"
+}

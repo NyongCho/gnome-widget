@@ -1,0 +1,31 @@
+{
+  "version": "2.2.1",
+  "source": "https://github.com/kewisch/ical.js",
+  "commit": "277d52c8db379f133a88957793e03997a65307f4",
+  "license": "MPL-2.0",
+  "changes": "budget.patch adds checks inside library loops; budget.js exposes a per-expansion callback. Event and timezone semantics live in the application adapter.",
+  "files": {
+    "binary.js": "49f5bb6f06c8d7d0cfa65375d926b40419ea1465cf8a976a166e17ae77fbe038",
+    "budget.js": "a095608caac2732e35345820eeffa48dae95fa3ce7885521dc4cbe8fc0fc08d9",
+    "component.js": "54210b65f4003298b941ca871ea0786b618ebdcb9fa0ff1454610848a332a6f9",
+    "component_parser.js": "e27d90407e1ad391e24ee0dcbf34809dcf3447b0ae875b666b76483bed848b55",
+    "design.js": "73dfae9c81a217fe82070d107f6a77ae1f1dea68ef18bf4524ef4f12bfc5ef35",
+    "duration.js": "bfb6fb9f98799a97057fe8aefa1aa48e9bb7d25b0ad5090208e71475ff8b55fd",
+    "event.js": "f495c0be81780cd3a5f40f698e3ae0a027b20dee4fdfea47ac112446dc2edc4b",
+    "helpers.js": "208bd2c2f03e22b3e45a1760095a8cf8642cca61508648f5c50d25dac2903ee8",
+    "module.js": "20b47557ec2cc468934e02dc48bfa48c687db599a4a635052973d84a01ffcbb1",
+    "parse.js": "b93ceefc8797f3685cb40b8d0883d0482a8407a61b96df4c89071c1d0425d7bf",
+    "period.js": "03077ea4255391008b591fbc9ef42f9d32824c591ab2fa0617a02c74d8f3d215",
+    "property.js": "23e302869a56a7ddd95d1efa9fd27c1c1598167ddfd26348ccb4f80e72b52881",
+    "recur.js": "18dd85e669f834d5025fab7a3f718c4adf112eca55e851daf5132362975ff0b9",
+    "recur_expansion.js": "b8a1f4a461388ff6d11a58404cfa4cad2e66cd594b7448ca1f9cd1c4005f8bd3",
+    "recur_iterator.js": "6f1c9f98668d863810d8d9259fb7e91a8a807985bd4ecda958eba64e739c109f",
+    "stringify.js": "a78e0adff2138d01a6a328cce810d3d9bd704d377523c2ddef75edbcdad537dc",
+    "time.js": "c96718d3d0f96bcce70005a13702c22bf02a321bc0933e63437f0ffb834abd01",
+    "timezone.js": "4aa5a75158ae6c03410eaea053ac90d252bc6930a5376d09bd559ee9fb13dd35",
+    "timezone_service.js": "0f02f9cb7a8a084be0e3196d61bd50843518bbe13104ef13f555c13311b9f3bf",
+    "types.js": "608766d6b81c5df7030ff38c8dd647e7219412a01aa1e524f214bc46fddf41f3",
+    "utc_offset.js": "fd5d101f7dc0253b8e2fb2a61da8f5d7d98c99aa732326321c2b758dc9b8748c",
+    "vcard_time.js": "6981611c52f5dfce5faf2a0c39026ff17970897b44855933e4b9b5d0442feacc"
+  }
+}

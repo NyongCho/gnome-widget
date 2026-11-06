@@ -11,6 +11,7 @@
     "tests/**/*.ts"
   ],
   "exclude": [
-    "tests/gnome"
+    "tests/gnome",
+    "tests/gjs"
   ]
 }

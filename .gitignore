@@ -9,3 +9,6 @@ extension/generated/
 
 /dist/
 __pycache__/
+
+# Managed worktree development toolchain symlink
+.tools
