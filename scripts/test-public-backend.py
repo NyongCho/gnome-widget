@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exercise the public edition on a private bus with synthetic data only."""
-import argparse,ctypes,gzip,http.server,json,os,select,struct,subprocess,sys,tempfile,threading,time
+import argparse,ctypes,gzip,zlib,hashlib,http.server,json,os,select,struct,subprocess,sys,tempfile,threading,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 HEADER={'version':1,'jobId':'test','sourceId':'synthetic','generation':1,'context':{'month':'2026-11','timeZone':'UTC','weekStart':1},'now':'2026-11-03T00:00:00Z'}
@@ -148,8 +148,39 @@ def system_network_suite():
         put('proc/oversize','too long');os.mkfifo(root/'proc/fifo')
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/systemNetwork.js'),tmp],check=True,timeout=15)
 
+def media_suite():
+    def png(width,height):
+        def chunk(kind,data):return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data))
+        return b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',width,height,8,2,0,0,0))+chunk(b'IDAT',zlib.compress((b'\0'+b'\x30\x80\xa0'*width)*height))+chunk(b'IEND',b'')
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def log_message(self,*args):pass
+        def do_GET(self):
+            if self.path.startswith('/slow'):time.sleep(1)
+            body={'/wide':png(160,90),'/square':png(100,100),'/empty':b'', '/large':b'x'*(8*1024*1024+1)}.get(self.path,b'broken')
+            self.send_response(200);self.send_header('Content-Length',str(len(body)));self.end_headers()
+            try:self.wfile.write(body)
+            except (BrokenPipeError,ConnectionResetError):pass
+    server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start()
+    try:
+        with tempfile.TemporaryDirectory(prefix='liquid-media-') as tmp:
+            root=Path(tmp);os.mkfifo(root/'fifo');(root/'link').symlink_to('/dev/null');(root/'cache').mkdir(mode=0o700)
+            for kind in ['link','fifo']:
+                file=root/'cache'/(hashlib.sha256(('https://fixture.invalid/'+kind).encode()).hexdigest()+'.art')
+                if kind=='link':file.symlink_to('/dev/null')
+                else:os.mkfifo(file)
+            with (root/'oversize').open('wb') as f:f.truncate(8*1024*1024+1)
+            for folder,count,size in [('cap',9,8*1024*1024),('count',64,1)]:
+                directory=root/folder;directory.mkdir(mode=0o700)
+                for i in range(count):
+                    path=directory/f'{i:064x}.art'
+                    with path.open('wb') as f:f.truncate(size)
+                    path.chmod(0o600)
+            (root/'cap'/'.tmp-00000000-0000-0000-0000-000000000000').write_bytes(b'interrupted')
+            subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/media.js'),tmp,f'http://127.0.0.1:{server.server_port}'],check=True,timeout=35)
+    finally:server.shutdown()
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--suite',choices=['worker','io','local-session','weather','system-network','media'],default='worker');parser.add_argument('--private',action='store_true');args=parser.parse_args()
     if not args.private:
         subprocess.run([str(ROOT/'scripts/dev'),'npm','--prefix','extension','run','generate'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
         subprocess.run([str(ROOT/'scripts/dev'),'node','scripts/build-calendar-tests.mjs'],cwd=ROOT/'extension',check=True)
@@ -160,6 +191,7 @@ def main():
         subprocess.run(['gjs','-m',str(ROOT/'extension/dist/tests/localSession.js'),str(ROOT/'extension/dist/tests')],check=True,timeout=15)
     elif args.suite=='weather':weather_suite()
     elif args.suite=='system-network':system_network_suite()
+    elif args.suite=='media':media_suite()
     else:(worker_suite if args.suite=='worker' else io_suite)()
     return 0
 if __name__=='__main__':sys.exit(main())

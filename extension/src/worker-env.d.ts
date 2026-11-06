@@ -4,3 +4,4 @@ import '@girs/gio-2.0/ambient';
 import '@girs/giounix-2.0/ambient';
 import '@girs/soup-3.0/ambient';
 import '@girs/secret-1/ambient';
+import '@girs/gdkpixbuf-2.0/ambient';

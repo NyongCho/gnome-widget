@@ -29,6 +29,7 @@ export class GioPrivateFiles implements PrivateFiles {
     private async safe<T>(cancel:Cancellation,fn:(io:Gio.Cancellable)=>Promise<T>):Promise<T>{
         try{return await bounded(cancel,5000,'SERVICE_UNAVAILABLE',fn);}catch(error){if(error instanceof DataFailure||error instanceof DataCancelled)throw error;throw new DataFailure('SERVICE_UNAVAILABLE');}
     }
+    prepare(cancel:Cancellation):Promise<void>{return this.safe(cancel,io=>this.directory(io));}
     read(name:string,maxBytes:number,cancel:Cancellation):Promise<Uint8Array|null>{
         return this.safe(cancel,async io=>{
             const file=this.file(name);await this.directory(io);let before:Gio.FileInfo;

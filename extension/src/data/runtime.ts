@@ -1,4 +1,9 @@
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import {MediaProvider} from './providers/media.js';
+import {ArtworkLoader} from './providers/mediaArt.js';
+import {GioMprisBus} from './mpris.js';
+import {GioArtworkStore} from './artworkFiles.js';
 import {getEdition} from '../edition.js';
 import type {WidgetSessionOptions} from '../backend/contracts.js';
 import {acquireBusLease} from './busLease.js';
@@ -32,6 +37,8 @@ export function createPublicDataServices(){
 }
 export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidgetSession {
     const services=createPublicDataServices();
-    // Remaining provider adapters are added in Tasks 8–9.
-    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network},destroy:()=>services.destroy()});
+    const art=new ArtworkLoader(services.http,new GioArtworkStore(GLib.build_filenamev([GLib.get_user_cache_dir(),getEdition('gjs').dataDirectory,'artwork'])),services.clock);
+    const media=new MediaProvider(new GioMprisBus(Gio.DBus.session),art,services.clock);
+    // Calendar adapter is added in Task 9.
+    return new LocalWidgetSession(options,{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media},destroy:()=>services.destroy()});
 }
