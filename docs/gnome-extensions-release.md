@@ -1,6 +1,6 @@
 # GNOME Extensions release preparation
 
-Status: **GPL-3.0-or-later selected; not submitted**. The license requirement is resolved. Publish the exact matching source commit before distributing or submitting the public ZIP. The five-pair performance gate, full checks and clean development-package install check passed. A passing local test is not GNOME Extensions approval.
+Distribution: **[GitHub release v0.1.0](https://github.com/NyongCho/gnome-widget/releases/tag/v0.1.0)**, under GPL-3.0-or-later. GNOME Extensions status: **not submitted**. The GitHub release pairs the public ZIP and SHA-256 checksum with the matching source tag. A GitHub release or a passing local test is not GNOME Extensions approval.
 
 The target is GNOME Shell **50**. The public UUID is `liquid-widgets@nyongcho.github.io`; the personal `liquid-widgets@local` installation and its service remain separate.
 
@@ -56,10 +56,11 @@ Calendar disconnect disables the source first, removes its local caches and all 
 
 The owner selected **GPL-3.0-or-later** on 2026-11-07. The project `LICENSE` contains the explicit version-3-or-later grant and the complete, unmodified GPL version 3 text. Package metadata uses the same SPDX identifier. MPL-2.0 ical.js modifications, original notices, patch and pinned file hashes are in `extension/vendor/ical/`. IANA input/generator/output provenance is in `extension/vendor/timezones/`. The ZIP carries the project license and complete MPL/IANA/Ajv notices. See [third-party notices](../THIRD_PARTY_NOTICES.md).
 
-Before a public submission, publish the exact matching source commit and retain the modified covered source under its license. This work does not push a branch, tag a release or upload to extensions.gnome.org.
+The matching source for the first public ZIP is published under [tag v0.1.0](https://github.com/NyongCho/gnome-widget/tree/v0.1.0), including the modified MPL-covered files and their original notices. Future releases must publish their matching source before distributing the ZIP. Uploading to extensions.gnome.org remains a separate step.
 
 ## Remaining release evidence
 
+- GitHub v0.1.0 artifact: freshly rebuilt public ZIP; 12 packaging tests and artifact policy PASS. The exact ZIP installed, enabled, collected local data, opened production preferences, disabled and uninstalled in disposable GNOME Shell 50 without Rust. Its entries are identical to the earlier licensed public ZIP. [Release artifact and checks](../outputs/verification/release-v0.1.0/artifact.json).
 - Owner-selected project license: GPL-3.0-or-later, applied to `LICENSE`, package metadata and project documentation.
 - Licensed public ZIP: built with `development: false`; all 12 packaging tests and the public artifact policy passed. The GPL text, explicit or-later grant and bundled third-party notices match their source files byte for byte. Compared with the previously tested development ZIP, only `LICENSE` was added and `THIRD_PARTY_NOTICES.md` changed; every runtime entry is identical, so native suites were not repeated for this license-only update. [Artifact hash and checks](../outputs/verification/public-license/artifact-check.json).
 - Final five-pair performance gate: PASS; 0/5 p95 regressions and 1/5 additional-stall pairs in each phase. All raw results are retained.

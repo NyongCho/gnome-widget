@@ -3,6 +3,7 @@
 [![GNOME Shell 50](https://img.shields.io/badge/GNOME_Shell-50-4a86cf?logo=gnome&logoColor=white)](#compatibility)
 [![Wayland](https://img.shields.io/badge/Session-Wayland-f4c542)](#compatibility)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/NyongCho/gnome-widget)](https://github.com/NyongCho/gnome-widget/releases/latest)
 
 Liquid glass desktop widgets for GNOME Shell. Keep your clock, calendar, weather, system stats, network activity, and music on the desktop, with wallpaper blur and refraction that follow your background.
 
@@ -50,28 +51,14 @@ The public edition runs with GNOME's GJS runtime. Rust, Node.js, npm, and a sepa
 ## Installation
 
 > [!NOTE]
-> Liquid Widgets is not yet listed on extensions.gnome.org. Build and install the public edition from this repository using the steps below.
+> Liquid Widgets is available through GitHub Releases. It is not yet listed on extensions.gnome.org.
 
-### Build from source
+### Install from GitHub Releases
 
-Install **Git**, **Python 3**, **Node.js 24 or newer**, **npm**, and **`glib-compile-schemas`**, in addition to the GNOME components listed above. Then run:
-
-```sh
-git clone https://github.com/NyongCho/gnome-widget.git
-cd gnome-widget
-
-./scripts/dev npm --prefix extension ci
-python3 scripts/package.py --edition gjs
-```
-
-The installable archive is created at `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. It includes the project license and third-party notices.
-
-### Install and enable
-
-From the repository directory:
+Download **[liquid-widgets.shell-extension.zip](https://github.com/NyongCho/gnome-widget/releases/latest/download/liquid-widgets.shell-extension.zip)** from the [latest release](https://github.com/NyongCho/gnome-widget/releases/latest). Open a terminal in the folder where you saved it and run:
 
 ```sh
-gnome-extensions install --force dist/liquid-widgets-public/liquid-widgets.shell-extension.zip
+gnome-extensions install --force liquid-widgets.shell-extension.zip
 ```
 
 **Log out and log back in** so GNOME Shell can load the new extension. Then enable it and open preferences:
@@ -83,7 +70,22 @@ gnome-extensions prefs liquid-widgets@nyongcho.github.io
 
 You can also open preferences through GNOME Extensions or the gear button above the widgets.
 
-For later source updates, run `git pull`, repeat the build and install commands, and log out and back in.
+To verify the download, save [SHA256SUMS](https://github.com/NyongCho/gnome-widget/releases/latest/download/SHA256SUMS) alongside the ZIP and run `sha256sum -c SHA256SUMS`. For updates, install the ZIP from a newer release and log out and back in.
+
+### Build from source
+
+To build the latest development version, install **Git**, **Python 3**, **Node.js 24 or newer**, **npm**, and **`glib-compile-schemas`**, in addition to the GNOME components listed above. Then run:
+
+```sh
+git clone https://github.com/NyongCho/gnome-widget.git
+cd gnome-widget
+
+./scripts/dev npm --prefix extension ci
+python3 scripts/package.py --edition gjs
+gnome-extensions install --force dist/liquid-widgets-public/liquid-widgets.shell-extension.zip
+```
+
+The generated ZIP includes the project license and third-party notices. Log out and back in, then enable the extension as described above. For later source updates, run `git pull` and repeat the build and install commands.
 
 ## Configuration
 

@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-07",
+  "tag": "v0.1.0",
+  "edition": "gjs",
+  "archive": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "d8879fbbd06441f3df44f03f42ec1cfa4b252c5d33bb3829d9ec1b35c3ef6199",
+  "bytes": 504900,
+  "metadataVersion": 1,
+  "shellVersions": [
+    "50"
+  ],
+  "runtimeSourceTree": "86ca3036399dd5ab2b11dcf6843e970d0e4b7416",
+  "packageTestsPassed": 12,
+  "publicPackagePolicy": "PASS",
+  "contentsIdenticalToPreviousLicensedPublicZip": true,
+  "baselineSha256": "35a3c8599ef0b318f4525b27b91ba8dc3462d19b92e78e7dabc9806bdc1f7f45",
+  "nativeInstall": {
+    "uuid": "liquid-widgets@nyongcho.github.io",
+    "enabled": true,
+    "localCollectors": true,
+    "preferences": true,
+    "disabled": true,
+    "uninstalled": true,
+    "rustService": false
+  },
+  "gnomeExtensionsSubmitted": false
+}
