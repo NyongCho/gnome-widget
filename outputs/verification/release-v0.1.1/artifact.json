@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-08",
+  "tag": "v0.1.1",
+  "edition": "gjs",
+  "archive": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "36fe2c1dd5e2f3c720fb4f1b7bd897b69bd75875854b35b4fba59b3a1cc74d95",
+  "bytes": 362079,
+  "uncompressedBytes": 2788185,
+  "entryCount": 17,
+  "runtimeCommit": "d192282ca14f133215fbd9ab55e0d202b7c193e2",
+  "changesSinceRuntimeVerification": [
+    "npm package and lockfile root version: 0.1.1",
+    "release documentation and verification records"
+  ],
+  "contentsIdenticalToIndependentlyVerifiedCleanup": true,
+  "baselineSha256": "8d9c6a232c4668a6b40a0111dcbca96e8b9333239118a957ccf33b4d6b77ee20",
+  "packageTestsPassed": 12,
+  "publicPackagePolicy": "PASS",
+  "independentReview": {
+    "standardsFindings": 0,
+    "specFindings": 0,
+    "validatorComparisons": 6480,
+    "isolatedTestsPassed": 49
+  },
+  "fullChecks": {
+    "runtimeCommit": "d192282",
+    "rustTestsPassed": 97,
+    "rustLiveProbesIgnored": 3,
+    "nodeTestsPassed": 143,
+    "calendarCasesPerEngine": 59,
+    "nativePublicSuitesPassed": 9,
+    "pythonTestsPassed": 26,
+    "log": "all-checks.log.gz"
+  },
+  "nativeInstall": {
+    "uuid": "liquid-widgets@nyongcho.github.io",
+    "enabled": true,
+    "localCollectors": true,
+    "preferences": true,
+    "disabled": true,
+    "uninstalled": true,
+    "rustService": false
+  },
+  "gnomeExtensionsSubmitted": false
+}

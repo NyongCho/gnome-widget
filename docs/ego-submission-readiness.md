@@ -1,8 +1,8 @@
 # GNOME Extensions submission readiness
 
-Assessed and updated: **2026-11-07**. Scope: official submission rules, the existing v0.1.0 release, and the subsequently verified bundle cleanup. This is not submission authorization.
+Rules assessed: **2026-11-07**; release status updated: **2026-11-08**. Scope: official submission rules, the v0.1.0 release, and the verified bundle cleanup distributed as v0.1.1. This is not submission authorization.
 
-**Conclusion:** the confirmed unused-code findings are resolved on `codex/typescript-public`, with a rebuilt ZIP and passing checks for both editions and native GNOME installation. The published v0.1.0 ZIP remains unchanged; publish a new release with matching source before distributing the cleaned artifact. Maintainer readiness and reviewer acceptance remain unresolved.
+**Conclusion:** the confirmed unused-code findings are resolved in [v0.1.1](https://github.com/NyongCho/gnome-widget/releases/tag/v0.1.1), with matching source, a rebuilt ZIP and passing checks for both editions and native GNOME installation. The published v0.1.0 ZIP remains unchanged. Maintainer readiness and reviewer acceptance remain unresolved.
 
 ## Existing evidence
 
@@ -24,7 +24,7 @@ The build now selects the backend implementation before bundling. Ajv emits sepa
 
 Only those three JavaScript entries changed. The ZIP is 28.3% smaller, and its uncompressed contents are 35.2% smaller. The [cleanup artifact record](../outputs/verification/public-bundle-cleanup/artifact.json) identifies SHA-256 `d3082451743a48906e6a3b9e3a47fc5769e314e99c877da2ae9922df5e4d5b43` and the retained verification logs.
 
-`check.sh --edition all` passed: Rust checks and live IPC, 143 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. The emitted-build regression first failed for the retained Rust backend and then for unrelated worker validators; it now passes for both editions without build warnings. The exact ZIP installed, enabled, collected local data, opened production preferences, disabled and uninstalled in disposable GNOME Shell 50 without Rust. A separate read-only code review found no issues. No new GitHub release or GNOME Extensions upload was performed.
+`check.sh --edition all` passed: Rust checks and live IPC, 143 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. The emitted-build regression first failed for the retained Rust backend and then for unrelated worker validators; it now passes for both editions without build warnings. The exact ZIP installed, enabled, collected local data, opened production preferences, disabled and uninstalled in disposable GNOME Shell 50 without Rust. Two subsequent independent reviewers found no issues, including 6,480 comparisons of validator behavior and another full-suite/native installation run. The v0.1.1 release has the same entry contents; see its [artifact record](../outputs/verification/release-v0.1.1/artifact.json). No GNOME Extensions upload has been performed.
 
 ## Original findings and remaining review risks
 
@@ -44,7 +44,7 @@ The release has integer **`metadata.version: 1`**. The review guidelines call th
 
 1. Confirm that the intended maintainer can support and explain the implementation. Extensions are supported by their authors. [GNOME Extensions about page](https://extensions.gnome.org/about/).
 2. Sign in to a GNOME Extensions account, or register one. The current **Add yours** route redirects unauthenticated visitors to login. [Upload](https://extensions.gnome.org/upload/), [registration](https://extensions.gnome.org/accounts/register/).
-3. Publish the cleaned artifact with matching source, then select that public ZIP and complete the authenticated upload form with accurate listing information. Include the worker rationale and source link wherever review notes are accepted. This assessment did not access that form and does not assert an icon or screenshot is mandatory.
+3. Select the public ZIP from v0.1.1 and complete the authenticated upload form with accurate listing information. Include the worker rationale and matching source link wherever review notes are accepted. This assessment did not access that form and does not assert an icon or screenshot is mandatory.
 4. Respond to review feedback and wait for approval before calling the extension available on GNOME Extensions. Uploaded extensions undergo review before download availability. [Review process](https://extensions.gnome.org/about/).
 
-No account action, upload or listing change was performed. Actual Google-account integration, external weather requests and physical login/lock behavior remain outside the synthetic public-release evidence. The five-pair desktop performance benchmark was not repeated for this build cleanup. GNOME's update check returned Not Found for the unpublished extension during the successful isolated installation test.
+No GNOME Extensions account action, upload or listing change was performed. Actual Google-account integration, external weather requests and physical login/lock behavior remain outside the synthetic public-release evidence. The five-pair desktop performance benchmark was not repeated for this build cleanup. GNOME's update check returned Not Found for the unpublished extension during the successful isolated installation test.

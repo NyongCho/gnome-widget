@@ -1,0 +1,26 @@
+Standards recheck: observed execution summary
+This file summarizes outputs already observed in the tool transcript. It is not a raw stdout log and no checks were rerun to create it.
+
+Base: a2ad945788e3f0f709b5ff92693d527ec315c03d
+Head: d192282ca14f133215fbd9ab55e0d202b7c193e2
+Isolated head cwd: /tmp/gnome-cleanup-standards-pp93c4vs/head/extension
+
+Command: node probe.mjs
+Probe source: /tmp/gnome-cleanup-standards-pp93c4vs/head/extension/probe.mjs
+Observed stdout:
+{"validators":15,"comparisons":6480,"warnings":0,"result":"PASS: standalone and individually re-bundled validators match baseline; only selected validator modules retained"}
+
+Command: node --import tsx --test tests/contract.test.ts tests/workerProtocol.test.ts tests/config.test.ts tests/calendarBridge.test.ts
+Observed totals:
+tests 44; suites 0; pass 44; fail 0; cancelled 0; skipped 0; todo 0; duration_ms 162.019115
+
+Command: node scripts/test.mjs backendEdition.test.ts
+Observed totals:
+tests 5; suites 0; pass 5; fail 0; cancelled 0; skipped 0; todo 0; duration_ms 659.749906
+This suite rebuilt both editions in the isolated head archive.
+
+Repeated generation hash comparison:
+{"generated_files":36,"repeat_generation_identical":true}
+
+Combined test result: 49 passed, 0 failed.
+The raw tool outputs were not redirected to persistent log files.
