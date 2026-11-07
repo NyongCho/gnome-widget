@@ -8,14 +8,14 @@ Liquid glass desktop widgets for GNOME Shell. Keep your clock, calendar, weather
 
 [Features](#features) · [Installation](#installation) · [Configuration](#configuration) · [Development](#development) · [Report an issue](https://github.com/NyongCho/gnome-widget/issues)
 
-![Liquid Widgets in dark mode, showing the clock, calendar, weather, system gauges, and network activity](outputs/verification/public-edition/gjs-compact-dark.png)
+![Liquid Widgets in English and dark mode, showing the clock, calendar, weather, system gauges, and network activity](docs/images/widgets-dark-en.png)
 
-*Captured in GNOME Shell with sample data. Widgets and preferences support English and Korean.*
+*Captured in GNOME Shell with the English interface and sample data. Widgets and preferences support English and Korean.*
 
 <details>
 <summary>View the light theme</summary>
 
-![Liquid Widgets in light mode](outputs/verification/public-edition/gjs-compact-light.png)
+![Liquid Widgets in English and light mode](docs/images/widgets-light-en.png)
 
 </details>
 

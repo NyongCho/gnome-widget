@@ -42,10 +42,11 @@ async function todayPixels(host,name,scale){
 function compact(host,scale){
     for(const [id,card] of host.cards){
         check(card.status.visible===Boolean(card.status.get_text()),`${id}: empty status reserves footer space`);
-        // Clock deliberately matches the weather card with a full clock face.
+        // Match weather height unless the localized clock needs more room.
         if(id==='clock'){
             const weather=host.cards.get('weather');
-            if(weather)check(card.button.height===weather.button.height,'clock/weather sizes differ');
+            const clockMinimum=Math.ceil(card.content.get_preferred_height(card.button.width)[1]);
+            if(weather)check(card.button.height===Math.max(clockMinimum,weather.button.height),'clock must match weather height or fit its localized content');
             continue;
         }
         const [,y]=card.button.get_transformed_position();
@@ -86,18 +87,22 @@ export async function run(){
     const ext=Main.extensionManager.lookup((GLib.getenv('LIQUID_TEST_UUID')||'liquid-widgets@local')).stateObj;
     ext.clock.destroy();ext.clock=null;ext.client.destroy();ext.client=null;
     const host=ext.host,settings=ext.settings;
+    const screenshotLanguage=GLib.getenv('LIQUID_SCREENSHOT_LANGUAGE')==='en'?'en':'ko';
+    settings.set_string('language',screenshotLanguage);
     settings.set_strv('visible',['clock','calendar','weather','agenda','network','system','media']);
     const now=Date.parse('2026-11-04T04:30:00Z'),updatedAt=new Date(now).toISOString();
     const state=data=>({status:'ok',sourceId:'compact-fixture',updatedAt,errorCode:null,data});
     host.tick(now,'Asia/Seoul',false,'ko-KR',1);host.setConnected(true);
-    const calendar=state({month:'2026-11',timeZone:'Asia/Seoul',weekStart:1,events:[1,2,3].map(i=>({uid:`item-${i}`,occurrenceKey:`item-${i}`,title:`테스트 일정 ${i}`,start:new Date(now+i*3600000).toISOString(),end:new Date(now+(i+1)*3600000).toISOString(),allDay:false}))});
-    const weather=state({location:'서울특별시 · 대한민국',timeZone:'Asia/Seoul',current:{temperatureC:16,code:2},hourly:Array.from({length:6},(_,i)=>({at:new Date(now+(i+1)*3600000).toISOString(),temperatureC:16-i,precipitationProbability:10*i})),attributionUrl:'https://open-meteo.com/'});
+    const eventTitles=['Project planning','Design review','Evening walk'];
+    const calendar=state({month:'2026-11',timeZone:'Asia/Seoul',weekStart:1,events:[1,2,3].map(i=>({uid:`item-${i}`,occurrenceKey:`item-${i}`,title:screenshotLanguage==='en'?eventTitles[i-1]:`테스트 일정 ${i}`,start:new Date(now+i*3600000).toISOString(),end:new Date(now+(i+1)*3600000).toISOString(),allDay:false}))});
+    const weather=state({location:screenshotLanguage==='en'?'Seoul · South Korea':'서울특별시 · 대한민국',timeZone:'Asia/Seoul',current:{temperatureC:16,code:2},hourly:Array.from({length:6},(_,i)=>({at:new Date(now+(i+1)*3600000).toISOString(),temperatureC:16-i,precipitationProbability:10*i})),attributionUrl:'https://open-meteo.com/'});
     host.updateProvider('calendar',calendar);host.updateProvider('weather',weather);
     host.updateProvider('network',state({interface:'test0',rxBytesPerSec:1024,txBytesPerSec:512,history:[{at:new Date(now-1000).toISOString(),rx:100,tx:50},{at:updatedAt,rx:1024,tx:512}]}));
     host.updateProvider('system',state({cpuPercent:12,memoryUsedBytes:4*2**30,memoryTotalBytes:32*2**30,temperatureC:43}));
-    host.updateProvider('media',state({player:'org.mpris.MediaPlayer2.fixture',status:'playing',title:'테스트 음악',artist:'Test artist',artUri:null}));
+    host.updateProvider('media',state({player:'org.mpris.MediaPlayer2.fixture',status:'playing',title:screenshotLanguage==='en'?'Evening Waves':'테스트 음악',artist:'Test artist',artUri:null}));
     ext.layout();await Scripting.sleep(300);
     check(host.connected&&host.cards.get('weather').status.get_text()==='','fixture must stay connected without a live data client');
+    if(screenshotLanguage==='en')check(!leaves(host.actor).some(actor=>actor instanceof St.Label&&/[가-힣]/u.test(actor.get_text())),'English screenshot contains Korean widget or sample text');
     await capture('compact-ready');compact(host,1);
     await todayPixels(host,'calendar-pixels-dark',1);
     const sizes=Object.fromEntries([...host.cards].map(([id,card])=>[id,{height:card.button.height,titleFont:card.title.get_theme_node().get_font().to_string()}]));
