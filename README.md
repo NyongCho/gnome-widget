@@ -16,7 +16,7 @@ UI·GLSL·카드 기능은 공유한다. 공개용 실행에는 Rust, Node.js, n
 
 ## 공개용 설치
 
-아직 extensions.gnome.org에 게시하지 않았다. 프로젝트 라이선스 선택과 최종 배포 검증이 남아 있으며, 개발 검증 ZIP을 제출용으로 사용하지 않는다.
+프로젝트 라이선스는 GPL-3.0-or-later다. 아직 extensions.gnome.org에 게시하지 않았으며, 배포 전에 ZIP과 일치하는 소스 커밋을 공개해야 한다. 개발 검증 ZIP을 제출용으로 사용하지 않는다.
 
 라이선스가 포함된 공개용 ZIP을 받은 경우:
 
@@ -45,7 +45,7 @@ gnome-extensions prefs liquid-widgets@nyongcho.github.io
 python3 scripts/package.py --edition gjs
 ```
 
-소유자가 라이선스를 선택하기 전에는 마지막 명령이 중단된다. 로컬 검증 전용으로는 `--development`를 추가하며 출력은 `dist/liquid-widgets-public-development/`다. 제출용 기본 출력은 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`이다.
+마지막 명령은 프로젝트 `LICENSE`와 외부 코드 고지가 포함된 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`을 만든다. 로컬 검증 전용으로는 `--development`를 추가하며 출력은 `dist/liquid-widgets-public-development/`다.
 
 개인용은 `python3 scripts/package.py --edition rust`로 기존 `dist/liquid-widgets/` 배포본을 만든다. 이 경로에는 Rust·libical 개발 환경이 필요하다. `package.py`의 기본 선택은 기존 호환성을 위해 Rust이며, `check.sh`의 기본 선택은 두 에디션을 검사하는 `all`이다.
 
@@ -58,3 +58,7 @@ python3 scripts/package.py --edition gjs
 - [외부 코드·데이터 고지](THIRD_PARTY_NOTICES.md)
 
 실제 GPU 검사는 격리된 GNOME 세션과 합성 데이터를 사용한다. 개인 Google 계정, 실제 날씨 요청, 물리 로그인·잠금 전환은 별도 확인 항목이다. 현재 개인용 설치를 자동으로 교체하지 않는다.
+
+## 라이선스
+
+별도 고지가 없는 프로젝트 코드는 **GPL-3.0-or-later**로 배포한다. GNU General Public License 버전 3 또는 사용자가 선택한 이후 버전의 조건에 따라 사용·수정·재배포할 수 있다. 전체 적용 문구와 라이선스 원문은 [LICENSE](LICENSE)에 있다. 포함된 외부 코드·데이터는 [각자의 라이선스와 고지](THIRD_PARTY_NOTICES.md)를 유지한다.

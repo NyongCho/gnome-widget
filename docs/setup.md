@@ -4,7 +4,7 @@ GNOME Shell 50 / Wayland용이다. 검증 호스트는 Ubuntu 26.04.1, Shell 50.
 
 ## 공개용 ZIP 설치
 
-공개용 UUID는 `liquid-widgets@nyongcho.github.io`다. Rust 실행 파일·libical·Node.js·npm·systemd 서비스를 설치하지 않는다. 소스에서 빌드할 때만 Node/npm을 사용한다. 현재 공개 게시와 프로젝트 라이선스 선택은 아직 완료되지 않았다.
+공개용 UUID는 `liquid-widgets@nyongcho.github.io`다. Rust 실행 파일·libical·Node.js·npm·systemd 서비스를 설치하지 않는다. 소스에서 빌드할 때만 Node/npm을 사용한다. 프로젝트 라이선스는 [GPL-3.0-or-later](../LICENSE)로 확정했으며 공개 게시 전이다.
 
 라이선스를 포함한 공개용 ZIP이 있을 때:
 

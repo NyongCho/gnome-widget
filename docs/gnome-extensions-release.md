@@ -1,6 +1,6 @@
 # GNOME Extensions release preparation
 
-Status: **not submitted and not release-ready**. The owner has not selected the project license. The five-pair performance gate, full checks and clean packaged-install check passed. A passing local test is not GNOME Extensions approval.
+Status: **GPL-3.0-or-later selected; not submitted**. The license requirement is resolved. Publish the exact matching source commit before distributing or submitting the public ZIP. The five-pair performance gate, full checks and clean development-package install check passed. A passing local test is not GNOME Extensions approval.
 
 The target is GNOME Shell **50**. The public UUID is `liquid-widgets@nyongcho.github.io`; the personal `liquid-widgets@local` installation and its service remain separate.
 
@@ -12,12 +12,11 @@ python3 -m unittest discover -s tests -p 'test_*package.py'
 python3 scripts/package.py --edition gjs
 ```
 
-For local artifact verification without a license selection:
+For a disposable GNOME install check of the public artifact:
 
 ```sh
-python3 scripts/package.py --edition gjs --development
-LIQUID_GNOME_WORK=outputs/verification/public-package-final ./scripts/test-gnome.py --edition gjs \
-  --package-zip dist/liquid-widgets-public-development/liquid-widgets.shell-extension.zip
+LIQUID_GNOME_WORK=outputs/verification/public-package-licensed ./scripts/test-gnome.py --edition gjs \
+  --package-zip dist/liquid-widgets-public/liquid-widgets.shell-extension.zip
 ```
 
 The normal output is `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. Packaging stops before building when `LICENSE` is absent. An explicit `--development` writes to `dist/liquid-widgets-public-development/` for local validation only; it does not grant a license or produce a submission candidate.
@@ -55,13 +54,14 @@ Calendar disconnect disables the source first, removes its local caches and all 
 
 ## License and source publication
 
-The project owner must select GPL-compatible terms and add the complete project `LICENSE`. MPL-2.0 ical.js modifications, original notices, patch and pinned file hashes are in `extension/vendor/ical/`. IANA input/generator/output provenance is in `extension/vendor/timezones/`. The ZIP carries the complete MPL/IANA/Ajv notices. See [third-party notices](../THIRD_PARTY_NOTICES.md).
+The owner selected **GPL-3.0-or-later** on 2026-11-07. The project `LICENSE` contains the explicit version-3-or-later grant and the complete, unmodified GPL version 3 text. Package metadata uses the same SPDX identifier. MPL-2.0 ical.js modifications, original notices, patch and pinned file hashes are in `extension/vendor/ical/`. IANA input/generator/output provenance is in `extension/vendor/timezones/`. The ZIP carries the project license and complete MPL/IANA/Ajv notices. See [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 Before a public submission, publish the exact matching source commit and retain the modified covered source under its license. This work does not push a branch, tag a release or upload to extensions.gnome.org.
 
 ## Remaining release evidence
 
-- Owner-selected project license: pending.
+- Owner-selected project license: GPL-3.0-or-later, applied to `LICENSE`, package metadata and project documentation.
+- Licensed public ZIP: built with `development: false`; all 12 packaging tests and the public artifact policy passed. The GPL text, explicit or-later grant and bundled third-party notices match their source files byte for byte. Compared with the previously tested development ZIP, only `LICENSE` was added and `THIRD_PARTY_NOTICES.md` changed; every runtime entry is identical, so native suites were not repeated for this license-only update. [Artifact hash and checks](../outputs/verification/public-license/artifact-check.json).
 - Final five-pair performance gate: PASS; 0/5 p95 regressions and 1/5 additional-stall pairs in each phase. All raw results are retained.
 - Complete `check.sh --edition all`: PASS, including Rust fmt/clippy/test, 143 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. Real external-account Rust tests remain intentionally ignored.
 - Exact development ZIP install/enable/collect/open production preferences/disable/uninstall in disposable GNOME 50: PASS, with no Rust service. Artifact SHA-256, logs and screenshots: [`outputs/verification/public-package-final`](../outputs/verification/public-package-final/).

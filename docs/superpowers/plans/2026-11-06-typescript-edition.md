@@ -300,12 +300,12 @@ function createPreferencesDataSession(extensionPath: string): PreferencesDataSes
 
 - [x] artifact allowlist 검사에 metadata.json·extension/prefs/calendar-worker JS·timezone·schema/CSS/GLSL·고지만 허용한다. Rust ELF/.so/systemd/installer/Node import/테스트 fixture/개인 설정과 worker 코드의 Shell 번들 혼입을 거부하는 테스트를 먼저 작성해 FAIL 확인한다. worker 첫 줄 `#!@GJS@ -m`, `<schema-id>.gschema.xml` 동봉, Shell의 Gtk/Gdk/Adw 및 prefs의 St/Clutter/Meta/Shell import 금지를 검사한다.
 - [x] 두 빌드의 metadata·UUID/schema/path·URL(`https://github.com/NyongCho/gnome-widget`)·출력 디렉터리를 일치시킨다. 공개용 README 설치를 기본으로, Rust 개인용 설치·복귀는 별도 안내한다. 다운로드/설치 시 npm이나 shell 설치 스크립트를 실행하지 않는다.
-- [ ] 프로젝트 GPL 호환 라이선스 선택, ical.js MPL-2.0 수정 소스/고지와 timezone provenance를 정리한다. 아직 라이선스가 없으면 출시 준비 완료로 표시하지 않는다.
+- [x] 프로젝트 GPL 호환 라이선스 선택, ical.js MPL-2.0 수정 소스/고지와 timezone provenance를 정리한다. 소유자가 2026-11-07 GPL-3.0-or-later를 선택해 `LICENSE`와 패키지 메타데이터에 반영했다.
 - [x] 심사 설명에 일회성 worker의 범위·약 0.7초 stall 실측·종료 검증·전송/저장/삭제·지원 범위를 기록한다. 공유 UI의 run_dispose 필요성을 확인하고 필수 호출은 이유를 주석으로 남긴다. 유지보수자의 코드 이해/관리와 읽기 좋은 출력 여부를 확인한다. GI 누락은 해당 기능 안내로 처리하고 자동 설치하지 않는다.
 - [x] `./scripts/check.sh --edition all`, `python3 -m unittest discover -s tests -p 'test_*package.py'`, GNOME 50 깨끗한 사용자 환경의 ZIP 설치/활성화/제거 PASS. 외부 공개 API·실제 계정 확인은 자동 fixture 결과와 구분한다.
 - [x] 커밋: `build: package the public edition with calendar workers`. 최종 변경을 검토하고 결과를 보고한다. EGO 업로드·개인용 설치 교체는 별도 요청 시 수행한다.
 
-라이선스 항목은 소유자 선택을 기다린다. 설계에 따라 구현/검증은 개발용 ZIP으로 완료하며 공개 배포 준비 완료로 표시하지 않는다.
+구현/검증 당시에는 설계에 따라 개발용 ZIP을 사용했다. 이후 소유자의 GPL-3.0-or-later 선택을 반영해 일반 공개용 패키징을 허용했다. 실제 배포 전에는 ZIP과 일치하는 소스 커밋을 공개해야 하며 EGO 제출·승인은 별도다.
 
 ## 실행 순서와 계획 점검
 

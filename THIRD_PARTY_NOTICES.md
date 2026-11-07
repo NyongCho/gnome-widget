@@ -1,6 +1,6 @@
 # Third-party notices
 
-The project license is awaiting the repository owner's selection. This file does not grant a project-wide license. Public submission packaging requires a separate `LICENSE`.
+Original project code is licensed under GPL-3.0-or-later; see the complete grant and license in `LICENSE`. The third-party materials below retain their own licenses and notices. The public ZIP includes `LICENSE` and the bundled dependencies' notices.
 
 ## ical.js 2.2.1
 

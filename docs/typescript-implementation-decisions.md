@@ -141,4 +141,8 @@ The final `check.sh --edition all` passed: Rust fmt/clippy/test and actual IPC, 
 
 ## Deferred minors
 
-The implementation-plan checkboxes for Tasks 8–11 lag the completed commits and evidence. This documentation reconciliation is deferred; the deliberately pending owner-license item must remain pending. No implementation feature is deferred by this finding.
+The implementation-plan checkboxes for Tasks 8–11 lag the completed commits and evidence. This documentation reconciliation is deferred. At the final implementation review, the owner-license item was deliberately pending; the later owner decision below resolves it. No implementation feature is deferred by this finding.
+
+## License decision after implementation — 2026-11-07
+
+The owner explicitly selected GPL-3.0-or-later. The repository now includes the version-3-or-later grant and complete GPLv3 text in `LICENSE`; npm and Cargo package metadata carry the same SPDX identifier. Third-party source, patches and notices retain their original licenses. This resolves the license-selection gate recorded in ruling 37 without changing the historical development-ZIP evidence. Normal public packaging includes the project license. Publishing the matching source commit and submitting to GNOME Extensions remain separate actions.

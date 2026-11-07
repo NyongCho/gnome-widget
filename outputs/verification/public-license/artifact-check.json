@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-07",
+  "license": "GPL-3.0-or-later",
+  "archive": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "35a3c8599ef0b318f4525b27b91ba8dc3462d19b92e78e7dabc9806bdc1f7f45",
+  "bytes": 504900,
+  "buildStatus": {
+    "edition": "gjs",
+    "development": false,
+    "licensePresent": true,
+    "submissionApproved": false
+  },
+  "checks": {
+    "packageTests": "12 passed",
+    "publicArtifactPolicy": "passed",
+    "fullUnmodifiedGpl3TextAndOrLaterGrant": "passed",
+    "projectAndThirdPartyLicenseBytes": "passed",
+    "npmLockAndCargoLicenseMetadata": "passed",
+    "runtimeIdenticalToPreviouslyTestedDevelopmentZip": true
+  },
+  "developmentArchiveSha256": "e4a3a4e087dbce49eb6b89954c38d691888a7e6474490e2353ae367cce0c3431",
+  "addedEntries": [
+    "LICENSE"
+  ],
+  "changedEntries": [
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "removedEntries": [],
+  "nativeSuites": "Not rerun: runtime entries are byte-identical to the previously tested development ZIP."
+}
