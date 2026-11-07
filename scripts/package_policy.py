@@ -8,7 +8,7 @@ from pathlib import Path,PurePosixPath
 SCHEMA='org.gnome.shell.extensions.liquid-widgets-public'
 SCHEMA_FILE=f'schemas/{SCHEMA}.gschema.xml'
 REQUIRED={'extension.js','prefs.js','calendar-worker.js','metadata.json','stylesheet.css',
-          SCHEMA_FILE,'schemas/gschemas.compiled','THIRD_PARTY_NOTICES.md',
+          SCHEMA_FILE,'THIRD_PARTY_NOTICES.md',
           'licenses/ical-MPL-2.0.txt','licenses/timezones.txt','licenses/ajv-MIT.txt',
           'licenses/ajv-formats-MIT.txt'}
 CHUNK=re.compile(r'(?:engine|chunk)-[A-Z0-9]{8}\.js')
@@ -48,6 +48,8 @@ def validate_process_imports(files,dependencies=None):
 def public_runtime_files(directory):
     """Reject surplus build output; test builds cannot become release ZIPs."""
     files={str(path.relative_to(directory)):path.read_bytes() for path in directory.rglob('*') if path.is_file()}
+    # Local builds need this cache; GNOME's installer compiles the shipped XML.
+    files.pop('schemas/gschemas.compiled',None)
     for name in files:
         if name not in REQUIRED|{'LICENSE'} and not CHUNK.fullmatch(name):
             raise ValueError(f'Unexpected public build output: {name}')
@@ -61,7 +63,7 @@ def validate_public(files,release=True):
         if name not in REQUIRED|{'LICENSE'} and not CHUNK.fullmatch(name) and not re.fullmatch(r'shaders/[a-z][a-z0-9-]*\.glsl',name):
             raise ValueError(f'Unexpected public file: {name}')
         if data.startswith((b'\x7fELF',b'MZ',b'\x00asm')):raise ValueError(f'Executable content: {name}')
-        if name!='schemas/gschemas.compiled':data.decode('utf-8')
+        data.decode('utf-8')
     meta=json.loads(files['metadata.json'])
     for key,value in {'uuid':'liquid-widgets@nyongcho.github.io','settings-schema':SCHEMA,
                       'shell-version':['50'],'url':'https://github.com/NyongCho/gnome-widget'}.items():

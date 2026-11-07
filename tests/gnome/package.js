@@ -32,13 +32,29 @@ export async function run(){
     await Scripting.sleep(300); // Let GTK's initial frame and Shell's map animation paint.
     await capture('public-package-installed');
     prefs.meta_window.delete(global.get_current_time());await until(()=>ext.client.watchers===0,'packaged preferences left demand');
+    // Retain the wrappers deliberately: cleanup must not depend on JS garbage collection.
+    ext.settings.set_string('clock-style','classic');ext.settings.set_boolean('low-power',false);
+    const host=ext.host,cards=[...host.cards.values()],clock=host.clockFaces.get(host.cards.get('clock'));
+    await until(()=>clock?.timer>0,'analog clock timer did not start');
+    const clockTimer=clock.timer;
+    const actors=[host.actor,host.settingsButton,clock.actor,clock.area,
+        ...cards.flatMap(card=>[card.surface.actor,card.button,card.status,card.mode])];
+    const destroyed=new Set();for(const actor of actors)actor.connect('destroy',()=>destroyed.add(actor));
+    const surfaces=cards.map(card=>card.surface);
     const session=ext.client;Main.extensionManager.disableExtension(uuid);
+    check(destroyed.size===actors.length,'owned widget actors survived disable');
+    check(host.cards.size===0&&ext.host===null,'extension retained its widget host or cards');
+    check(clock.timer===0&&!GLib.MainContext.default().find_source_by_id(clockTimer),'analog clock timer survived disable');
+    for(const surface of surfaces){
+        surface.effect.emit('failed');
+        check(surface.fallbackIdle===0,'disposed glass surface retained its failure callback');
+    }
     await until(()=>extension.state===2,'packaged extension did not disable');await session.drained;
     check(session.dead&&session.unwatch===null,'packaged session retained resources');
     check(!await owned('io.github.NyongCho.LiquidWidgets.Status'),'packaged status bridge survived disable');
     check(!await owned('io.github.NyongCho.LiquidWidgets.CalendarJob'),'packaged worker survived disable');
     await command(['gnome-extensions','uninstall',uuid]);
     check(!installed.query_exists(null),'uninstall retained extension files');
-    GLib.file_set_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/package.json`,JSON.stringify({uuid,enabled:true,localCollectors:true,preferences:true,disabled:true,uninstalled:true,rustService:false}));
+    GLib.file_set_contents(`${GLib.getenv('LIQUID_TEST_OUTPUT')}/package.json`,JSON.stringify({uuid,enabled:true,localCollectors:true,preferences:true,disabled:true,widgetActorsDestroyed:destroyed.size,clockTimerStopped:true,glassCallbacksDisconnected:true,uninstalled:true,rustService:false}));
     print('PACKAGE_TEST: final public ZIP installed, enabled, collected, opened preferences, disabled and uninstalled without Rust');
 }

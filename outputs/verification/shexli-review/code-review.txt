@@ -1,0 +1,6 @@
+Focused independent read-only review: PASS. Critical 0, Important 0, Minor 0.
+Scope: GlassSurface effect cleanup, public package policy, package regressions, native package lifecycle test.
+Verified public-only cache exclusion, retained XML/local cache, effect disconnect order, actor ownership path, actual subprocess dependency closure.
+Inspected provided native red/green receipts and current ZIP; did not rerun the coordinator's tests.
+Remaining reported warnings are supported as analyzer limitations by the current code and GNOME 50 actor/GObject disposal semantics.
+Limits: no claim of total leak absence, repeated-cycle coverage by the new regression, every failure timing, or GNOME reviewer approval.

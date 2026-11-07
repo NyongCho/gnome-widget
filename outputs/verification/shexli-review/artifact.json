@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-08",
+  "baseCommit": "be910dbe7494c2cb11f6bd2323838fa3c7a56cc0",
+  "status": "unreleased follow-up to v0.1.1",
+  "edition": "gjs",
+  "archive": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "4e5cb0d307368a24f47f78961cf30b8f940dbb19d33b559983a8c31fabeef1dd",
+  "bytes": 361246,
+  "entryCount": 16,
+  "uncompressedBytes": 2786936,
+  "baselineSha256": "36fe2c1dd5e2f3c720fb4f1b7bd897b69bd75875854b35b4fba59b3a1cc74d95",
+  "changedEntries": [
+    "extension.js"
+  ],
+  "removedEntries": [
+    "schemas/gschemas.compiled"
+  ],
+  "addedEntries": [],
+  "sourceHashes": {
+    "extension/src/effects/background.ts": "6cf262581b9912660a7778f6e627ca5fbf8edae81a9e8481fa4327093ab83c71",
+    "scripts/package_policy.py": "d657a9d8c89f79828cdc8d4865cc57a3c4121b6807347e3620b8807faefaa9ef",
+    "tests/test_public_package.py": "60643aea6002712795c761cd941e72232806f069fa95563ddd04d8474166aeab",
+    "tests/gnome/package.js": "b1c50c7718cab2630d2c10921027cd53140d4a41953243a9bf0e332826290590"
+  },
+  "shexli": {
+    "version": "0.2.1",
+    "treeSitterVersion": "0.25.2",
+    "treeSitterJavascriptVersion": "0.25.0",
+    "beforeWarnings": 5,
+    "afterWarnings": 4,
+    "remainingRules": [
+      "EGO-P-007",
+      "EGO-L-002",
+      "EGO-L-005",
+      "EGO-L-003"
+    ]
+  },
+  "checks": {
+    "allEditions": "PASS",
+    "nodeTestsPassed": 143,
+    "calendarCasesPerEngine": 59,
+    "nativePublicSuitesPassed": 9,
+    "pythonTestsPassed": 27,
+    "publicPackageTestsPassed": 13,
+    "nativePackage": "PASS"
+  },
+  "nativeInstall": {
+    "uuid": "liquid-widgets@nyongcho.github.io",
+    "enabled": true,
+    "localCollectors": true,
+    "preferences": true,
+    "disabled": true,
+    "widgetActorsDestroyed": 28,
+    "clockTimerStopped": true,
+    "glassCallbacksDisconnected": true,
+    "uninstalled": true,
+    "rustService": false
+  },
+  "replacementUploaded": false,
+  "publishedReleaseAssetsModified": false,
+  "independentReview": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "scope": [
+      "extension/src/effects/background.ts",
+      "scripts/package_policy.py",
+      "tests/test_public_package.py",
+      "tests/gnome/package.js"
+    ],
+    "nativeReceiptsInspected": true,
+    "testsRerunByReviewer": false
+  }
+}

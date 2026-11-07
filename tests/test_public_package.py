@@ -30,7 +30,6 @@ def artifact():
         'stylesheet.css': b'.card { color: white; }\n',
         'schemas/org.gnome.shell.extensions.liquid-widgets-public.gschema.xml':
             b'<schemalist><schema id="org.gnome.shell.extensions.liquid-widgets-public" path="/org/gnome/shell/extensions/liquid-widgets-public/"/></schemalist>',
-        'schemas/gschemas.compiled': b'GVariant',
         'LICENSE': b'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n',
         'THIRD_PARTY_NOTICES.md': b'Third-party source and notices\n',
         'licenses/ical-MPL-2.0.txt': b'Mozilla Public License Version 2.0\n',
@@ -52,6 +51,10 @@ export default helper;
 
     def test_readable_worker_closure_is_accepted(self):
         validate_public(artifact())
+
+    def test_compiled_schema_is_not_shipped(self):
+        with self.assertRaisesRegex(ValueError,'Unexpected public file: schemas/gschemas.compiled'):
+            validate_public(artifact()|{'schemas/gschemas.compiled':b'GVariant'})
 
     def test_unknown_files_cannot_leak_into_public_zip(self):
         for name,body in [('liquid-widgets-daemon',b'\x7fELF'),('native.so',b'library'),
@@ -116,7 +119,7 @@ class PublicPackagingCommand(unittest.TestCase):
         patch.object(self.package,'ROOT',self.root).start()
         patch.object(self.package,'run',side_effect=lambda args:self.commands.append(args)).start()
         repo=Path(__file__).resolve().parents[1]
-        files=artifact()
+        files=artifact()|{'schemas/gschemas.compiled':b'GVariant'}
         for name,data in files.items():
             if name.startswith('licenses/') or name in {'LICENSE','THIRD_PARTY_NOTICES.md'}:continue
             path=self.root/'extension/dist-gjs'/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
@@ -135,6 +138,9 @@ class PublicPackagingCommand(unittest.TestCase):
         archive=self.root/'dist/liquid-widgets-public/liquid-widgets.shell-extension.zip'
         with zipfile.ZipFile(archive) as bundle:
             validate_public({name:bundle.read(name) for name in bundle.namelist()})
+            self.assertNotIn('schemas/gschemas.compiled',bundle.namelist())
+            self.assertIn('schemas/org.gnome.shell.extensions.liquid-widgets-public.gschema.xml',bundle.namelist())
+        self.assertTrue((self.root/'extension/dist-gjs/schemas/gschemas.compiled').is_file())
         self.assertFalse((archive.parent/'install.py').exists())
         self.assertFalse((archive.parent/'liquid-widgets-daemon').exists())
 

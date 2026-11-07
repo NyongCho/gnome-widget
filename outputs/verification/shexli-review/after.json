@@ -1,0 +1,130 @@
+{
+  "spec_version": "2026-04-02",
+  "summary": {
+    "input_path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+    "finding_count": 4,
+    "severity_counts": {
+      "warning": 4
+    },
+    "status": "issues_found"
+  },
+  "findings": [
+    {
+      "rule_id": "EGO-P-007",
+      "title": "JavaScript files should be reachable from extension.js or prefs.js",
+      "severity": "warning",
+      "message": "Some JavaScript files are not reachable from `extension.js` or `prefs.js` imports.",
+      "evidence": [
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:calendar-worker.js",
+          "line": null,
+          "snippet": ""
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:chunk-76ERF2C3.js",
+          "line": null,
+          "snippet": ""
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:engine-ESU5YLKC.js",
+          "line": null,
+          "snippet": ""
+        }
+      ],
+      "source_url": "https://gjs.guide/extensions/review-guidelines/review-guidelines.html#don-t-include-unnecessary-files",
+      "source_section": "Don't include unnecessary files"
+    },
+    {
+      "rule_id": "EGO-L-002",
+      "title": "objects created by extension should be destroyed in disable()",
+      "severity": "warning",
+      "message": "Objects assigned in `enable()` are missing matching `.destroy()` calls in `disable()` or its helper methods.",
+      "evidence": [
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12184,
+          "snippet": "this.button = new St.Button({ child: this.content, reactive: true, can_focus: true, track_hover: true, style_class: \"liquid-card\", accessible_name: title })"
+        }
+      ],
+      "source_url": "https://gjs.guide/extensions/review-guidelines/review-guidelines.html#destroy-all-objects",
+      "source_section": "Destroy all objects"
+    },
+    {
+      "rule_id": "EGO-L-005",
+      "title": "owned object references should be released in disable()",
+      "severity": "warning",
+      "message": "Owned references that are cleaned up in `disable()` should also be released with `null` or `undefined`.",
+      "evidence": [
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12184,
+          "snippet": "this.button = new St.Button({ child: this.content, reactive: true, can_focus: true, track_hover: true, style_class: \"liquid-card\", accessible_name: title })"
+        }
+      ],
+      "source_url": "https://gjs.guide/extensions/review-guidelines/review-guidelines.html#destroy-all-objects",
+      "source_section": "Destroy all objects"
+    },
+    {
+      "rule_id": "EGO-L-003",
+      "title": "signals connected by extension should be disconnected in disable()",
+      "severity": "warning",
+      "message": "Signals assigned in `enable()` are missing matching disconnect calls in `disable()` or its helper methods.",
+      "evidence": [
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12185,
+          "snippet": "this.button.connect(\"clicked\", action)"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12178,
+          "snippet": "    this.status.connect(\"notify::text\", () => {\n      this.status.visible = Boolean(this.status.get_text());\n    })"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12320,
+          "snippet": "this.actor.connect(\"destroy\", () => this.stop())"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12319,
+          "snippet": "this.actor.connect(\"notify::mapped\", () => this.schedule())"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12318,
+          "snippet": "this.area.connect(\"repaint\", () => this.paint())"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12308,
+          "snippet": "    card.mode.connect(\"notify::visible\", () => {\n      this.date.visible = !card.mode.visible;\n    })"
+        },
+        {
+          "path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:extension.js",
+          "line": 12867,
+          "snippet": "this.settingsButton.connect(\"clicked\", preferences)"
+        }
+      ],
+      "source_url": "https://gjs.guide/extensions/review-guidelines/review-guidelines.html#disconnect-all-signals",
+      "source_section": "Disconnect all signals"
+    }
+  ],
+  "artifacts": {
+    "root": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+    "metadata_path": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip:metadata.json",
+    "js_file_count": 2,
+    "file_count": 16,
+    "limits": {
+      "max_files": 5000,
+      "max_file_size_bytes": 10485760,
+      "max_total_file_bytes": 52428800,
+      "max_zip_members": 5000,
+      "max_zip_uncompressed_bytes": 52428800,
+      "max_zip_compression_ratio": 1000
+    },
+    "target_versions": [
+      50
+    ]
+  }
+}

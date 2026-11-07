@@ -1,6 +1,6 @@
 # GNOME Extensions release preparation
 
-Distribution: **[GitHub release v0.1.1](https://github.com/NyongCho/gnome-widget/releases/tag/v0.1.1)**, under GPL-3.0-or-later. GNOME Extensions status: **not submitted**. The GitHub release pairs the public ZIP and SHA-256 checksum with the matching source tag. A GitHub release or a passing local test is not GNOME Extensions approval.
+Distribution: **[GitHub release v0.1.1](https://github.com/NyongCho/gnome-widget/releases/tag/v0.1.1)**, under GPL-3.0-or-later. GNOME Extensions status: **version 1 submitted by the owner; Unreviewed**, according to the owner's 2026-11-08 screenshots. The GitHub release pairs the public ZIP and SHA-256 checksum with the matching source tag. A GitHub release or a passing local test is not GNOME Extensions approval. Post-submission fixes and the remaining analyzer warnings are documented in [the Shexli review](shexli-review.md); they are not part of the published v0.1.1 ZIP.
 
 The target is GNOME Shell **50**. The public UUID is `liquid-widgets@nyongcho.github.io`; the personal `liquid-widgets@local` installation and its service remain separate.
 
@@ -21,7 +21,7 @@ LIQUID_GNOME_WORK=outputs/verification/public-package-licensed ./scripts/test-gn
 
 The normal output is `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. Packaging stops before building when `LICENSE` is absent. An explicit `--development` writes to `dist/liquid-widgets-public-development/` for local validation only; it does not grant a license or produce a submission candidate.
 
-The ZIP policy permits readable extension/prefs/worker JavaScript, reachable generated worker chunks (including fixed timezone data), metadata, CSS, schema XML/compiled schema, GLSL and notices. It rejects surplus test output, private settings/calendar input, executable binaries, native libraries, installers, service units and Node runtime imports. It follows local JS imports to keep the calendar engine out of Shell/preferences and checks the Shell/GTK library boundary. The worker begins with `#!@GJS@ -m` and is launched explicitly with `gjs -m`.
+The ZIP policy permits readable extension/prefs/worker JavaScript, reachable generated worker chunks (including fixed timezone data), metadata, CSS, schema XML, GLSL and notices. The compiled schema is retained for local development but excluded from the public ZIP: GNOME's installer compiles the XML. It rejects surplus test output, private settings/calendar input, executable binaries, native libraries, installers, service units and Node runtime imports. It follows local JS imports to keep the calendar engine out of Shell/preferences and checks the Shell/GTK library boundary. The worker begins with `#!@GJS@ -m` and is launched explicitly with `gjs -m`.
 
 `package.py --edition gjs` and `check.sh --edition gjs` do not invoke Cargo. Node/npm compile the source in the development environment; users install the ZIP through GNOME Extensions. No dependency installer runs during extension enable or preferences use.
 
@@ -56,7 +56,7 @@ Calendar disconnect disables the source first, removes its local caches and all 
 
 The owner selected **GPL-3.0-or-later** on 2026-11-07. The project `LICENSE` contains the explicit version-3-or-later grant and the complete, unmodified GPL version 3 text. Package metadata uses the same SPDX identifier. MPL-2.0 ical.js modifications, original notices, patch and pinned file hashes are in `extension/vendor/ical/`. IANA input/generator/output provenance is in `extension/vendor/timezones/`. The ZIP carries the project license and complete MPL/IANA/Ajv notices. See [third-party notices](../THIRD_PARTY_NOTICES.md).
 
-The matching source for the current public ZIP is published under [tag v0.1.1](https://github.com/NyongCho/gnome-widget/tree/v0.1.1), including the modified MPL-covered files and their original notices. The first release remains available under [v0.1.0](https://github.com/NyongCho/gnome-widget/tree/v0.1.0). Future releases must publish their matching source before distributing the ZIP. Uploading to extensions.gnome.org remains a separate step.
+The matching source for the published v0.1.1 ZIP is under [tag v0.1.1](https://github.com/NyongCho/gnome-widget/tree/v0.1.1), including the modified MPL-covered files and their original notices. The first release remains available under [v0.1.0](https://github.com/NyongCho/gnome-widget/tree/v0.1.0). Future releases must publish their matching source before distributing the ZIP. Uploading to extensions.gnome.org remains a separate step.
 
 ## Remaining release evidence
 

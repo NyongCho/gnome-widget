@@ -6,12 +6,13 @@ export class GlassSurface {
     readonly actor = new Clutter.Actor();
     private source = new Clutter.Actor({clip_to_allocation:true});
     private effect = new GlassEffect();
+    private failedSignal:number;
     private wallpaper: WallpaperClone;
     private fallbackIdle=0;
     constructor(monitorIndex:number,onFallback:()=>void=()=>{}) {
         this.actor.add_child(this.source);
         this.source.add_effect(this.effect);
-        this.effect.connect('failed',()=>{
+        this.failedSignal=this.effect.connect('failed',()=>{
             this.fallbackIdle=GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE,()=>{
                 this.fallbackIdle=0;this.source.hide();onFallback();return GLib.SOURCE_REMOVE;
             });
@@ -33,5 +34,10 @@ export class GlassSurface {
     setStrength(value:number):void { this.effect.setStrength(value); }
     setMaterial(opacity:number,dark:boolean):void { this.effect.setMaterial(opacity,dark); }
     get diagnostics():object { return {inputPaints:this.effect.inputPaints,blurPaints:this.effect.blurPaints,outputPaints:this.effect.outputPaints,textureBytes:this.effect.textureBytes}; }
-    destroy():void { if(this.fallbackIdle)GLib.Source.remove(this.fallbackIdle);this.fallbackIdle=0;this.wallpaper.destroy(); this.source.remove_effect(this.effect); this.effect.release(); this.actor.destroy(); }
+    destroy():void {
+        this.effect.disconnect(this.failedSignal);
+        if(this.fallbackIdle)GLib.Source.remove(this.fallbackIdle);
+        this.fallbackIdle=0;
+        this.wallpaper.destroy();this.source.remove_effect(this.effect);this.effect.release();this.actor.destroy();
+    }
 }
