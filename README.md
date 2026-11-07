@@ -1,64 +1,175 @@
-# GNOME Liquid Glass Widgets
+# Liquid Widgets
 
-GNOME Shell 50 바탕화면용 유리 위젯이다. 날짜·시계, 월간 달력, 다가오는 일정, 날씨, CPU·RAM·온도, 네트워크, 재생 중 음악을 표시한다. 한국어·영어, 네 가지 시계, 라이트·다크 모드, 좌우 열 배치와 배경화면 굴절을 지원한다.
+[![GNOME Shell 50](https://img.shields.io/badge/GNOME_Shell-50-4a86cf?logo=gnome&logoColor=white)](#compatibility)
+[![Wayland](https://img.shields.io/badge/Session-Wayland-f4c542)](#compatibility)
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue)](LICENSE)
 
-## 두 에디션
+Liquid glass desktop widgets for GNOME Shell. Keep your clock, calendar, weather, system stats, network activity, and music on the desktop, with wallpaper blur and refraction that follow your background.
 
-| | 공개용 TypeScript/GJS | 개인용 Rust |
-| --- | --- | --- |
-| 확장 UUID | `liquid-widgets@nyongcho.github.io` | `liquid-widgets@local` |
-| 데이터 처리 | 확장 내부 비동기 수집 + 요청별 GJS 달력 계산 | Rust 사용자 서비스 |
-| 추가 런타임 | GNOME/GJS 환경과 달력용 Secret Service | Rust 실행 파일, libical, 사용자 서비스 |
-| 설정·캐시 이름 | `liquid-widgets-public` | `liquid-widgets` |
-| 빌드 선택 | `--edition gjs` | `--edition rust` |
+[Features](#features) · [Installation](#installation) · [Configuration](#configuration) · [Development](#development) · [Report an issue](https://github.com/NyongCho/gnome-widget/issues)
 
-UI·GLSL·카드 기능은 공유한다. 공개용 실행에는 Rust, Node.js, npm 또는 별도 systemd 서비스 설치가 필요 없다. 두 에디션의 설정과 비밀 주소는 자동으로 복사하지 않는다. 전환할 때 기존 에디션을 비활성화하면 카드가 겹치지 않는다.
+![Liquid Widgets in dark mode, showing the clock, calendar, weather, system gauges, and network activity](outputs/verification/public-edition/gjs-compact-dark.png)
 
-## 공개용 설치
+*Captured in GNOME Shell with sample data. Widgets and preferences support English and Korean.*
 
-프로젝트 라이선스는 GPL-3.0-or-later다. 아직 extensions.gnome.org에 게시하지 않았으며, 배포 전에 ZIP과 일치하는 소스 커밋을 공개해야 한다. 개발 검증 ZIP을 제출용으로 사용하지 않는다.
+<details>
+<summary>View the light theme</summary>
 
-라이선스가 포함된 공개용 ZIP을 받은 경우:
+![Liquid Widgets in light mode](outputs/verification/public-edition/gjs-compact-light.png)
+
+</details>
+
+## Features
+
+| Widget | What it shows |
+| --- | --- |
+| **Clock** | Time and date with four faces: large digital, square dial, classic analog, and minimal analog. |
+| **Calendar** | A monthly calendar with today's date highlighted. Click to open Google Calendar in your browser. |
+| **Upcoming events** | Read-only events from a Google Calendar iCal feed. |
+| **Weather** | Current conditions and a six-hour temperature and precipitation forecast from Open-Meteo. |
+| **System** | CPU and memory donut gauges, plus CPU temperature when a supported sensor is available. |
+| **Network** | Upload and download rates for the automatic or selected network interface. |
+| **Now playing** | Track information and artwork from MPRIS-compatible players, with the artwork's aspect ratio preserved. |
+
+Make the layout your own:
+
+- Move widgets between independent left and right columns, reorder them, or hide individual cards.
+- Choose a monitor and desktop corner, then adjust the size and margins.
+- Tune glass tint and refraction, or use low-power mode.
+- Follow GNOME's light or dark appearance and respond to wallpaper changes.
+- Switch between English and Korean in preferences.
+
+## Compatibility
+
+- **GNOME Shell 50 on Wayland.** Tested on Ubuntu 26.04.1 with GNOME Shell 50.1. Other major Shell versions are not currently supported.
+- GJS, GTK 4, libadwaita, and libsoup 3 with their GObject Introspection bindings must be available in your desktop environment.
+- Google Calendar integration also requires libsecret and a session Secret Service, such as GNOME Keyring.
+
+The public edition runs with GNOME's GJS runtime. Rust, Node.js, npm, and a separate systemd service are not needed to run an installed public ZIP. Node.js and npm are used when building from source.
+
+## Installation
+
+> [!NOTE]
+> Liquid Widgets is not yet listed on extensions.gnome.org. Build and install the public edition from this repository using the steps below.
+
+### Build from source
+
+Install **Git**, **Python 3**, **Node.js 24 or newer**, **npm**, and **`glib-compile-schemas`**, in addition to the GNOME components listed above. Then run:
 
 ```sh
-gnome-extensions install --force liquid-widgets.shell-extension.zip
+git clone https://github.com/NyongCho/gnome-widget.git
+cd gnome-widget
+
+./scripts/dev npm --prefix extension ci
+python3 scripts/package.py --edition gjs
 ```
 
-처음 설치하거나 코드를 업데이트했다면 로그아웃 후 다시 로그인한다. 이어서:
+The installable archive is created at `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`. It includes the project license and third-party notices.
+
+### Install and enable
+
+From the repository directory:
+
+```sh
+gnome-extensions install --force dist/liquid-widgets-public/liquid-widgets.shell-extension.zip
+```
+
+**Log out and log back in** so GNOME Shell can load the new extension. Then enable it and open preferences:
 
 ```sh
 gnome-extensions enable liquid-widgets@nyongcho.github.io
 gnome-extensions prefs liquid-widgets@nyongcho.github.io
 ```
 
-설정의 데이터 탭에서 Google Calendar iCal 주소와 날씨 지역을 연결한다. 달력·일정을 클릭하면 기본 브라우저에서 Google Calendar를 연다. 비밀 주소는 키링에 저장하며 채팅이나 저장소에 넣지 않는다.
+You can also open preferences through GNOME Extensions or the gear button above the widgets.
 
-[설치·설정·제거 및 Rust판 복귀](docs/setup.md), [Google Calendar](docs/calendar.md), [날씨](docs/weather.md), [시스템·네트워크·음악](docs/live-data.md)을 참고한다.
+For later source updates, run `git pull`, repeat the build and install commands, and log out and back in.
 
-## 개발
+## Configuration
 
-공개용 빌드에는 Node 24 이상, npm, GJS, GLib schema 도구와 GNOME 50 개발 환경을 사용한다. 저장소의 `.tools`가 준비되어 있으면 `scripts/dev`가 해당 도구를 선택한다.
+Preferences have two tabs: **Widgets** and **Data**.
+
+| Setting | Where to find it |
+| --- | --- |
+| Language | **Widgets → Language**. Select English or Korean; Korean is the initial default. |
+| Layout | **Widgets → Left column / Right column**. Move cards between columns and change their order. |
+| Clock and appearance | **Widgets**. Choose a clock face, adjust the glass effect, or enable low-power mode. |
+| Weather location | **Data → Weather location**. Search for a city and select it. |
+| Google Calendar | **Data → Google Calendar**. Connect your calendar's secret iCal address. |
+| Network interface | **Data → Network**. Use automatic selection or choose an interface. |
+
+To get the calendar address, open Google Calendar in your browser, select the calendar in **Settings**, and find **Integrate calendar → Secret address in iCal format**. Paste it directly into the extension's preferences. The address is stored in your desktop keyring. Calendar and event cards open Google Calendar in your default browser; the extension does not edit events.
+
+The music card appears only while a compatible MPRIS player is playing. It displays metadata and artwork; it does not provide playback controls.
+
+### Uninstall
+
+To remove saved calendar credentials, disconnect the calendar in preferences and finish any pending credential deletion **before** uninstalling.
 
 ```sh
-./scripts/dev npm --prefix extension ci
+gnome-extensions disable liquid-widgets@nyongcho.github.io
+gnome-extensions uninstall liquid-widgets@nyongcho.github.io
+```
+
+Uninstalling the extension leaves settings and caches in place. See the [setup guide](docs/setup.md) for storage locations and complete cleanup instructions.
+
+## Development
+
+After installing the build dependencies and running `npm ci` as above:
+
+```sh
+# Check the public TypeScript/GJS edition.
 ./scripts/check.sh --edition gjs
+
+# Build the public extension ZIP.
 python3 scripts/package.py --edition gjs
 ```
 
-마지막 명령은 프로젝트 `LICENSE`와 외부 코드 고지가 포함된 `dist/liquid-widgets-public/liquid-widgets.shell-extension.zip`을 만든다. 로컬 검증 전용으로는 `--development`를 추가하며 출력은 `dist/liquid-widgets-public-development/`다.
+The repository contains two editions with shared widgets, preferences, and GLSL shaders:
 
-개인용은 `python3 scripts/package.py --edition rust`로 기존 `dist/liquid-widgets/` 배포본을 만든다. 이 경로에는 Rust·libical 개발 환경이 필요하다. `package.py`의 기본 선택은 기존 호환성을 위해 Rust이며, `check.sh`의 기본 선택은 두 에디션을 검사하는 `all`이다.
+| Edition | Data backend | Extension UUID |
+| --- | --- | --- |
+| **Public** | TypeScript/GJS, with a short-lived calendar calculation worker | `liquid-widgets@nyongcho.github.io` |
+| **Personal Rust** | Rust user service with libical | `liquid-widgets@local` |
 
-검증 자료:
+The editions keep separate settings, caches, and keyring entries. Disable the other edition when switching to avoid duplicate widgets; settings are not migrated automatically.
 
-- [에디션 구조와 수명](docs/data-service.md)
-- [공개용 화면·설정 검증](docs/public-edition-verification.md)
-- [반응성·CPU·메모리·자식 종료 측정](docs/typescript-performance.md)
-- [GNOME Extensions 심사 준비 상태](docs/gnome-extensions-release.md)
-- [외부 코드·데이터 고지](THIRD_PARTY_NOTICES.md)
+<details>
+<summary>Building the personal Rust edition</summary>
 
-실제 GPU 검사는 격리된 GNOME 세션과 합성 데이터를 사용한다. 개인 Google 계정, 실제 날씨 요청, 물리 로그인·잠금 전환은 별도 확인 항목이다. 현재 개인용 설치를 자동으로 교체하지 않는다.
+This edition additionally needs Rust, a C compiler, pkg-config, and libical development files. Its installed runtime uses libical and a user systemd service.
 
-## 라이선스
+```sh
+./scripts/check.sh --edition rust
+python3 scripts/package.py --edition rust
+```
 
-별도 고지가 없는 프로젝트 코드는 **GPL-3.0-or-later**로 배포한다. GNU General Public License 버전 3 또는 사용자가 선택한 이후 버전의 조건에 따라 사용·수정·재배포할 수 있다. 전체 적용 문구와 라이선스 원문은 [LICENSE](LICENSE)에 있다. 포함된 외부 코드·데이터는 [각자의 라이선스와 고지](THIRD_PARTY_NOTICES.md)를 유지한다.
+The distribution is written to `dist/liquid-widgets/`. See the [setup guide](docs/setup.md) for installation and switching between editions.
+
+Use `./scripts/check.sh --edition all` to check both editions. Always pass `--edition gjs` when packaging the public extension: the packaging command defaults to Rust for compatibility with the personal edition.
+
+</details>
+
+### Documentation
+
+- [Architecture and data services](docs/data-service.md)
+- [Public edition UI verification](docs/public-edition-verification.md)
+- [Performance and lifecycle measurements](docs/typescript-performance.md)
+- [GNOME Extensions release preparation](docs/gnome-extensions-release.md)
+- User guides, currently in Korean: [setup and removal](docs/setup.md), [Google Calendar](docs/calendar.md), [weather](docs/weather.md), and [system, network, and media](docs/live-data.md).
+
+## Contributing
+
+Bug reports, translations, and pull requests are welcome. Before opening an [issue](https://github.com/NyongCho/gnome-widget/issues), check for an existing report and include:
+
+- Your distribution and GNOME Shell version.
+- The edition you installed and the commit you built.
+- Steps to reproduce the problem, with relevant logs or screenshots.
+
+Keep secret calendar URLs and private event details out of reports. For code changes, run the checks for the edition you changed; changes to shared code should be checked in both editions.
+
+## License
+
+Original project code is licensed under **GNU GPL version 3 or, at your option, any later version** ([GPL-3.0-or-later](LICENSE)).
+
+Bundled third-party code and data retain their own licenses. See [Third-party notices](THIRD_PARTY_NOTICES.md) for ical.js, timezone data, and other dependencies. Weather data is provided by [Open-Meteo](https://open-meteo.com/), with location data from GeoNames.
