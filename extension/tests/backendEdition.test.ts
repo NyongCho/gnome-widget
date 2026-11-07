@@ -51,6 +51,7 @@ test('both emitted editions carry the selected metadata and schema without mutat
     for(const name of ['gjs','rust']){
         const built=spawnSync(process.execPath,['scripts/build.mjs','--edition',name],{cwd:root,encoding:'utf8'});
         assert.equal(built.status,0,built.stderr);
+        assert.equal(built.stderr,'','edition builds must not discard side-effect imports with warnings');
         const edition=getEdition(name),base=new URL(`${edition.output}/`,root);
         const metadata=JSON.parse(readFileSync(new URL('metadata.json',base),'utf8'));
         assert.equal(metadata.uuid,edition.uuid);assert.equal(metadata['settings-schema'],edition.schemaId);
@@ -58,8 +59,18 @@ test('both emitted editions carry the selected metadata and schema without mutat
         assert.ok(schema.includes(`id="${edition.schemaId}"`));assert.ok(schema.includes(`path="${edition.schemaPath}"`));
         if(name==='gjs'){
             assert.ok(existsSync(new URL('calendar-worker.js',base)));
-            assert.ok(readFileSync(new URL('calendar-worker.js',base),'utf8').startsWith('#!@GJS@ -m\n'));
-            for(const file of ['extension.js','prefs.js'])assert.ok(!readFileSync(new URL(file,base),'utf8').includes('vendor/timezones/zones.json'));
+            const worker=readFileSync(new URL('calendar-worker.js',base),'utf8');
+            assert.ok(worker.startsWith('#!@GJS@ -m\n'));
+            // Check the emitted bundle, where an unused import can still retain code.
+            for(const file of ['extension.js','prefs.js']){
+                const code=readFileSync(new URL(file,base),'utf8');
+                assert.ok(!code.includes('vendor/timezones/zones.json'));
+                assert.ok(!/\/\/ src\/(?:backend\/rust|dbus|prefs\/rustDataSession)\.ts/.test(code),`${file} includes the Rust backend`);
+            }
+            assert.ok(!/#\/\$defs\/(?:Weather|System|Network|Media)/.test(worker),'calendar worker includes unrelated provider validators');
+        }else{
+            assert.ok(readFileSync(new URL('extension.js',base),'utf8').includes('org.local.LiquidWidgets1'));
+            assert.ok(readFileSync(new URL('prefs.js',base),'utf8').includes('org.local.LiquidWidgets1'));
         }
     }
     assert.equal(readFileSync(new URL('metadata.json',root),'utf8'),original);

@@ -3,6 +3,7 @@ import {build} from 'esbuild';
 import {copyFile,mkdir,readFile,rm,writeFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {parseArgs} from 'node:util';
+import {resolve} from 'node:path';
 import {assertCalendarIsolated} from '../src/shared/buildPolicy.ts';
 
 const {values}=parseArgs({options:{edition:{type:'string',default:'rust'},tests:{type:'boolean',default:false}},strict:true});
@@ -12,7 +13,18 @@ const edition=editions[values.edition],outdir=edition.output;
 const sourceMetadata=JSON.parse(await readFile('metadata.json','utf8'));
 const metadata=values.edition==='rust'?sourceMetadata:{...sourceMetadata,uuid:edition.uuid,'settings-schema':edition.schemaId,url:edition.homepage};
 const common={bundle:true,format:'esm',platform:'browser',target:'es2022',external:['gi://*','resource://*','cairo','system'],loader:{'.glsl':'text','.json':'json'},
-    define:{__LIQUID_EDITION__:JSON.stringify(edition),__LIQUID_BACKEND__:JSON.stringify(edition.backend)}};
+    define:{__LIQUID_EDITION__:JSON.stringify(edition)},
+    // Select the implementation before bundling so the other backend is never imported.
+    plugins:[{name:'edition-backend',setup(build){
+        if(values.edition==='gjs')build.onResolve({filter:/\/factory\.js$/},args=>{
+            const factories={
+                [resolve('src/backend/factory.js')]:resolve('src/data/runtime.ts'),
+                [resolve('src/prefs/factory.js')]:resolve('src/prefs/dataSession.ts'),
+            };
+            const path=factories[resolve(args.resolveDir,args.path)];
+            if(path)return{path};
+        });
+    }}]};
 // These are generated outputs selected by the fixed edition manifest.
 await rm(outdir,{recursive:true,force:true});
 await mkdir(outdir,{recursive:true});

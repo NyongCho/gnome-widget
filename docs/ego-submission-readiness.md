@@ -1,8 +1,8 @@
 # GNOME Extensions submission readiness
 
-Assessed: **2026-11-07**. Scope: current official submission rules and the existing v0.1.0 release evidence; this is not submission authorization or a new functionality test.
+Assessed and updated: **2026-11-07**. Scope: official submission rules, the existing v0.1.0 release, and the subsequently verified bundle cleanup. This is not submission authorization.
 
-**Conclusion:** submission is feasible, but trim confirmed unused bundled code before recommending the current ZIP for review. The release is a working submission candidate, not an approved GNOME Extensions listing. Maintainer readiness and reviewer acceptance remain unresolved.
+**Conclusion:** the confirmed unused-code findings are resolved on `codex/typescript-public`, with a rebuilt ZIP and passing checks for both editions and native GNOME installation. The published v0.1.0 ZIP remains unchanged; publish a new release with matching source before distributing the cleaned artifact. Maintainer readiness and reviewer acceptance remain unresolved.
 
 ## Existing evidence
 
@@ -10,9 +10,25 @@ Assessed: **2026-11-07**. Scope: current official submission rules and the exist
 
 The accompanying artifact audit confirmed the released checksum, 17 ZIP entries and package-policy PASS. These establish the tested artifact; they do not establish acceptance by GNOME reviewers.
 
-## Confirmed cleanup and review risks
+## Verified bundle cleanup
 
-- **Unused bundled code:** the artifact audit found `RustWidgetSession`, `SessionTransport` and `DataClient` behind an unconditional public-backend branch in generated `extension.js` (19,971 lines; 1,082,379 bytes), and an unreachable Rust preferences branch in `prefs.js` (18,574 lines; 1,021,577 bytes). The calendar worker also carries unrelated validators. This is retained JavaScript, not a bundled Rust executable. Remove avoidable branches and validators before submission; the audit does not establish how much of each bundle can be removed. Official rules require reviewable JavaScript and permit rejection for unreasonable unnecessary data. They publish no numeric bundle-size limit. [Review guidelines](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#code-must-not-be-obfuscated), [unnecessary files](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#don-t-include-unnecessary-files).
+The build now selects the backend implementation before bundling. Ajv emits separate validator modules and shares its helpers, allowing unused validators to be omitted without changing schemas, validation options or parsing call sites. JavaScript remains formatted and unminified; the calendar engine, timezone data and all license notices are unchanged. This follows the [Ponytail skill](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md) approach of reusing installed tools and preserving validation.
+
+| Artifact | v0.1.0 bytes | Cleaned bytes |
+| --- | ---: | ---: |
+| `extension.js` | 1,082,379 | 715,246 |
+| `prefs.js` | 1,021,577 | 663,695 |
+| `calendar-worker.js` | 887,235 | 94,383 |
+| ZIP | 504,900 | 362,079 |
+| Uncompressed package | 4,306,052 | 2,788,185 |
+
+Only those three JavaScript entries changed. The ZIP is 28.3% smaller, and its uncompressed contents are 35.2% smaller. The [cleanup artifact record](../outputs/verification/public-bundle-cleanup/artifact.json) identifies SHA-256 `d3082451743a48906e6a3b9e3a47fc5769e314e99c877da2ae9922df5e4d5b43` and the retained verification logs.
+
+`check.sh --edition all` passed: Rust checks and live IPC, 143 Node tests, 59 calendar cases per engine, nine native public suites and 26 Python tests. The emitted-build regression first failed for the retained Rust backend and then for unrelated worker validators; it now passes for both editions without build warnings. The exact ZIP installed, enabled, collected local data, opened production preferences, disabled and uninstalled in disposable GNOME Shell 50 without Rust. A separate read-only code review found no issues. No new GitHub release or GNOME Extensions upload was performed.
+
+## Original findings and remaining review risks
+
+- **Unused bundled code (resolved on the branch):** v0.1.0 contained unused Rust session/transport code in `extension.js`, an unreachable Rust preferences branch, and unrelated worker validators. The cleanup above removes these confirmed findings. Official rules require reviewable JavaScript and permit rejection for unreasonable unnecessary data; they publish no numeric bundle-size limit. [Review guidelines](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#code-must-not-be-obfuscated), [unnecessary files](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#don-t-include-unnecessary-files).
 - **GJS worker:** external scripts are strongly discouraged, not categorically banned. Unavoidable helpers must spawn carefully and exit cleanly; bundled binaries are prohibited; scripts normally use GJS and an OSI-approved license. The documented short-lived worker and cancellation evidence support a justification, whose sufficiency remains a review judgment. [Scripts and binaries](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#scripts-and-binaries).
 - **Maintainer explanation:** AI assistance is permitted, but the developer should explain and justify submitted code. Large unnecessary code, imaginary APIs, inconsistent style and prompt-like comments are rejection indicators. Test results cannot demonstrate the human maintainer's understanding. [AI rule](https://gjs.guide/extensions/review-guidelines/review-guidelines.html#extensions-must-not-be-ai-generated).
 
@@ -28,7 +44,7 @@ The release has integer **`metadata.version: 1`**. The review guidelines call th
 
 1. Confirm that the intended maintainer can support and explain the implementation. Extensions are supported by their authors. [GNOME Extensions about page](https://extensions.gnome.org/about/).
 2. Sign in to a GNOME Extensions account, or register one. The current **Add yours** route redirects unauthenticated visitors to login. [Upload](https://extensions.gnome.org/upload/), [registration](https://extensions.gnome.org/accounts/register/).
-3. After cleanup and verification, select the public ZIP and complete the authenticated upload form with accurate listing information. Include the worker rationale and source link wherever review notes are accepted. This assessment did not access that form and does not assert an icon or screenshot is mandatory.
+3. Publish the cleaned artifact with matching source, then select that public ZIP and complete the authenticated upload form with accurate listing information. Include the worker rationale and source link wherever review notes are accepted. This assessment did not access that form and does not assert an icon or screenshot is mandatory.
 4. Respond to review feedback and wait for approval before calling the extension available on GNOME Extensions. Uploaded extensions undergo review before download availability. [Review process](https://extensions.gnome.org/about/).
 
-No account action, upload, listing change or code change was performed. Actual Google-account integration, external weather requests and physical login/lock behavior remain outside the synthetic public-release evidence, as already disclosed in the release record.
+No account action, upload or listing change was performed. Actual Google-account integration, external weather requests and physical login/lock behavior remain outside the synthetic public-release evidence. The five-pair desktop performance benchmark was not repeated for this build cleanup. GNOME's update check returned Not Found for the unpublished extension during the successful isolated installation test.

@@ -38,7 +38,7 @@ export function createPublicDataServices(){
     const linux=new GioLinuxFiles(),system=new SystemProvider(linux,gioClock),network=new NetworkProvider(linux,gioClock.monotonic);
     return{config,cache,http,secrets,settings,weather,locations,system,network,listNetworkInterfaces:(cancel:import('../shared/dataClient.js').Cancellation)=>listNetworkInterfaces(linux,cancel),clock:gioClock,destroy(){http.destroy();}};
 }
-export function createLocalWidgetSession(options:WidgetSessionOptions):LocalWidgetSession {
+export function createWidgetDataSession(options:WidgetSessionOptions):LocalWidgetSession {
     const services=createPublicDataServices();
     const art=new ArtworkLoader(services.http,new GioArtworkStore(GLib.build_filenamev([GLib.get_user_cache_dir(),getEdition('gjs').dataDirectory,'artwork'])),services.clock);
     const media=new MediaProvider(new GioMprisBus(Gio.DBus.session),art,services.clock);

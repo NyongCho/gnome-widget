@@ -9,6 +9,9 @@ import {listNetworkInterfaces} from '../data/providers/network.js';
 import {DataCancelled} from '../data/errors.js';
 import type {PreferencesDataSession} from '../backend/contracts.js';
 import type {WeatherLocation} from '../types.js';
+export function createPreferencesDataSession(_extensionPath:string):PreferencesDataSession {
+    return new RustPreferencesSession();
+}
 export class RustPreferencesSession implements PreferencesDataSession {
     private wire=new SessionTransport();private store=new ProviderStore();private client:DataClient;private dead=false;private connected=false;
     private listeners=new Set<(state:CalendarSummary,origin:CalendarOrigin)=>void>();private requests=new Set<Cancellation>();

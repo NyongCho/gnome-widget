@@ -5,7 +5,7 @@ import {addWeatherSettings} from './weather.js';
 import {addCalendarSettings} from './calendar.js';
 import {addDisplaySettings,addNetworkSettings} from './placement.js';
 import type {PreferencesDataSession} from '../backend/contracts.js';
-import {createPreferencesDataSession} from './dataSession.js';
+import {createPreferencesDataSession} from './factory.js';
 import {preferencesLanguage,addLanguageSettings,onPreferencesClosed} from './language.js';
 import {addCardSettings} from './cards.js';
 import {addClockSettings} from './clock.js';

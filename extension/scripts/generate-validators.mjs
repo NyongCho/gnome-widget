@@ -18,7 +18,17 @@ ajv.addSchema(dataConfig); exports.dataConfig = dataConfig.$id;
 const calendarStatus = JSON.parse(await readFile(new URL('../../protocol/calendar-status.schema.json', import.meta.url), 'utf8'));
 ajv.addSchema(calendarStatus); exports.calendarSummary = calendarStatus.$id;
 const dir = new URL('../generated/', import.meta.url);
-await mkdir(dir, {recursive: true});
-// Bundling replaces Ajv's tiny helper imports. No Node/Ajv/compiler at runtime.
-await build({stdin: {contents: standaloneCode(ajv, exports), resolveDir: new URL('..', import.meta.url).pathname, sourcefile:'validators.js'}, outfile: new URL('validators.js', dir).pathname, bundle:true, format:'esm', platform:'browser', target:'es2022'});
+const sources = new URL('validator-sources/', dir);
+await mkdir(sources, {recursive: true});
+// Omit unused validator entries, but preserve the shared helpers' initialization imports.
+await writeFile(new URL('package.json', dir), JSON.stringify({type:'module',sideEffects:['./validators/chunk-*.js']})+'\n');
+const entryPoints = {};
+for (const [name, id] of Object.entries(exports)) {
+    const path = new URL(`${name}.js`, sources);
+    await writeFile(path, standaloneCode(ajv, {[name]:id}));
+    entryPoints[name] = path.pathname;
+}
+// Share Ajv's helper code without shipping Node or the schema compiler.
+await build({entryPoints, outdir:new URL('validators/', dir).pathname, bundle:true, splitting:true, format:'esm', platform:'browser', target:'es2022'});
+await writeFile(new URL('validators.js', dir), Object.keys(exports).map(name=>`export {${name}} from './validators/${name}.js';`).join('\n')+'\n');
 await writeFile(new URL('validators.d.ts', dir), Object.keys(exports).map(name=>`export function ${name}(data: unknown): boolean;`).join('\n')+'\n');

@@ -8,8 +8,6 @@ import {CalendarStatusClient,type StatusTransport} from '../calendar/statusClien
 import {GioStatusTransport} from '../calendar/statusTransport.js';
 import {summarizeCalendar,type CalendarSummary,type CalendarOrigin} from '../shared/calendarSummary.js';
 import {CalendarPreview,type PublicDataServices} from './calendarPreview.js';
-import {RustPreferencesSession} from './rustDataSession.js';
-declare const __LIQUID_BACKEND__:'rust'|'gjs';
 type Listener=(state:CalendarSummary,origin:CalendarOrigin)=>void;
 export class PublicPreferencesSession implements PreferencesDataSession {
     private dead=false;private requests=new Set<Cancellation>();private listeners=new Set<Listener>();
@@ -42,5 +40,5 @@ export class PublicPreferencesSession implements PreferencesDataSession {
     destroy():void{if(this.dead)return;this.dead=true;this.attachment++;for(const request of this.requests)request.cancel();this.requests.clear();this.listeners.clear();this.client?.destroy();this.client=null;this.stopPreview();this.services.destroy();}
 }
 export function createPreferencesDataSession(extensionPath:string):PreferencesDataSession {
-    return typeof __LIQUID_BACKEND__!=='undefined'&&__LIQUID_BACKEND__==='gjs'?new PublicPreferencesSession(extensionPath):new RustPreferencesSession();
+    return new PublicPreferencesSession(extensionPath);
 }

@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-07",
+  "edition": "gjs",
+  "baseCommit": "a2ad945",
+  "sourceBranch": "codex/typescript-public",
+  "archive": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "d3082451743a48906e6a3b9e3a47fc5769e314e99c877da2ae9922df5e4d5b43",
+  "baseline": {
+    "tag": "v0.1.0",
+    "sha256": "d8879fbbd06441f3df44f03f42ec1cfa4b252c5d33bb3829d9ec1b35c3ef6199"
+  },
+  "zipBytes": {
+    "before": 504900,
+    "after": 362079
+  },
+  "uncompressedBytes": {
+    "before": 4306052,
+    "after": 2788185
+  },
+  "bundleBytes": {
+    "extension.js": {
+      "before": 1082379,
+      "after": 715246
+    },
+    "prefs.js": {
+      "before": 1021577,
+      "after": 663695
+    },
+    "calendar-worker.js": {
+      "before": 887235,
+      "after": 94383
+    }
+  },
+  "changedEntries": [
+    "calendar-worker.js",
+    "extension.js",
+    "prefs.js"
+  ],
+  "entryCount": 17,
+  "checks": {
+    "allEditions": "PASS",
+    "nodeTestsPassed": 143,
+    "calendarCasesPerEngine": 59,
+    "nativePublicSuitesPassed": 9,
+    "pythonTestsPassed": 26,
+    "buildWarnings": 0,
+    "publicPackagePolicy": "PASS",
+    "readOnlyReview": "No findings"
+  },
+  "nativeInstall": {
+    "uuid": "liquid-widgets@nyongcho.github.io",
+    "enabled": true,
+    "localCollectors": true,
+    "preferences": true,
+    "disabled": true,
+    "uninstalled": true,
+    "rustService": false
+  },
+  "publishedNewRelease": false,
+  "gnomeExtensionsSubmitted": false,
+  "limits": [
+    "Private Google account and external weather requests were not exercised.",
+    "The five-pair desktop performance benchmark was not repeated.",
+    "GNOME update checks returned Not Found for the unpublished extension; install/lifecycle checks passed."
+  ]
+}
