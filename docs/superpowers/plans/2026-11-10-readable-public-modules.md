@@ -1,6 +1,6 @@
 # Readable Public Modules Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Replace the rejected monolithic public bundles with readable modules while preserving behavior.
 
@@ -31,11 +31,11 @@
 
 **Interfaces:** Public emitter `buildPublicModules(edition, outdir)` writes root entry points plus reachable `src/`, `generated/`, `vendor/` and asset modules. `validate_public(files, release)` retains its API while resolving normalized relative module imports and checking the process graph. Existing edition factories and protocol signatures stay unchanged.
 
-- [ ] Add failing artifact tests for small entry points, named source modules, safe parent-relative dependencies, missing/escaping/unused modules and public worker isolation.
-- [ ] Run the focused tests and record expected failures against the old bundles/policy.
-- [ ] Implement the public emitter, build-time factory/edition selection and asset loading; separate shared cancellation and snapshot-only parsing, updating all callers.
-- [ ] Permit only reachable production modules/data in packaging and retain existing binary/private-data/fixture checks.
-- [ ] Run Node tests, public packaging tests, both build checks and direct GJS imports/worker execution; commit the task.
+- [x] Add failing artifact tests for small entry points, named source modules, safe parent-relative dependencies, missing/escaping/unused modules and public worker isolation.
+- [x] Run the focused tests and record expected failures against the old bundles/policy.
+- [x] Implement the public emitter, build-time factory/edition selection and asset loading; separate shared cancellation and snapshot-only parsing, updating all callers.
+- [x] Permit only reachable production modules/data in packaging and retain existing binary/private-data/fixture checks.
+- [x] Run Node tests, public packaging tests, both build checks and direct GJS imports/worker execution; commit the task.
 
 ### Task 2: Factor generated validation and verify behavior
 
@@ -43,10 +43,10 @@
 
 **Interfaces:** Existing validator names continue to return boolean and consume unknown values. Generate per-validator declaration files for direct imports; retain the development barrel for tests where needed. No schema or validation option affecting accepted data changes.
 
-- [ ] Capture the previous standalone validators and add a behavior comparison using valid fixtures and invalid structural/boundary mutations.
-- [ ] Add a failing size/readability check establishing generated code does not return to giant entry points or excessive duplicated inlined definitions.
-- [ ] Disable reference inlining, format standalone modules, and preserve shared initialization/format helpers.
-- [ ] Run the parity regression, all Node tests and actual GJS contract/worker suites; commit the task.
+- [x] Capture the previous standalone validators and add a behavior comparison using valid fixtures and invalid structural/boundary mutations.
+- [x] Add a failing size/readability check establishing generated code does not return to giant entry points or excessive duplicated inlined definitions.
+- [x] Disable reference inlining, format standalone modules, and preserve shared initialization/format helpers.
+- [x] Run the parity regression, all Node tests and actual GJS contract/worker suites; commit the task.
 
 ### Task 3: Format source and validate the final distribution
 
@@ -54,8 +54,8 @@
 
 **Interfaces:** Runtime interfaces remain unchanged; formatting checks and exact-package tests become the acceptance evidence.
 
-- [ ] Format first-party TypeScript and build scripts, expanding dense control flow without changing behavior. Inspect remaining long lines and dependency code.
-- [ ] Extend the exact-ZIP native test to execute the actual emitted calendar worker with synthetic ICS and timezone data.
-- [ ] Run `CARGO_TARGET_DIR=/home/nyong/projet/gnome-widget/daemon/target ./scripts/check.sh --edition all`, package checks, Shexli, and the disposable GNOME exact-ZIP lifecycle test.
-- [ ] Obtain one fresh read-only whole-change review, address material findings with regressions, and record any limitations.
-- [ ] Commit and push the authorized source changes, preserve published release assets, and deliver the tested ZIP and accurate review notes.
+- [x] Format first-party TypeScript and build scripts, expanding dense control flow without changing behavior. Inspect remaining long lines and dependency code.
+- [x] Extend the exact-ZIP native test to execute the actual emitted calendar worker with synthetic ICS and timezone data.
+- [x] Run `CARGO_TARGET_DIR=/home/nyong/projet/gnome-widget/daemon/target ./scripts/check.sh --edition all`, package checks, Shexli, and the disposable GNOME exact-ZIP lifecycle test.
+- [x] Obtain one fresh read-only whole-change review, address material findings with regressions, and record any limitations.
+- [x] Commit and push the authorized source changes, preserve published release assets, and deliver the tested ZIP and accurate review notes.

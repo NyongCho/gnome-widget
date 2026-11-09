@@ -1,0 +1,100 @@
+libmutter-Message: 00:35:14.791: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:81675): libmutter-WARNING **: 00:35:14.791: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:81675): libmutter-WARNING **: 00:35:14.791: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 00:35:14.900: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 00:35:14.901: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 00:35:14.901: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 00:35:14.901: Obtained a high priority EGL context
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.3' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gtk.vfs.Daemon' requested by ':1.4' (uid=1000 pid=81695 comm="/usr/libexec/at-spi-bus-launcher" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gtk.vfs.Daemon'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.a11y.Bus'
+libmutter-Message: 00:35:14.924: Using public X11 display :2, (using unix:/tmp/.X11-unix/X3 for managed services)
+libmutter-Message: 00:35:14.924: Using Wayland display name 'liquid-widgets-test-81633'
+dbus-daemon[81707]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+
+(gnome-shell:81675): libmutter-WARNING **: 00:35:14.956: Failed to launch devkit: Failed to execute child process “/usr/libexec/mutter-devkit” (No such file or directory)
+dbus-daemon[81707]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+GNOME Shell-Message: 00:35:15.107: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Shell.Screencast' requested by ':1.2' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.2' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Shell.CalendarServer' requested by ':1.2' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Sources5' requested by ':1.11' (uid=1000 pid=81736 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+GNOME Shell-Message: 00:35:15.159: Registering session with GDM
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=81710 comm="/home/nyong/.codex/worktrees/ccd1/gnome-widget/.to" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.OnlineAccounts' requested by ':1.12' (uid=1000 pid=81748 comm="/usr/libexec/evolution-source-registry" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.13' (uid=1000 pid=81757 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Sources5'
+GNOME Shell-Message: 00:35:15.190: Will monitor session 2
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+GNOME Shell-Message: 00:35:15.190: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.13' (uid=1000 pid=81757 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Calendar8' requested by ':1.11' (uid=1000 pid=81736 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+goa-daemon-Message: 00:35:15.197: goa-daemon version 3.58.0 starting
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Shell.CalendarServer'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Identity' requested by ':1.16' (uid=1000 pid=81760 comm="/usr/libexec/goa-daemon" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.OnlineAccounts'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Identity'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Calendar8'
+GNOME Shell-Message: 00:35:15.220: Failed to register AuthenticationAgent
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.evolution.dataserver.AddressBook10' requested by ':1.18' (uid=1000 pid=81789 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Shell.Notifications' requested by ':1.2' (uid=1000 pid=81675 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.AddressBook10'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Shell.Notifications'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.24' (uid=1000 pid=81758 comm="ibus-daemon --panel disable" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.19' (uid=1000 pid=81784 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.13' (uid=1000 pid=81757 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.13' (uid=1000 pid=81757 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 00:35:15.492: couldn't access control socket: /tmp/liquid-widgets-runtime-i_jn2n49/keyring/control: No such file or directory
+** Message: 00:35:15.492: couldn't access control socket: /tmp/liquid-widgets-runtime-i_jn2n49/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Shell.Screencast'
+libmutter-Message: 00:35:15.773: Added virtual monitor Meta-0
+GNOME Shell-Message: 00:35:16.509: GNOME Shell started at Tue Nov 10 2026 00:35:15 GMT+0900 (Korean Standard Time)
+GNOME Shell-Message: 00:35:16.509: Registering display with GDM
+
+(gnome-shell:81675): GnomeDesktop-WARNING **: 00:35:16.519: Could not create transient scope for PID 82366: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.gnome.Shell.Extensions' requested by ':1.39' (uid=1000 pid=82388 comm="gnome-extensions prefs liquid-widgets@nyongcho.git" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.gnome.Shell.Extensions'
+
+(org.gnome.Shell.Extensions:82393): Gjs-WARNING **: 00:35:17.835: Type GITypeInfo of property Adw.PreferencesWindow::visible-page does not match return type GITypeInfo of getter get_visible_page. Falling back to slow path
+
+(org.gnome.Shell.Extensions:82393): Gjs-WARNING **: 00:35:17.835: Type GITypeInfo of property Adw.PreferencesWindow::visible-page does not match type GITypeInfo of first argument of setter set_visible_page. Falling back to slow path
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Unsupported maximum keycode 708, clipping.
+>                   X11 cannot support keycodes above 255.
+> Warning:          Virtual modifier Hyper multiply defined
+>                   Using 0, ignoring 0
+> Warning:          Virtual modifier ScrollLock multiply defined
+>                   Using 0, ignoring 0
+Errors from xkbcomp are not fatal to the X server
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.43' (uid=1000 pid=82441 comm="ibus-daemon --panel disable -r --xim" label="unconfined")
+dbus-daemon[81632]: [session uid=1000 pid=81632 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+
+(gnome-shell:81675): libmutter-WARNING **: 00:35:19.544: Tried to ping window W0 (Liquid Widgets) with a bad serial! Not allowed.
+PACKAGE_TEST: final public ZIP installed, enabled, collected, opened preferences, disabled and uninstalled without Rust
+** Message: 00:35:19.629: Shutting down GNOME Shell
+libmutter-Message: 00:35:19.685: Removed virtual monitor Meta-0
+ 00:35:19 | INFO | Disconnected by EIS
+Gdk-Message: 00:35:19.686: Lost connection to Wayland compositor.
+Gdk-Message: 00:35:19.686: Lost connection to Wayland compositor.
+Gdk-Message: 00:35:19.686: Lost connection to Wayland compositor.
+Gdk-Message: 00:35:19.687: Error reading events from display: Broken pipe
+args: ['/home/nyong/.codex/worktrees/ccd1/gnome-widget/scripts/gnome-test-env.py', '/usr/bin/gnome-shell', '--automation-script', '/home/nyong/.codex/worktrees/ccd1/gnome-widget/tests/gnome/package.js', '--force-animations', '--devkit', '--wayland-display', 'gnome-shell-test-display']
+------------------------------------------------------------
+------------------------------------------------------------
+A connection to the bus can't be made
+gnome-shell-calendar-server[81736]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting
+
+(evolution-calendar-factory:81789): libedbus-private-WARNING **: 00:35:19.832: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)
+
+(evolution-addressbook-factory:81818): libedbus-private-WARNING **: 00:35:19.832: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)

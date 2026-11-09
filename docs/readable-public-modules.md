@@ -35,6 +35,12 @@ Ajv's compiler runs only during development. Validators still use Ajv-generated 
 
 Logs and analyzer output are under [`outputs/verification/readable-public-modules`](../outputs/verification/readable-public-modules/).
 
+## Independent review
+
+A fresh reviewer inspected the complete change from `5836fc6` through `6bdfd90` and reported no Critical, Important or Minor findings. The reviewer independently ran 17 validator tests and 15 package tests, checked module linking with tree shaking disabled and verified that the worker graph excludes unrelated validators. Normalizing source with the pinned formatter confirmed that runtime edits are limited to the intended import/extraction changes and equivalent XML/weather construction. No minor findings were deferred.
+
+EGO acceptance and maintainer understanding remain human judgments; automated evidence cannot replace them. Private-account integrations, physical session transitions and repeated desktop benchmarks were explicitly left outside this build/readability review, so those conditions are not newly verified.
+
 ## Remaining analyzer result
 
 Shexli 0.2.1 reports **one warning category, EGO-P-007**: the separately launched `calendar-worker.js` and its exclusive dependencies are not reachable through extension/preferences imports. Those imports must remain separate so recurrence work cannot run on Shell's main thread. The package validator follows the worker as a third entry point and rejects unreachable JavaScript. Its lifetime and lease are checked in both worker tests and the exact installed ZIP.
