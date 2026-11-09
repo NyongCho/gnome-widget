@@ -1,0 +1,23 @@
+{
+  "artifact": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "a436e2505b3dce28a96bb9f8e7a196ec7eb405caa0d9a6af956d73a4b7ce8094",
+  "zipBytes": 371405,
+  "uncompressedBytes": 2533419,
+  "entries": 130,
+  "entryBytes": {
+    "extension.js": 4505,
+    "prefs.js": 370,
+    "calendar-worker.js": 3517
+  },
+  "firstPartyJavaScriptFiles": 74,
+  "generatedValidatorFiles": 17,
+  "separateTimeZoneBytes": 1004137,
+  "compiledSchemaShipped": false,
+  "gnomeExtensionsSubmitted": false,
+  "gnomeExtensionsApproved": false,
+  "limits": [
+    "Synthetic local integration only; no private Google account or external weather verification",
+    "Five-pair desktop performance benchmark not repeated",
+    "Generated validators still require reviewer assessment"
+  ]
+}

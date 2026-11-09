@@ -1,5 +1,7 @@
 # Shexli submission warnings
 
+This is the historical version-2 warning analysis. Version 2 was subsequently rejected for readability. Current module paths, analyzer results and verification are recorded in [the readability change record](readable-public-modules.md).
+
 Assessed 2026-11-08 against the owner's version-1 submission screenshots and the identical GitHub v0.1.1 ZIP. Shexli 0.2.1 reproduces all five warning categories. Two corrections are made after v0.1.1; this document does not represent GNOME reviewer approval or an uploaded replacement.
 
 ## Corrections

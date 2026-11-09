@@ -1,1 +1,1 @@
-export {createPreferencesDataSession} from './rustDataSession.js';
+export { createPreferencesDataSession } from './rustDataSession.js';

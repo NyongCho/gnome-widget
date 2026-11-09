@@ -3,45 +3,100 @@ import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 import { build } from 'esbuild';
-import {format} from 'prettier';
-const ajv = new Ajv({code: {source: true, esm: true, lines: true}, inlineRefs:false, strict: true, allErrors: false});
+import { format } from 'prettier';
+const ajv = new Ajv({
+    code: { source: true, esm: true, lines: true },
+    inlineRefs: false,
+    strict: true,
+    allErrors: false,
+});
 addFormats(ajv);
-const snapshot = JSON.parse(await readFile(new URL('../../protocol/snapshot.schema.json', import.meta.url), 'utf8'));
-const settings = JSON.parse(await readFile(new URL('../../protocol/settings.schema.json', import.meta.url), 'utf8'));
-ajv.addSchema(snapshot); ajv.addSchema(settings);
-const exports = {snapshot: snapshot.$id, settings: settings.$id, calendarContext: `${snapshot.$id}#/$defs/CalendarContext`, weatherLocation: `${settings.$id}#/$defs/WeatherLocationInput`, locationSearchResults: `${settings.$id}#/$defs/LocationSearchResults`};
-for (const name of ['Calendar','Weather','System','Network','Media']) exports[name.toLowerCase()] = `${snapshot.$id}#/$defs/${name}State`;
-const worker = JSON.parse(await readFile(new URL('../../protocol/calendar-worker.schema.json', import.meta.url), 'utf8'));
+const snapshot = JSON.parse(
+    await readFile(new URL('../../protocol/snapshot.schema.json', import.meta.url), 'utf8'),
+);
+const settings = JSON.parse(
+    await readFile(new URL('../../protocol/settings.schema.json', import.meta.url), 'utf8'),
+);
+ajv.addSchema(snapshot);
+ajv.addSchema(settings);
+const exports = {
+    snapshot: snapshot.$id,
+    settings: settings.$id,
+    calendarContext: `${snapshot.$id}#/$defs/CalendarContext`,
+    weatherLocation: `${settings.$id}#/$defs/WeatherLocationInput`,
+    locationSearchResults: `${settings.$id}#/$defs/LocationSearchResults`,
+};
+for (const name of ['Calendar', 'Weather', 'System', 'Network', 'Media'])
+    exports[name.toLowerCase()] = `${snapshot.$id}#/$defs/${name}State`;
+const worker = JSON.parse(
+    await readFile(new URL('../../protocol/calendar-worker.schema.json', import.meta.url), 'utf8'),
+);
 ajv.addSchema(worker);
-for (const name of ['Header', 'Control', 'Reply']) exports[`worker${name}`] = `${worker.$id}#/$defs/${name}`;
-const dataConfig = JSON.parse(await readFile(new URL('../../protocol/data-config.schema.json', import.meta.url), 'utf8'));
-ajv.addSchema(dataConfig); exports.dataConfig = dataConfig.$id;
-const calendarStatus = JSON.parse(await readFile(new URL('../../protocol/calendar-status.schema.json', import.meta.url), 'utf8'));
-ajv.addSchema(calendarStatus); exports.calendarSummary = calendarStatus.$id;
+for (const name of ['Header', 'Control', 'Reply'])
+    exports[`worker${name}`] = `${worker.$id}#/$defs/${name}`;
+const dataConfig = JSON.parse(
+    await readFile(new URL('../../protocol/data-config.schema.json', import.meta.url), 'utf8'),
+);
+ajv.addSchema(dataConfig);
+exports.dataConfig = dataConfig.$id;
+const calendarStatus = JSON.parse(
+    await readFile(new URL('../../protocol/calendar-status.schema.json', import.meta.url), 'utf8'),
+);
+ajv.addSchema(calendarStatus);
+exports.calendarSummary = calendarStatus.$id;
 const dir = new URL('../generated/', import.meta.url);
 const sources = new URL('validator-sources/', dir);
 const validators = new URL('validators/', dir);
-await rm(sources,{recursive:true,force:true});
-await rm(validators,{recursive:true,force:true});
-await mkdir(sources, {recursive: true});
-await mkdir(validators,{recursive:true});
+await rm(sources, { recursive: true, force: true });
+await rm(validators, { recursive: true, force: true });
+await mkdir(sources, { recursive: true });
+await mkdir(validators, { recursive: true });
 // Omit unused validator entries, but preserve the shared helpers' initialization imports.
-await writeFile(new URL('package.json', dir), JSON.stringify({type:'module',sideEffects:['./validators/chunk-*.js']})+'\n');
+await writeFile(
+    new URL('package.json', dir),
+    JSON.stringify({ type: 'module', sideEffects: ['./validators/chunk-*.js'] }) + '\n',
+);
 const entryPoints = {};
 for (const [name, id] of Object.entries(exports)) {
     const path = new URL(`${name}.js`, sources);
-    await writeFile(path, standaloneCode(ajv, {[name]:id}));
+    await writeFile(path, standaloneCode(ajv, { [name]: id }));
     entryPoints[name] = path.pathname;
-    await writeFile(new URL(`validators/${name}.d.ts`, dir), `export function ${name}(data: unknown): boolean;\n`);
+    await writeFile(
+        new URL(`validators/${name}.d.ts`, dir),
+        `export function ${name}(data: unknown): boolean;\n`,
+    );
 }
 // Share Ajv's helper code without shipping Node or the schema compiler.
-await build({entryPoints, outdir:new URL('validators/', dir).pathname, bundle:true, splitting:true, format:'esm', platform:'browser', target:'es2022'});
-const formatting = JSON.parse(await readFile(new URL('../.prettierrc.json',import.meta.url),'utf8'));
-for(const name of await readdir(validators)) {
-    if(!name.endsWith('.js'))continue;
-    const file = new URL(name,validators);
-    const code = await format(await readFile(file,'utf8'),{...formatting,parser:'babel'});
-    await writeFile(file,'// Generated by Ajv from protocol/*.schema.json; do not edit by hand.\n'+code);
+await build({
+    entryPoints,
+    outdir: new URL('validators/', dir).pathname,
+    bundle: true,
+    splitting: true,
+    format: 'esm',
+    platform: 'browser',
+    target: 'es2022',
+});
+const formatting = JSON.parse(
+    await readFile(new URL('../.prettierrc.json', import.meta.url), 'utf8'),
+);
+for (const name of await readdir(validators)) {
+    if (!name.endsWith('.js')) continue;
+    const file = new URL(name, validators);
+    const code = await format(await readFile(file, 'utf8'), { ...formatting, parser: 'babel' });
+    await writeFile(
+        file,
+        '// Generated by Ajv from protocol/*.schema.json; do not edit by hand.\n' + code,
+    );
 }
-await writeFile(new URL('validators.js', dir), Object.keys(exports).map(name=>`export {${name}} from './validators/${name}.js';`).join('\n')+'\n');
-await writeFile(new URL('validators.d.ts', dir), Object.keys(exports).map(name=>`export function ${name}(data: unknown): boolean;`).join('\n')+'\n');
+await writeFile(
+    new URL('validators.js', dir),
+    Object.keys(exports)
+        .map((name) => `export {${name}} from './validators/${name}.js';`)
+        .join('\n') + '\n',
+);
+await writeFile(
+    new URL('validators.d.ts', dir),
+    Object.keys(exports)
+        .map((name) => `export function ${name}(data: unknown): boolean;`)
+        .join('\n') + '\n',
+);

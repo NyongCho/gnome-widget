@@ -15,7 +15,8 @@
     "pretest": "npm run generate",
     "pretypecheck": "npm run generate",
     "test:calendar": "python3 ../scripts/test-calendar-parity.py --engine gjs",
-    "build:gjs": "node scripts/build.mjs --edition gjs"
+    "build:gjs": "node scripts/build.mjs --edition gjs",
+    "format:check": "prettier --check \"src/**/*.ts\" \"scripts/{build,public-modules,generate-validators,test}.mjs\""
   },
   "devDependencies": {
     "@girs/gnome-shell": "50.0.4",

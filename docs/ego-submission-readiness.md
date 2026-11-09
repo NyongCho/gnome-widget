@@ -1,8 +1,8 @@
 # GNOME Extensions submission readiness
 
-Rules assessed: **2026-11-07**; release status updated: **2026-11-08**. Scope: official submission rules, the v0.1.0 release, and the verified bundle cleanup distributed as v0.1.1. This is not submission authorization.
+Status updated **2026-11-10** from the owner's review screenshots. EGO version 2 was rejected for readability and monolithic transpilation; version 1 was superseded. The published v0.1.1 assets are unchanged.
 
-**Conclusion:** the confirmed unused-code findings are resolved in [v0.1.1](https://github.com/NyongCho/gnome-widget/releases/tag/v0.1.1), with matching source, a rebuilt ZIP and passing checks for both editions and native GNOME installation. The owner has since submitted version 1; their 2026-11-08 screenshots show **Unreviewed** and five Shexli warning categories. The subsequent schema-packaging and effect-signal fixes, with evidence for the remaining warnings, are recorded in [the Shexli review](shexli-review.md). They are not included in v0.1.1. Published release assets remain unchanged; reviewer acceptance remains unresolved.
+The current branch addresses that feedback with module-preserving JavaScript, formatted source, standalone validators and separate timezone data. See [the candidate and verification record](readable-public-modules.md). Local checks do not establish reviewer acceptance or the human maintainer's ability to explain and maintain the code. No replacement upload or reviewer comment has been made by the agent.
 
 ## Existing evidence
 
@@ -10,7 +10,7 @@ Rules assessed: **2026-11-07**; release status updated: **2026-11-08**. Scope: o
 
 The accompanying artifact audit confirmed the released checksum, 17 ZIP entries and package-policy PASS. These establish the tested artifact; they do not establish acceptance by GNOME reviewers.
 
-## Verified bundle cleanup
+## Historical v0.1.1 bundle cleanup
 
 The build now selects the backend implementation before bundling. Ajv emits separate validator modules and shares its helpers, allowing unused validators to be omitted without changing schemas, validation options or parsing call sites. JavaScript remains formatted and unminified; the calendar engine, timezone data and all license notices are unchanged. This follows the [Ponytail skill](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md) approach of reusing installed tools and preserving validation.
 

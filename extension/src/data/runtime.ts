@@ -1,49 +1,131 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-import {CalendarStatusBridge} from '../calendar/statusBridge.js';
-import {CalendarProvider} from './providers/calendar.js';
-import {CalendarWorkerClient} from '../calendar/workerClient.js';
-import {MediaProvider} from './providers/media.js';
-import {ArtworkLoader} from './providers/mediaArt.js';
-import {GioMprisBus} from './mpris.js';
-import {GioArtworkStore} from './artworkFiles.js';
-import {getEdition} from '../edition.js';
-import type {WidgetSessionOptions} from '../backend/contracts.js';
-import {acquireBusLease} from './busLease.js';
-import {ConfigStore} from './config.js';
-import {GioPrivateFiles} from './files.js';
-import {SoupHttpClient} from './http.js';
-import {SystemSecretStore} from './secrets.js';
-import {DataSettingsService} from './settings.js';
-import {GioLinuxFiles} from './linux.js';
-import {SystemProvider} from './providers/system.js';
-import {NetworkProvider,listNetworkInterfaces} from './providers/network.js';
-import {WeatherProvider,LocationSearch} from './providers/weather.js';
-import {LocalWidgetSession,type SessionClock} from './localSession.js';
-export const gioClock:SessionClock={
-    monotonic:()=>GLib.get_monotonic_time()/1000,
-    now:()=>new Date().toISOString(),
-    schedule(ms,fn){let id=GLib.timeout_add(GLib.PRIORITY_DEFAULT,ms,()=>{id=0;fn();return GLib.SOURCE_REMOVE;});return()=>{if(id){GLib.source_remove(id);id=0;}};},
+import { CalendarStatusBridge } from '../calendar/statusBridge.js';
+import { CalendarProvider } from './providers/calendar.js';
+import { CalendarWorkerClient } from '../calendar/workerClient.js';
+import { MediaProvider } from './providers/media.js';
+import { ArtworkLoader } from './providers/mediaArt.js';
+import { GioMprisBus } from './mpris.js';
+import { GioArtworkStore } from './artworkFiles.js';
+import { getEdition } from '../edition.js';
+import type { WidgetSessionOptions } from '../backend/contracts.js';
+import { acquireBusLease } from './busLease.js';
+import { ConfigStore } from './config.js';
+import { GioPrivateFiles } from './files.js';
+import { SoupHttpClient } from './http.js';
+import { SystemSecretStore } from './secrets.js';
+import { DataSettingsService } from './settings.js';
+import { GioLinuxFiles } from './linux.js';
+import { SystemProvider } from './providers/system.js';
+import { NetworkProvider, listNetworkInterfaces } from './providers/network.js';
+import { WeatherProvider, LocationSearch } from './providers/weather.js';
+import { LocalWidgetSession, type SessionClock } from './localSession.js';
+export const gioClock: SessionClock = {
+    monotonic: () => GLib.get_monotonic_time() / 1000,
+    now: () => new Date().toISOString(),
+    schedule(ms, fn) {
+        let id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, ms, () => {
+            id = 0;
+            fn();
+            return GLib.SOURCE_REMOVE;
+        });
+        return () => {
+            if (id) {
+                GLib.source_remove(id);
+                id = 0;
+            }
+        };
+    },
 };
 /** Composition shared by public Shell sessions and preferences; no UI imports. */
-export function createPublicDataServices(){
-    const edition=getEdition('gjs');
-    const configFiles=new GioPrivateFiles(GLib.build_filenamev([GLib.get_user_config_dir(),edition.dataDirectory]));
-    const cache=new GioPrivateFiles(GLib.build_filenamev([GLib.get_user_cache_dir(),edition.dataDirectory]));
-    const config=new ConfigStore({files:configFiles,uuid:GLib.uuid_string_random,watch:fn=>configFiles.watch(fn),
-        acquire:cancel=>acquireBusLease('io.github.NyongCho.LiquidWidgets.ConfigLock',30000,cancel)});
-    const http=new SoupHttpClient(),secrets=new SystemSecretStore(undefined,edition.secretApplication);
-    const settings=new DataSettingsService(config,secrets,cache,GLib.uuid_string_random);
-    const weather=new WeatherProvider(http,cache,config),locations=new LocationSearch(http,gioClock.monotonic);
-    const linux=new GioLinuxFiles(),system=new SystemProvider(linux,gioClock),network=new NetworkProvider(linux,gioClock.monotonic);
-    return{config,cache,http,secrets,settings,weather,locations,system,network,listNetworkInterfaces:(cancel:import('../shared/dataClient.js').Cancellation)=>listNetworkInterfaces(linux,cancel),clock:gioClock,destroy(){http.destroy();}};
+export function createPublicDataServices() {
+    const edition = getEdition('gjs');
+    const configFiles = new GioPrivateFiles(
+        GLib.build_filenamev([GLib.get_user_config_dir(), edition.dataDirectory]),
+    );
+    const cache = new GioPrivateFiles(
+        GLib.build_filenamev([GLib.get_user_cache_dir(), edition.dataDirectory]),
+    );
+    const config = new ConfigStore({
+        files: configFiles,
+        uuid: GLib.uuid_string_random,
+        watch: (fn) => configFiles.watch(fn),
+        acquire: (cancel) =>
+            acquireBusLease('io.github.NyongCho.LiquidWidgets.ConfigLock', 30000, cancel),
+    });
+    const http = new SoupHttpClient(),
+        secrets = new SystemSecretStore(undefined, edition.secretApplication);
+    const settings = new DataSettingsService(config, secrets, cache, GLib.uuid_string_random);
+    const weather = new WeatherProvider(http, cache, config),
+        locations = new LocationSearch(http, gioClock.monotonic);
+    const linux = new GioLinuxFiles(),
+        system = new SystemProvider(linux, gioClock),
+        network = new NetworkProvider(linux, gioClock.monotonic);
+    return {
+        config,
+        cache,
+        http,
+        secrets,
+        settings,
+        weather,
+        locations,
+        system,
+        network,
+        listNetworkInterfaces: (cancel: import('../shared/dataClient.js').Cancellation) =>
+            listNetworkInterfaces(linux, cancel),
+        clock: gioClock,
+        destroy() {
+            http.destroy();
+        },
+    };
 }
-export function createWidgetDataSession(options:WidgetSessionOptions):LocalWidgetSession {
-    const services=createPublicDataServices();
-    const art=new ArtworkLoader(services.http,new GioArtworkStore(GLib.build_filenamev([GLib.get_user_cache_dir(),getEdition('gjs').dataDirectory,'artwork'])),services.clock);
-    const media=new MediaProvider(new GioMprisBus(Gio.DBus.session),art,services.clock);
-    const calendar=new CalendarProvider({...services,files:services.cache,worker:new CalendarWorkerClient(options.extensionPath),uuid:GLib.uuid_string_random,digest:bytes=>GLib.compute_checksum_for_bytes(GLib.ChecksumType.SHA256,new GLib.Bytes(bytes))!});
-    let bridge:CalendarStatusBridge|null=null;
-    const session=new LocalWidgetSession({...options,changed(name){if(!name||name==='calendar')bridge?.update();options.changed(name);}},{config:services.config,clock:services.clock,drivers:{weather:services.weather,system:services.system,network:services.network,media,calendar},destroy(){bridge?.destroy();services.destroy();}});
-    bridge=new CalendarStatusBridge(session);return session;
+export function createWidgetDataSession(options: WidgetSessionOptions): LocalWidgetSession {
+    const services = createPublicDataServices();
+    const art = new ArtworkLoader(
+        services.http,
+        new GioArtworkStore(
+            GLib.build_filenamev([
+                GLib.get_user_cache_dir(),
+                getEdition('gjs').dataDirectory,
+                'artwork',
+            ]),
+        ),
+        services.clock,
+    );
+    const media = new MediaProvider(new GioMprisBus(Gio.DBus.session), art, services.clock);
+    const calendar = new CalendarProvider({
+        ...services,
+        files: services.cache,
+        worker: new CalendarWorkerClient(options.extensionPath),
+        uuid: GLib.uuid_string_random,
+        digest: (bytes) =>
+            GLib.compute_checksum_for_bytes(GLib.ChecksumType.SHA256, new GLib.Bytes(bytes))!,
+    });
+    let bridge: CalendarStatusBridge | null = null;
+    const session = new LocalWidgetSession(
+        {
+            ...options,
+            changed(name) {
+                if (!name || name === 'calendar') bridge?.update();
+                options.changed(name);
+            },
+        },
+        {
+            config: services.config,
+            clock: services.clock,
+            drivers: {
+                weather: services.weather,
+                system: services.system,
+                network: services.network,
+                media,
+                calendar,
+            },
+            destroy() {
+                bridge?.destroy();
+                services.destroy();
+            },
+        },
+    );
+    bridge = new CalendarStatusBridge(session);
+    return session;
 }

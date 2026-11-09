@@ -1,51 +1,93 @@
 import './generate-validators.mjs';
-import {build} from 'esbuild';
-import {copyFile,mkdir,readFile,rm,writeFile} from 'node:fs/promises';
-import {execFileSync} from 'node:child_process';
-import {parseArgs} from 'node:util';
-import {resolve} from 'node:path';
-import {assertCalendarIsolated} from '../src/shared/buildPolicy.ts';
-import {buildPublicModules} from './public-modules.mjs';
+import { build } from 'esbuild';
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { parseArgs } from 'node:util';
+import { resolve } from 'node:path';
+import { assertCalendarIsolated } from '../src/shared/buildPolicy.ts';
+import { buildPublicModules } from './public-modules.mjs';
 
-const {values}=parseArgs({options:{edition:{type:'string',default:'rust'},tests:{type:'boolean',default:false}},strict:true});
-if(!['rust','gjs'].includes(values.edition))throw new Error('Expected --edition rust or gjs');
-const editions=JSON.parse(await readFile('editions.json','utf8'));
-const edition=editions[values.edition],outdir=edition.output;
-const sourceMetadata=JSON.parse(await readFile('metadata.json','utf8'));
-const metadata=values.edition==='rust'?sourceMetadata:{...sourceMetadata,uuid:edition.uuid,'settings-schema':edition.schemaId,url:edition.homepage};
-const common={bundle:true,format:'esm',platform:'browser',target:'es2022',external:['gi://*','resource://*','cairo','system'],loader:{'.glsl':'text','.json':'json'},
-    define:{__LIQUID_EDITION__:JSON.stringify(edition)},
+const { values } = parseArgs({
+    options: {
+        edition: { type: 'string', default: 'rust' },
+        tests: { type: 'boolean', default: false },
+    },
+    strict: true,
+});
+if (!['rust', 'gjs'].includes(values.edition)) throw new Error('Expected --edition rust or gjs');
+const editions = JSON.parse(await readFile('editions.json', 'utf8'));
+const edition = editions[values.edition],
+    outdir = edition.output;
+const sourceMetadata = JSON.parse(await readFile('metadata.json', 'utf8'));
+const metadata =
+    values.edition === 'rust'
+        ? sourceMetadata
+        : {
+              ...sourceMetadata,
+              uuid: edition.uuid,
+              'settings-schema': edition.schemaId,
+              url: edition.homepage,
+          };
+const common = {
+    bundle: true,
+    format: 'esm',
+    platform: 'browser',
+    target: 'es2022',
+    external: ['gi://*', 'resource://*', 'cairo', 'system'],
+    loader: { '.glsl': 'text', '.json': 'json' },
+    define: { __LIQUID_EDITION__: JSON.stringify(edition) },
     // Select the implementation before bundling so the other backend is never imported.
-    plugins:[{name:'edition-backend',setup(build){
-        if(values.edition==='gjs')build.onResolve({filter:/\/factory\.js$/},args=>{
-            const factories={
-                [resolve('src/backend/factory.js')]:resolve('src/data/runtime.ts'),
-                [resolve('src/prefs/factory.js')]:resolve('src/prefs/dataSession.ts'),
-            };
-            const path=factories[resolve(args.resolveDir,args.path)];
-            if(path)return{path};
-        });
-    }}]};
+    plugins: [
+        {
+            name: 'edition-backend',
+            setup(build) {
+                if (values.edition === 'gjs')
+                    build.onResolve({ filter: /\/factory\.js$/ }, (args) => {
+                        const factories = {
+                            [resolve('src/backend/factory.js')]: resolve('src/data/runtime.ts'),
+                            [resolve('src/prefs/factory.js')]: resolve('src/prefs/dataSession.ts'),
+                        };
+                        const path = factories[resolve(args.resolveDir, args.path)];
+                        if (path) return { path };
+                    });
+            },
+        },
+    ],
+};
 // These are generated outputs selected by the fixed edition manifest.
-await rm(outdir,{recursive:true,force:true});
-await mkdir(outdir,{recursive:true});
-const entryPoints=['src/extension.ts','src/prefs.ts'];
-if(values.edition==='rust')entryPoints.push('src/dbus.ts','src/shared/dataClient.ts','src/shared/providerStore.ts');
-if(values.edition==='gjs'){
-    await buildPublicModules(edition,outdir);
-}else{
-    const ui=await build({...common,entryPoints,outdir,metafile:true});
+await rm(outdir, { recursive: true, force: true });
+await mkdir(outdir, { recursive: true });
+const entryPoints = ['src/extension.ts', 'src/prefs.ts'];
+if (values.edition === 'rust')
+    entryPoints.push('src/dbus.ts', 'src/shared/dataClient.ts', 'src/shared/providerStore.ts');
+if (values.edition === 'gjs') {
+    await buildPublicModules(edition, outdir);
+} else {
+    const ui = await build({ ...common, entryPoints, outdir, metafile: true });
     assertCalendarIsolated(ui.metafile);
 }
-if(values.edition==='rust'||values.tests){
-    await build({...common,entryPoints:['src/shared/validation.ts','src/shared/snapshot.ts'],outdir:`${outdir}/shared`});
-    await build({...common,entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js',benchmark:'tests/gnome/benchmark.js'},outdir:`${outdir}/tests`});
+if (values.edition === 'rust' || values.tests) {
+    await build({
+        ...common,
+        entryPoints: ['src/shared/validation.ts', 'src/shared/snapshot.ts'],
+        outdir: `${outdir}/shared`,
+    });
+    await build({
+        ...common,
+        entryPoints: {
+            spike: 'tests/gnome/spike.ts',
+            preferences: 'tests/gnome/preferences.js',
+            'card-order': 'tests/gnome/card-order.js',
+            benchmark: 'tests/gnome/benchmark.js',
+        },
+        outdir: `${outdir}/tests`,
+    });
 }
-await writeFile(`${outdir}/metadata.json`,JSON.stringify(metadata,null,2)+'\n');
-await copyFile('stylesheet.css',`${outdir}/stylesheet.css`);
-await mkdir(`${outdir}/schemas`,{recursive:true});
-const schema=(await readFile(`schemas/${editions.rust.schemaId}.gschema.xml`,'utf8'))
-    .replace(`id="${editions.rust.schemaId}"`,`id="${edition.schemaId}"`)
-    .replace(`path="${editions.rust.schemaPath}"`,`path="${edition.schemaPath}"`);
-await writeFile(`${outdir}/schemas/${edition.schemaId}.gschema.xml`,schema);
-execFileSync('glib-compile-schemas',['--strict',`${outdir}/schemas`]);
+await writeFile(`${outdir}/metadata.json`, JSON.stringify(metadata, null, 2) + '\n');
+await copyFile('stylesheet.css', `${outdir}/stylesheet.css`);
+await mkdir(`${outdir}/schemas`, { recursive: true });
+const schema = (await readFile(`schemas/${editions.rust.schemaId}.gschema.xml`, 'utf8'))
+    .replace(`id="${editions.rust.schemaId}"`, `id="${edition.schemaId}"`)
+    .replace(`path="${editions.rust.schemaPath}"`, `path="${edition.schemaPath}"`);
+await writeFile(`${outdir}/schemas/${edition.schemaId}.gschema.xml`, schema);
+execFileSync('glib-compile-schemas', ['--strict', `${outdir}/schemas`]);

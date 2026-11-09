@@ -18,6 +18,7 @@ if [ "$edition" != gjs ]; then
     ./scripts/dev cargo test --locked --manifest-path daemon/Cargo.toml
     ./scripts/dev cargo run --locked --manifest-path tests/calendar-candidates/Cargo.toml
 fi
+./scripts/dev npm --prefix extension run format:check
 ./scripts/dev npm --prefix extension run typecheck
 ./scripts/dev npm --prefix extension test
 if [ "$edition" != gjs ]; then
