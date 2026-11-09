@@ -1,4 +1,4 @@
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 export interface PrivateFiles {
     read(name:string,maxBytes:number,cancel:Cancellation):Promise<Uint8Array|null>;
     replace(name:string,bytes:Uint8Array,cancel:Cancellation):Promise<void>;

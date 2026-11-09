@@ -5,7 +5,7 @@ import {LocalWidgetSession} from '../data/localSession.js';
 import {createPublicDataServices} from '../data/runtime.js';
 import {ProviderStore} from '../shared/providerStore.js';
 import {summarizeCalendar,type CalendarSummary} from '../shared/calendarSummary.js';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import {DataCancelled} from '../data/errors.js';
 export type PublicDataServices=Omit<ReturnType<typeof createPublicDataServices>,'secrets'>&{secrets:import('../data/contracts.js').SecretStore};
 /** Preferences owns this session only while no Shell status owner exists. */

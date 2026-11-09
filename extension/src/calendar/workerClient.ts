@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import type {CalendarData} from '../types.js';
 import {waitBusNameFree,CancelledError} from '../data/busLease.js';
 import {CONTROL_LIMIT,INPUT_LIMIT,REPLY_LIMIT,encodeFrame,parseControl,parseHeader,parseReply,ProtocolFailure,type CalendarJob} from './protocol.js';

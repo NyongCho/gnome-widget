@@ -27,6 +27,8 @@ for (const [name, id] of Object.entries(exports)) {
     const path = new URL(`${name}.js`, sources);
     await writeFile(path, standaloneCode(ajv, {[name]:id}));
     entryPoints[name] = path.pathname;
+    await mkdir(new URL('validators/', dir), {recursive: true});
+    await writeFile(new URL(`validators/${name}.d.ts`, dir), `export function ${name}(data: unknown): boolean;\n`);
 }
 // Share Ajv's helper code without shipping Node or the schema compiler.
 await build({entryPoints, outdir:new URL('validators/', dir).pathname, bundle:true, splitting:true, format:'esm', platform:'browser', target:'es2022'});

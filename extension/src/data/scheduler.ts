@@ -1,4 +1,4 @@
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import type {ProviderMap,ProviderName,CalendarContext} from '../types.js';
 import type {DataConfig} from './config.js';
 import type {SessionClock} from './localSession.js';

@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import {summarizeCalendar,type CalendarSummary} from '../shared/calendarSummary.js';
 import type {ProviderMap,CalendarContext} from '../types.js';
 import {bounded,gioAsync} from '../data/async.js';

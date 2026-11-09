@@ -1,4 +1,4 @@
-import {Cancellation} from '../../shared/dataClient.js';
+import {Cancellation} from '../../shared/cancellation.js';
 import type {HttpClient} from '../contracts.js';
 import type {SessionClock} from '../localSession.js';
 import {DataCancelled,DataFailure} from '../errors.js';

@@ -1,4 +1,4 @@
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import {parseCalendarSummary,type CalendarSummary} from '../shared/calendarSummary.js';
 import {DataFailure} from '../data/errors.js';
 export interface StatusTransport {

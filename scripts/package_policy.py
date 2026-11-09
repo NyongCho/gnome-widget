@@ -2,6 +2,7 @@
 import json
 import re
 import subprocess
+import posixpath
 import xml.etree.ElementTree as ET
 from pathlib import Path,PurePosixPath
 
@@ -12,7 +13,22 @@ REQUIRED={'extension.js','prefs.js','calendar-worker.js','metadata.json','styles
           'licenses/ical-MPL-2.0.txt','licenses/timezones.txt','licenses/ajv-MIT.txt',
           'licenses/ajv-formats-MIT.txt'}
 CHUNK=re.compile(r'(?:engine|chunk)-[A-Z0-9]{8}\.js')
+MODULE=re.compile(r'(?:src|generated/validators|vendor/ical)/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+\.js')
+ASSETS={'vendor/timezones/zones.json','shaders/glass.glsl','shaders/blur.glsl'}
 ENGINE_SOURCE=re.compile(r'(?m)^\s*//\s*(?:src/calendar-worker/|vendor/(?:ical|timezones)/)')
+
+
+def allowed_file(name):
+    return (name in REQUIRED|{'LICENSE'}|ASSETS or name in {f'{asset}.js' for asset in ASSETS}
+            or CHUNK.fullmatch(name) or MODULE.fullmatch(name)) and 'tests' not in PurePosixPath(name).parts
+
+
+def local_import(name,dependency):
+    if not dependency.startswith(('./','../')):return None
+    target=posixpath.normpath(posixpath.join(posixpath.dirname(name),dependency))
+    if target=='..' or target.startswith(('../','/')) or '\\' in target:
+        raise ValueError(f'Import escapes public package: {name}: {dependency}')
+    return target
 
 
 def module_imports(files):
@@ -32,8 +48,8 @@ def validate_process_imports(files,dependencies=None):
         if name in seen:return
         seen.add(name)
         for dependency in dependencies[name]:
-            if dependency.startswith('./'):
-                target=str(PurePosixPath(name).parent/dependency[2:])
+            target=local_import(name,dependency)
+            if target is not None:
                 if target not in files:raise ValueError(f'Missing imported file: {target}')
                 visit(target,forbidden,seen)
             elif any(re.match(rf'gi://{library}(?:\?|$)',dependency) for library in forbidden):
@@ -51,7 +67,7 @@ def public_runtime_files(directory):
     # Local builds need this cache; GNOME's installer compiles the shipped XML.
     files.pop('schemas/gschemas.compiled',None)
     for name in files:
-        if name not in REQUIRED|{'LICENSE'} and not CHUNK.fullmatch(name):
+        if not allowed_file(name):
             raise ValueError(f'Unexpected public build output: {name}')
     return files
 
@@ -60,10 +76,12 @@ def validate_public(files,release=True):
     required=REQUIRED|({'LICENSE'} if release else set())
     if missing:=required-files.keys():raise ValueError(f'Missing public files: {sorted(missing)}')
     for name,data in files.items():
-        if name not in REQUIRED|{'LICENSE'} and not CHUNK.fullmatch(name) and not re.fullmatch(r'shaders/[a-z][a-z0-9-]*\.glsl',name):
+        if not allowed_file(name):
             raise ValueError(f'Unexpected public file: {name}')
         if data.startswith((b'\x7fELF',b'MZ',b'\x00asm')):raise ValueError(f'Executable content: {name}')
         data.decode('utf-8')
+    for asset in ASSETS:
+        if f'{asset}.js' in files and asset not in files:raise ValueError(f'Missing runtime asset: {asset}')
     meta=json.loads(files['metadata.json'])
     for key,value in {'uuid':'liquid-widgets@nyongcho.github.io','settings-schema':SCHEMA,
                       'shell-version':['50'],'url':'https://github.com/NyongCho/gnome-widget'}.items():
@@ -78,8 +96,8 @@ def validate_public(files,release=True):
         if not name.endswith('.js'):continue
         graph[name]=[]
         for dependency in dependencies[name]:
-            if dependency.startswith('./') and '..' not in PurePosixPath(dependency).parts:
-                target=str(PurePosixPath(name).parent/dependency[2:])
+            target=local_import(name,dependency)
+            if target is not None:
                 if target not in files:raise ValueError(f'Missing imported file: {target}')
                 graph[name].append(target)
             elif not dependency.startswith(('gi://','resource://')) and dependency not in {'cairo','system'}:
@@ -92,7 +110,7 @@ def validate_public(files,release=True):
         return seen
     for entry in ['extension.js','prefs.js']:
         for name in closure(entry,set()):
-            if name=='calendar-worker.js' or name.startswith('engine-') or ENGINE_SOURCE.search(files[name].decode()):
+            if name=='calendar-worker.js' or name.startswith(('engine-','src/calendar-worker/','vendor/ical/','vendor/timezones/')) or ENGINE_SOURCE.search(files[name].decode()):
                 raise ValueError(f'Calendar computation loaded by UI: {name}')
     reachable=set().union(*(closure(entry,set()) for entry in ['extension.js','prefs.js','calendar-worker.js']))
     if set(graph)-reachable:raise ValueError(f'Unused JavaScript: {sorted(set(graph)-reachable)}')

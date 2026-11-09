@@ -2,7 +2,7 @@ import {onPreferencesClosed} from './language.js';
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk?version=4.0';
 import type {PreferencesDataSession} from '../backend/contracts.js';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import type {WeatherLocation} from '../types.js';
 import type {TextBindings} from '../shared/i18n.js';
 export function addWeatherSettings(window:Adw.PreferencesWindow,page:Adw.PreferencesPage,ui:TextBindings,session:PreferencesDataSession):void{

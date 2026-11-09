@@ -26,6 +26,7 @@
     "ajv-formats": "3.0.1",
     "esbuild": "0.28.2",
     "ical.js": "2.2.1",
+    "prettier": "3.9.10",
     "tsx": "4.23.15",
     "typescript": "7.0.2"
   }

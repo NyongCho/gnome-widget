@@ -1,7 +1,7 @@
 import {onPreferencesClosed} from './language.js';
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk?version=4.0';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import type {PreferencesDataSession} from '../backend/contracts.js';
 import type {CalendarSummary,CalendarOrigin} from '../shared/calendarSummary.js';
 import {calendarSummaryStatus} from '../shared/calendarStatus.js';

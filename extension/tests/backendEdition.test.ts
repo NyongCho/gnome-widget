@@ -61,6 +61,12 @@ test('both emitted editions carry the selected metadata and schema without mutat
             assert.ok(existsSync(new URL('calendar-worker.js',base)));
             const worker=readFileSync(new URL('calendar-worker.js',base),'utf8');
             assert.ok(worker.startsWith('#!@GJS@ -m\n'));
+            for(const file of ['extension.js','prefs.js','calendar-worker.js'])
+                assert.ok(readFileSync(new URL(file,base)).length<20000,`${file} must delegate to readable modules`);
+            for(const file of ['src/widgets/clock.js','src/data/providers/weather.js','src/prefs/pages.js','vendor/timezones/zones.json'])
+                assert.ok(existsSync(new URL(file,base)),`missing readable module/data: ${file}`);
+            for(const file of ['src/backend/rust.js','src/dbus.js','src/shared/dataClient.js','src/prefs/rustDataSession.js'])
+                assert.ok(!existsSync(new URL(file,base)),`public graph includes personal implementation: ${file}`);
             // Check the emitted bundle, where an unused import can still retain code.
             for(const file of ['extension.js','prefs.js']){
                 const code=readFileSync(new URL(file,base),'utf8');

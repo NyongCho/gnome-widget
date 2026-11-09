@@ -1,4 +1,4 @@
-import {Cancellation} from '../../shared/dataClient.js';
+import {Cancellation} from '../../shared/cancellation.js';
 import {parseProviderState} from '../../shared/validation.js';
 import type {CalendarData,ProviderMap} from '../../types.js';
 import {INPUT_LIMIT,REPLY_LIMIT,ProtocolFailure,type CalendarJob} from '../../calendar/protocol.js';

@@ -2,7 +2,7 @@ import Gio from 'gi://Gio';
 import GioUnix from 'gi://GioUnix?version=2.0';
 import GLib from 'gi://GLib';
 import System from 'system';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import {acquireBusLease,LeaseBusyError,type BusLease} from '../data/busLease.js';
 import {CONTROL_LIMIT,INPUT_LIMIT,REPLY_LIMIT,frameLength,parseHeader,parseReply,ProtocolFailure,type CalendarJobHeader} from '../calendar/protocol.js';
 import {readExact,readFrame,expectEof,writeFrame,closeStream} from '../calendar/streams.js';

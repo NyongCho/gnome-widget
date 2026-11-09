@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import {bounded,gioAsync} from './async.js';
 import type {MprisBus,MprisEvent,PlayerSnapshot} from './providers/media.js';
 const BUS='org.freedesktop.DBus',BUS_PATH='/org/freedesktop/DBus',PATH='/org/mpris/MediaPlayer2',PROPS='org.freedesktop.DBus.Properties',PLAYER='org.mpris.MediaPlayer2.Player';

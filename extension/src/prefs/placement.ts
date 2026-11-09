@@ -1,6 +1,6 @@
 import {onPreferencesClosed} from './language.js';
 import Adw from 'gi://Adw';import Gtk from 'gi://Gtk?version=4.0';import Gdk from 'gi://Gdk?version=4.0';import Gio from 'gi://Gio';
-import type {PreferencesDataSession} from '../backend/contracts.js';import {Cancellation} from '../shared/dataClient.js';
+import type {PreferencesDataSession} from '../backend/contracts.js';import {Cancellation} from '../shared/cancellation.js';
 import type {TextBindings} from '../shared/i18n.js';
 export function addDisplaySettings(window:Adw.PreferencesWindow,page:Adw.PreferencesPage,settings:Gio.Settings,ui:TextBindings):void{
  const group=ui.bind(new Adw.PreferencesGroup(),{title:'화면과 위치',description:'선택한 화면이 없으면 주 모니터에 표시합니다. 여백은 작업 영역에 맞게 제한됩니다.'});page.add(group);

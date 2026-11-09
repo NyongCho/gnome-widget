@@ -1,6 +1,6 @@
 import Soup from 'gi://Soup?version=3.0';
 import Gio from 'gi://Gio';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import {bounded,gioAsync,checkIO} from './async.js';
 import {DataFailure,DataCancelled} from './errors.js';
 import {readBytes,closeStream} from '../calendar/streams.js';

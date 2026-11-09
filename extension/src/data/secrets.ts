@@ -1,4 +1,4 @@
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import type {SecretStore} from './contracts.js';
 export type {SecretStore} from './contracts.js';
 import Gio from 'gi://Gio';

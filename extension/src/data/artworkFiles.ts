@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import {bounded,gioAsync,checkIO,isIoError} from './async.js';
 import {GioPrivateFiles} from './files.js';
 import {acquireBusLease} from './busLease.js';

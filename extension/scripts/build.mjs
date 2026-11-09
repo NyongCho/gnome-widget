@@ -5,6 +5,7 @@ import {execFileSync} from 'node:child_process';
 import {parseArgs} from 'node:util';
 import {resolve} from 'node:path';
 import {assertCalendarIsolated} from '../src/shared/buildPolicy.ts';
+import {buildPublicModules} from './public-modules.mjs';
 
 const {values}=parseArgs({options:{edition:{type:'string',default:'rust'},tests:{type:'boolean',default:false}},strict:true});
 if(!['rust','gjs'].includes(values.edition))throw new Error('Expected --edition rust or gjs');
@@ -30,13 +31,14 @@ await rm(outdir,{recursive:true,force:true});
 await mkdir(outdir,{recursive:true});
 const entryPoints=['src/extension.ts','src/prefs.ts'];
 if(values.edition==='rust')entryPoints.push('src/dbus.ts','src/shared/dataClient.ts','src/shared/providerStore.ts');
-const ui=await build({...common,entryPoints,outdir,metafile:true});
-assertCalendarIsolated(ui.metafile);
 if(values.edition==='gjs'){
-    await build({...common,entryPoints:{'calendar-worker':'src/calendar-worker/main.ts'},outdir,splitting:true,banner:{js:'#!@GJS@ -m'}});
+    await buildPublicModules(edition,outdir);
+}else{
+    const ui=await build({...common,entryPoints,outdir,metafile:true});
+    assertCalendarIsolated(ui.metafile);
 }
 if(values.edition==='rust'||values.tests){
-    await build({...common,entryPoints:['src/shared/validation.ts'],outdir:`${outdir}/shared`});
+    await build({...common,entryPoints:['src/shared/validation.ts','src/shared/snapshot.ts'],outdir:`${outdir}/shared`});
     await build({...common,entryPoints:{spike:'tests/gnome/spike.ts',preferences:'tests/gnome/preferences.js','card-order':'tests/gnome/card-order.js',benchmark:'tests/gnome/benchmark.js'},outdir:`${outdir}/tests`});
 }
 await writeFile(`${outdir}/metadata.json`,JSON.stringify(metadata,null,2)+'\n');

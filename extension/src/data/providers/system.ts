@@ -1,4 +1,4 @@
-import {Cancellation} from '../../shared/dataClient.js';
+import {Cancellation} from '../../shared/cancellation.js';
 import type {ProviderMap,SystemData} from '../../types.js';
 import type {LinuxFiles} from '../contracts.js';
 import {DataFailure,DataCancelled} from '../errors.js';

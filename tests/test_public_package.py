@@ -52,6 +52,23 @@ export default helper;
     def test_readable_worker_closure_is_accepted(self):
         validate_public(artifact())
 
+    def test_named_modules_resolve_safe_parent_imports(self):
+        validate_public(artifact()|{
+            'extension.js':b'import "./src/widgets/clock.js";',
+            'src/widgets/clock.js':b'import "../shared/time.js";',
+            'src/shared/time.js':b'export const minute = 60;\n',
+        })
+
+    def test_modular_graph_rejects_escape_missing_unused_and_cross_process_imports(self):
+        for dependency in ['../../../outside.js','../missing.js','gi://Gtk',
+                '../calendar-worker/engine.js']:
+            files=artifact()|{'extension.js':b'import "./src/widgets/clock.js";',
+                'src/widgets/clock.js':f'import "{dependency}";'.encode()}
+            if dependency=='../calendar-worker/engine.js':
+                files['src/calendar-worker/engine.js']=b'export const engine = 1;'
+            with self.subTest(dependency=dependency),self.assertRaises(ValueError):validate_public(files)
+        with self.assertRaises(ValueError):validate_public(artifact()|{'src/widgets/unused.js':b'export const unused = 1;'})
+
     def test_compiled_schema_is_not_shipped(self):
         with self.assertRaisesRegex(ValueError,'Unexpected public file: schemas/gschemas.compiled'):
             validate_public(artifact()|{'schemas/gschemas.compiled':b'GVariant'})

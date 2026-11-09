@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import type {LinuxFiles} from './contracts.js';
 import {bounded,gioAsync,checkIO} from './async.js';
 import {DataFailure,DataCancelled} from './errors.js';

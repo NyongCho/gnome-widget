@@ -1,5 +1,5 @@
-import {Cancellation} from '../shared/dataClient.js';
-import {weatherLocation as validateLocation} from '../../generated/validators.js';
+import {Cancellation} from '../shared/cancellation.js';
+import {weatherLocation as validateLocation} from '../../generated/validators/weatherLocation.js';
 import type {Settings,WeatherLocation} from '../types.js';
 import {ConfigStore,CALENDAR_CACHE_FILES,WEATHER_CACHE_FILE} from './config.js';
 import type {PrivateFiles} from './contracts.js';

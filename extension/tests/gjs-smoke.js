@@ -1,6 +1,7 @@
+import {parseSnapshot} from '../dist/shared/snapshot.js';
 // Execute the actual bundle in GJS, independently of Node and the Shell UI.
 import Gio from 'gi://Gio';
-import { parseSnapshot, parseProviderState, parseSettings, parseCalendarContext, parseWeatherLocation } from '../dist/shared/validation.js';
+import { parseProviderState, parseSettings, parseCalendarContext, parseWeatherLocation } from '../dist/shared/validation.js';
 const read = path => new TextDecoder().decode(Gio.File.new_for_path(path).load_contents(null)[1]);
 const snapshot = parseSnapshot(read('tests/fixtures/protocol/snapshot-valid.json'));
 if (snapshot.calendar.data.events[0].title !== '오늘 일정') throw new Error('UTF-8 round trip');

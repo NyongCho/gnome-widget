@@ -1,5 +1,5 @@
-import {dataConfig as validate} from '../../generated/validators.js';
-import {Cancellation} from '../shared/dataClient.js';
+import {dataConfig as validate} from '../../generated/validators/dataConfig.js';
+import {Cancellation} from '../shared/cancellation.js';
 import type {WeatherLocation} from '../types.js';
 import type {PrivateFiles} from './contracts.js';
 import {DataFailure,DataCancelled} from './errors.js';

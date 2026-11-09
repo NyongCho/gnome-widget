@@ -1,7 +1,7 @@
 import GLib from 'gi://GLib';
 import type {PreferencesDataSession} from '../backend/contracts.js';
 import {createPublicDataServices} from '../data/runtime.js';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import {DataCancelled,DataFailure} from '../data/errors.js';
 import type {WeatherLocation} from '../types.js';
 import {CalendarStatusClient,type StatusTransport} from '../calendar/statusClient.js';

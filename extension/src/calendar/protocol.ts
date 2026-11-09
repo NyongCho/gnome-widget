@@ -1,4 +1,6 @@
-import {workerHeader, workerControl, workerReply} from '../../generated/validators.js';
+import {workerHeader} from '../../generated/validators/workerHeader.js';
+import {workerControl} from '../../generated/validators/workerControl.js';
+import {workerReply} from '../../generated/validators/workerReply.js';
 import type {CalendarContext, CalendarData} from '../types.js';
 
 export const CONTROL_LIMIT = 16 * 1024;

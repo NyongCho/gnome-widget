@@ -1,8 +1,9 @@
+import {parseSnapshot} from '../src/shared/snapshot.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {ProviderStore} from '../src/shared/providerStore.js';
-import {parseSnapshot, parseProviderState} from '../src/shared/validation.js';
+import {parseProviderState} from '../src/shared/validation.js';
 const fixture = () => parseSnapshot(readFileSync(new URL('../../tests/fixtures/protocol/snapshot-valid.json', import.meta.url), 'utf8'));
 test('provider_revision_is_monotonic', () => {
     const store=new ProviderStore();

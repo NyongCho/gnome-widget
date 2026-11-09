@@ -1,4 +1,4 @@
-import {calendarSummary as validate} from '../../generated/validators.js';
+import {calendarSummary as validate} from '../../generated/validators/calendarSummary.js';
 import type {CalendarContext,ProviderMap,ProviderStatus} from '../types.js';
 import {DataFailure} from '../data/errors.js';
 import {parseProviderState} from './validation.js';

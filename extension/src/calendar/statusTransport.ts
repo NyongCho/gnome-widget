@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import type {StatusTransport} from './statusClient.js';
 import {STATUS_BUS,STATUS_PATH,STATUS_INTERFACE} from './statusContract.js';
 import {DataFailure} from '../data/errors.js';

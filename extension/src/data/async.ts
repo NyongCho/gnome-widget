@@ -1,6 +1,6 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
-import type {Cancellation} from '../shared/dataClient.js';
+import type {Cancellation} from '../shared/cancellation.js';
 import {DataCancelled,DataFailure,type DataErrorCode} from './errors.js';
 export function checkIO(cancel:Gio.Cancellable):void {if(cancel.is_cancelled())throw new DataCancelled();}
 export function gioAsync<T>(start:(callback:(source:unknown,result:Gio.AsyncResult)=>void)=>void,finish:(result:Gio.AsyncResult)=>T):Promise<T> {

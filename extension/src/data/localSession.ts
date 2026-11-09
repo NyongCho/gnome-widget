@@ -1,5 +1,5 @@
 import type {WidgetDataSession,WidgetSessionOptions} from '../backend/contracts.js';
-import {Cancellation} from '../shared/dataClient.js';
+import {Cancellation} from '../shared/cancellation.js';
 import {PROVIDERS} from '../shared/providerStore.js';
 import type {CalendarContext,ProviderName} from '../types.js';
 import {defaultConfig,type ConfigStore,type DataConfig} from './config.js';

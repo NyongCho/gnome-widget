@@ -1,7 +1,8 @@
+import {parseSnapshot} from '../src/shared/snapshot.js';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseSettings, parseSnapshot } from '../src/shared/validation.js';
+import { parseSettings } from '../src/shared/validation.js';
 const fixture = (name: string) => JSON.parse(readFileSync(new URL(`../../tests/fixtures/protocol/${name}.json`, import.meta.url), 'utf8'));
 const snapshot = fixture('snapshot-valid');
 const settings = fixture('settings-valid');

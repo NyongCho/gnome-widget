@@ -1,14 +1,11 @@
 import type {ProviderName,CalendarContext} from '../types.js';
 import {ProviderStore,PROVIDERS} from './providerStore.js';
-import {parseSnapshot,parseProviderState} from './validation.js';
+import {parseProviderState} from './validation.js';
+import {parseSnapshot} from './snapshot.js';
+import {Cancellation} from './cancellation.js';
+export {Cancellation} from './cancellation.js';
 export type ChangeHandler=(name:string,revision:number,payload:string)=>void;
 export type ConnectionState='connecting'|'connected'|'disconnected'|'invalid-data'|'unavailable';
-export class Cancellation {
-    cancelled=false;
-    private listeners=new Set<()=>void>();
-    onCancel(callback:()=>void):()=>void {if(this.cancelled) callback(); else this.listeners.add(callback);return()=>{this.listeners.delete(callback);};}
-    cancel():void {this.cancelled=true;for(const callback of this.listeners) callback();this.listeners.clear();}
-}
 export interface Transport {
     schedule(delay:number,callback:()=>void):()=>void;
     watchOwner(callback:(owner:string|null)=>void):()=>void;

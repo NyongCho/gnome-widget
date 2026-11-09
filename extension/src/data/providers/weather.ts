@@ -1,4 +1,4 @@
-import {Cancellation} from '../../shared/dataClient.js';
+import {Cancellation} from '../../shared/cancellation.js';
 import {parseProviderState,parseWeatherLocation} from '../../shared/validation.js';
 import type {ProviderMap,WeatherData,WeatherLocation} from '../../types.js';
 import type {HttpClient,PrivateFiles} from '../contracts.js';

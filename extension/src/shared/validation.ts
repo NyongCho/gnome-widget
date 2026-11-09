@@ -1,22 +1,29 @@
-import type { CalendarContext, ProviderMap, ProviderName, Settings, Snapshot, WeatherLocation } from '../types.js';
-import * as validators from '../../generated/validators.js';
+import type { CalendarContext, ProviderMap, ProviderName, Settings, WeatherLocation } from '../types.js';
+import {settings} from '../../generated/validators/settings.js';
+import {calendarContext} from '../../generated/validators/calendarContext.js';
+import {weatherLocation} from '../../generated/validators/weatherLocation.js';
+import {locationSearchResults} from '../../generated/validators/locationSearchResults.js';
+import {calendar} from '../../generated/validators/calendar.js';
+import {weather} from '../../generated/validators/weather.js';
+import {system} from '../../generated/validators/system.js';
+import {network} from '../../generated/validators/network.js';
+import {media} from '../../generated/validators/media.js';
 export const MAX_PAYLOAD_BYTES = 512 * 1024;
 export class ValidationError extends Error {
     constructor() { super('Invalid protocol payload'); this.name = 'ValidationError'; }
 }
-function parse<T>(input: string, validate: (data: unknown) => boolean): T {
+export function parse<T>(input: string, validate: (data: unknown) => boolean): T {
     if (new TextEncoder().encode(input).length > MAX_PAYLOAD_BYTES) throw new ValidationError();
     let value: unknown;
     try { value = JSON.parse(input); } catch { throw new ValidationError(); }
     if (!validate(value)) throw new ValidationError();
     return value as T;
 }
-export function parseSnapshot(input: string): Snapshot { return parse(input, validators.snapshot); }
-export function parseSettings(input: string): Settings { return parse(input, validators.settings); }
-export function parseCalendarContext(input: string): CalendarContext { return parse(input, validators.calendarContext); }
-export function parseWeatherLocation(input: string): WeatherLocation | null { return parse(input, validators.weatherLocation); }
-export function parseLocationSearchResults(input: string): WeatherLocation[] { return parse(input, validators.locationSearchResults); }
-const providerValidators = { calendar: validators.calendar, weather: validators.weather, system: validators.system, network: validators.network, media: validators.media };
+export function parseSettings(input: string): Settings { return parse(input, settings); }
+export function parseCalendarContext(input: string): CalendarContext { return parse(input, calendarContext); }
+export function parseWeatherLocation(input: string): WeatherLocation | null { return parse(input, weatherLocation); }
+export function parseLocationSearchResults(input: string): WeatherLocation[] { return parse(input, locationSearchResults); }
+const providerValidators = { calendar: calendar, weather: weather, system: system, network: network, media: media };
 export function parseProviderState<K extends ProviderName>(name: K, input: string): ProviderMap[K] {
     if (!Object.hasOwn(providerValidators, name)) throw new ValidationError();
     return parse(input, providerValidators[name]);
