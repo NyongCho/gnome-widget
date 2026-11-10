@@ -236,8 +236,8 @@ export class WeatherProvider implements ProviderDriver<'weather'> {
                     }
                 }
             } catch (error) {
-                if (cancel.cancelled || error instanceof DataCancelled)
-                    throw new DataCancelled(); /* Ignore unreadable or incompatible caches. */
+                if (cancel.cancelled || error instanceof DataCancelled) throw new DataCancelled();
+                // Ignore unreadable or incompatible caches.
             }
             throw failure;
         }

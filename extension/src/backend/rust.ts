@@ -1,7 +1,6 @@
 import { DataClient, type Transport } from '../shared/dataClient.js';
 import type { ProviderName, CalendarContext } from '../types.js';
 import type { WidgetDataSession, WidgetSessionOptions } from './contracts.js';
-/** Preserves the existing Rust D-Bus client and its late-subscription cleanup. */
 export class RustWidgetSession implements WidgetDataSession {
     private client: DataClient;
     private destroyed = false;

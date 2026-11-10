@@ -87,7 +87,6 @@ export async function readTemperature(
                     const chip = (await files.readText(`${directory}/name`, 1024, cancel)).trim();
                     if (chip !== 'coretemp' && chip !== 'k10temp') return sensors;
                     const names = await files.listNames(directory, 256, cancel);
-                    // At most four device tasks; each device reads its sensors serially.
                     for (const labelFile of names.filter((name) => /^temp\d+_label$/.test(name))) {
                         if (cancel.cancelled) throw new DataCancelled();
                         try {

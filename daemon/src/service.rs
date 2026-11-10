@@ -1,4 +1,3 @@
-//! Session-bus service. Provider collection is injected; network/keyring providers arrive later.
 use crate::{
     cache::{CacheKey, PrivateStore},
     config::Config,
@@ -62,7 +61,6 @@ pub trait Collector: Send + Sync {
         request: CollectRequest,
     ) -> Pin<Box<dyn Future<Output = Result<Collected, Failure>> + Send + '_>>;
 }
-/// Explicit unavailable states until the real provider implementations are installed.
 pub struct UnavailableCollector;
 impl Collector for UnavailableCollector {
     fn collect(
