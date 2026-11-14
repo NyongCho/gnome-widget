@@ -1,0 +1,86 @@
+libmutter-Message: 00:16:52.327: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:835364): libmutter-WARNING **: 00:16:52.328: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:835364): libmutter-WARNING **: 00:16:52.328: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 00:16:52.485: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 00:16:52.486: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 00:16:52.486: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 00:16:52.486: Obtained a high priority EGL context
+libmutter-Message: 00:16:52.509: Added virtual monitor Meta-0
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.a11y.Bus'
+libmutter-Message: 00:16:52.519: Using public X11 display :2, (using unix:/tmp/.X11-unix/X3 for managed services)
+libmutter-Message: 00:16:52.519: Using Wayland display name 'gnome-shell-test-display'
+dbus-daemon[835390]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835390]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+GNOME Shell-Message: 00:16:52.725: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.Shell.Screencast' requested by ':1.1' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.1' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.Shell.CalendarServer' requested by ':1.1' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Sources5' requested by ':1.7' (uid=1000 pid=835410 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+GNOME Shell-Message: 00:16:52.834: Registering session with GDM
+GNOME Shell-Message: 00:16:52.915: Will monitor session 2
+GNOME Shell-Message: 00:16:52.915: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+GNOME Shell-Message: 00:16:52.924: Failed to register AuthenticationAgent
+
+(gnome-shell:835364): libmutter-WARNING **: 00:16:52.927: Failed to load background 'file:///usr/share/backgrounds/gnome/adwaita-morning.jpg': Error opening file /usr/share/backgrounds/gnome/adwaita-morning.jpg: No such file or directory
+
+(gnome-shell:835364): libmutter-WARNING **: 00:16:52.927: Failed to load background 'file:///usr/share/backgrounds/gnome/adwaita-day.jpg': Error opening file /usr/share/backgrounds/gnome/adwaita-day.jpg: No such file or directory
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.Shell.Notifications' requested by ':1.1' (uid=1000 pid=835364 comm="/usr/bin/gnome-shell --automation-script /tmp/glas" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.OnlineAccounts' requested by ':1.8' (uid=1000 pid=835425 comm="/usr/libexec/evolution-source-registry" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Sources5'
+goa-daemon-Message: 00:16:52.955: goa-daemon version 3.58.0 starting
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.Identity' requested by ':1.9' (uid=1000 pid=835455 comm="/usr/libexec/goa-daemon" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Calendar8' requested by ':1.7' (uid=1000 pid=835410 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.Shell.CalendarServer'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.OnlineAccounts'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.Identity'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.Shell.Notifications'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Calendar8'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.evolution.dataserver.AddressBook10' requested by ':1.12' (uid=1000 pid=835470 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.AddressBook10'
+** Message: 00:16:53.001: Failed to start camera monitor
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.15' (uid=1000 pid=835434 comm="ibus-daemon --panel disable" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.19' (uid=1000 pid=835521 comm="/usr/libexec/ibus-extension-gtk3" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.21' (uid=1000 pid=835761 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.21' (uid=1000 pid=835761 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.23' (uid=1000 pid=835778 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.21' (uid=1000 pid=835761 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:835761): xdg-desktop-portal-WARNING **: 00:16:53.335: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.21' (uid=1000 pid=835761 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 00:16:53.339: couldn't access control socket: /tmp/glass-native-runtime-7kxe4lb3/keyring/control: No such file or directory
+** Message: 00:16:53.339: couldn't access control socket: /tmp/glass-native-runtime-7kxe4lb3/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+GNOME Shell-Message: 00:16:53.443: GNOME Shell started at Sun Nov 15 2026 00:16:52 GMT+0900 (Korean Standard Time)
+GNOME Shell-Message: 00:16:53.443: Registering display with GDM
+
+(gnome-shell:835364): GnomeDesktop-WARNING **: 00:16:53.455: Could not create transient scope for PID 835811: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+dbus-daemon[835362]: [session uid=1000 pid=835362 pidfd=5] Successfully activated service 'org.gnome.Shell.Screencast'
+GLASS_NATIVE enabled cycle=0 LiquidWidgetsGlassEffect50_rust paints=3 bytes=580320
+GLASS_NATIVE enabled cycle=0 LiquidWidgetsGlassEffect50_gjs paints=3 bytes=580320
+GLASS_NATIVE enabled cycle=1 LiquidWidgetsGlassEffect50_rust paints=3 bytes=580320
+GLASS_NATIVE enabled cycle=1 LiquidWidgetsGlassEffect50_gjs paints=3 bytes=580320
+GLASS_NATIVE enabled cycle=2 LiquidWidgetsGlassEffect50_rust paints=3 bytes=580320
+GLASS_NATIVE enabled cycle=2 LiquidWidgetsGlassEffect50_gjs paints=4 bytes=580320
+GLASS_NATIVE PASS real production bundles coexist, paint, repaint, detach, release, and reenable across 3 cycles
+** Message: 00:17:00.989: Shutting down GNOME Shell
+Gdk-Message: 00:17:01.031: Lost connection to Wayland compositor.
+Gdk-Message: 00:17:01.031: Lost connection to Wayland compositor.
+Gdk-Message: 00:17:01.031: Error reading events from display: Broken pipe
+libmutter-Message: 00:17:01.044: Removed virtual monitor Meta-0
+args: ['/tmp/glass-review-20261115-0n56sgg4/headless-wrapper.py', '/usr/bin/gnome-shell', '--automation-script', '/tmp/glass-review-20261115-0n56sgg4/headless-probe.js', '--force-animations', '--headless', '--virtual-monitor', '1280x720', '--wayland-display', 'gnome-shell-test-display']
+------------------------------------------------------------
+------------------------------------------------------------
+gnome-shell-calendar-server[835410]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting
+
+(evolution-calendar-factory:835470): libedbus-private-WARNING **: 00:17:01.148: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)

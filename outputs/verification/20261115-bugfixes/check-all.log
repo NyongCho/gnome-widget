@@ -1,0 +1,1036 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling libc v0.2.191
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+    Checking pin-project-lite v0.2.17
+   Compiling find-msvc-tools v0.1.15
+   Compiling shlex v2.0.1
+    Checking once_cell v1.21.4
+    Checking stable_deref_trait v1.2.1
+    Checking futures-core v0.3.34
+   Compiling autocfg v1.5.1
+   Compiling pkg-config v0.3.34
+    Checking bytes v1.12.1
+    Checking typenum v1.20.1
+    Checking smallvec v1.16.4
+    Checking cfg-if v1.0.5
+    Checking itoa v1.0.18
+   Compiling dunce v1.0.5
+   Compiling fs_extra v1.3.0
+   Compiling winnow v1.0.4
+   Compiling equivalent v1.0.3
+   Compiling hashbrown v0.17.1
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+    Checking hybrid-array v0.4.15
+    Checking utf_types v1.0.0
+    Checking writeable v0.6.4
+    Checking litemap v0.8.3
+    Checking zeroize v1.9.1
+    Checking percent-encoding v2.3.2
+   Compiling aws-lc-rs v1.19.0
+   Compiling icu_properties_data v2.4.0
+    Checking utf8_iter v1.1.0
+    Checking memchr v2.8.3
+   Compiling icu_normalizer_data v2.4.0
+    Checking rustls-pki-types v1.15.1
+   Compiling num-traits v0.2.19
+    Checking http v1.5.0
+    Checking futures-task v0.3.34
+   Compiling indexmap v2.14.2
+    Checking crypto-common v0.2.2
+    Checking slab v0.4.12
+    Checking tracing-core v0.1.36
+   Compiling getrandom v0.3.4
+    Checking untrusted v0.9.0
+   Compiling rustls v0.23.46
+   Compiling httparse v1.10.1
+   Compiling zmij v1.0.23
+    Checking parking v2.2.1
+    Checking http-body v1.1.0
+   Compiling zerocopy v0.8.63
+   Compiling version_check v0.9.5
+    Checking bitflags v2.13.2
+   Compiling getrandom v0.4.3
+    Checking cmov v0.5.4
+   Compiling toml_parser v1.1.5+spec-1.1.0
+    Checking block-buffer v0.12.1
+    Checking block-padding v0.4.2
+    Checking regex-syntax v0.8.11
+   Compiling parking_lot_core v0.9.12
+   Compiling endi v1.1.1
+   Compiling rustix v1.1.6
+   Compiling ref-cast v1.0.27
+    Checking subtle v2.6.1
+    Checking tower-service v0.3.3
+    Checking const-oid v0.10.2
+   Compiling serde_json v1.0.154
+    Checking ctutils v0.4.8
+    Checking try-lock v0.2.5
+    Checking inout v0.2.5
+   Compiling ahash v0.8.12
+    Checking want v0.3.2
+    Checking event-listener v5.4.2
+    Checking aho-corasick v1.1.5
+    Checking form_urlencoded v1.2.2
+    Checking atomic-waker v1.1.2
+    Checking fastrand v2.5.0
+    Checking linux-raw-sys v0.12.1
+    Checking scopeguard v1.2.0
+    Checking digest v0.11.3
+    Checking lock_api v0.4.14
+    Checking cipher v0.5.2
+    Checking futures-channel v0.3.34
+    Checking event-listener-strategy v0.5.4
+    Checking sync_wrapper v1.0.2
+    Checking bit-vec v0.8.0
+   Compiling toml_edit v0.25.17+spec-1.1.0
+    Checking allocator-api2 v0.2.21
+    Checking borrow-or-share v0.2.4
+    Checking foldhash v0.2.0
+    Checking tower-layer v0.3.3
+   Compiling heck v0.5.0
+    Checking base64 v0.23.1
+    Checking openssl-probe v0.2.2
+    Checking syn v3.0.9
+   Compiling unicode-general-category v1.1.0
+    Checking futures-io v0.3.34
+    Checking ipnet v2.12.2
+    Checking cpufeatures v0.3.1
+   Compiling syn v2.0.119
+    Checking num-integer v0.1.47
+    Checking num-complex v0.4.6
+   Compiling jsonschema-value v0.60.2
+    Checking futures-lite v2.6.1
+    Checking rustls-native-certs v0.8.5
+    Checking bit-set v0.8.0
+    Checking hmac v0.13.0
+    Checking async-broadcast v0.7.2
+    Checking num-bigint v0.4.8
+    Checking num-iter v0.1.46
+    Checking ordered-stream v0.2.0
+    Checking log v0.4.35
+    Checking vsimd v0.8.0
+    Checking outref v0.5.2
+   Compiling proc-macro-crate v3.5.0
+    Checking num-cmp v0.1.0
+    Checking errno v0.3.14
+    Checking mio v1.2.4
+   Compiling jobserver v0.1.35
+    Checking signal-hook-registry v1.4.8
+    Checking socket2 v0.6.5
+    Checking cpubits v0.1.1
+   Compiling cc v1.11.0
+    Checking micromap v0.3.0
+    Checking ryu v1.0.23
+    Checking hex v0.4.3
+   Compiling thiserror v2.0.21
+    Checking bytecount v0.6.9
+    Checking parking_lot v0.12.5
+    Checking regex-automata v0.4.18
+    Checking jsonschema-regex v0.60.2
+    Checking uuid-simd v0.8.0
+    Checking aes v0.9.4
+    Checking hkdf v0.13.0
+    Checking sha2 v0.11.1
+    Checking cbc v0.2.1
+    Checking http-body-util v0.1.5
+    Checking data-encoding v2.11.1
+    Checking toml_writer v1.1.3+spec-1.1.0
+    Checking num-rational v0.4.2
+    Checking uuid v1.29.0
+    Checking serde_spanned v1.1.2
+    Checking toml v1.1.8+spec-1.1.0
+    Checking num v0.4.3
+    Checking fraction v0.17.0
+   Compiling cmake v0.1.58
+   Compiling liquid-widgets-daemon v0.1.0 (/home/nyong/.codex/worktrees/bb8e/gnome-widget/daemon)
+   Compiling aws-lc-sys v0.47.0
+    Checking regex v1.13.1
+    Checking fancy-regex v0.19.2
+   Compiling enumflags2_derive v0.7.12
+   Compiling tracing-attributes v0.1.31
+   Compiling strum_macros v0.28.0
+   Compiling synstructure v0.14.0
+    Checking tempfile v3.27.0
+   Compiling serde_derive v1.0.229
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+   Compiling displaydoc v0.2.7
+   Compiling tokio-macros v2.7.2
+   Compiling futures-macro v0.3.34
+   Compiling ref-cast-impl v1.0.27
+   Compiling serde_repr v0.1.21
+   Compiling async-trait v0.1.92
+   Compiling async-recursion v1.2.0
+   Compiling thiserror-impl v2.0.21
+    Checking tracing v0.1.44
+    Checking tokio v1.54.1
+    Checking futures-util v0.3.34
+    Checking zerofrom v0.1.8
+    Checking yoke v0.8.4
+    Checking zerovec v0.11.9
+    Checking zerotrie v0.2.5
+    Checking strum v0.28.0
+    Checking tinystr v0.8.5
+    Checking potential_utf v0.1.6
+    Checking icu_locale_core v2.4.0
+    Checking icu_collections v2.4.0
+    Checking icu_provider v2.4.0
+    Checking icu_normalizer v2.4.0
+    Checking icu_properties v2.4.0
+    Checking zvariant_utils v4.2.0
+    Checking enumflags2 v0.7.12
+    Checking zcheapstr v1.2.0
+    Checking fluent-uri v0.4.1
+    Checking serde_urlencoded v0.7.1
+    Checking email_address v0.2.9
+    Checking chrono v0.4.45
+    Checking referencing v0.60.2
+   Compiling zvariant_derive v5.15.1
+    Checking idna_adapter v1.2.2
+    Checking jsonschema v0.60.2
+    Checking idna v1.1.0
+   Compiling zvariant v5.15.1
+    Checking url v2.5.8
+    Checking hyper v1.12.0
+    Checking tower v0.5.3
+    Checking tower-http v0.6.11
+    Checking hyper-util v0.1.21
+    Checking zbus_names v4.3.5
+   Compiling zbus_macros v5.19.0
+    Checking zbus v5.19.0
+    Checking rustls-webpki v0.103.16
+    Checking tokio-rustls v0.26.6
+    Checking rustls-platform-verifier v0.7.1
+    Checking hyper-rustls v0.27.10
+    Checking reqwest v0.13.5
+    Checking secret-service v5.2.0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.26s
+   Compiling unicode-ident v1.0.27
+   Compiling pin-project-lite v0.2.17
+   Compiling futures-core v0.3.34
+   Compiling stable_deref_trait v1.2.1
+   Compiling winnow v1.0.4
+   Compiling equivalent v1.0.3
+   Compiling once_cell v1.21.4
+   Compiling typenum v1.20.1
+   Compiling itoa v1.0.18
+   Compiling smallvec v1.16.4
+   Compiling bytes v1.12.1
+   Compiling cfg-if v1.0.5
+   Compiling libc v0.2.191
+   Compiling serde_core v1.0.229
+   Compiling num-traits v0.2.19
+   Compiling utf_types v1.0.0
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling percent-encoding v2.3.2
+   Compiling zeroize v1.9.1
+   Compiling indexmap v2.14.2
+   Compiling memchr v2.8.3
+   Compiling slab v0.4.12
+   Compiling endi v1.1.1
+   Compiling proc-macro2 v1.0.107
+   Compiling futures-task v0.3.34
+   Compiling tracing-core v0.1.36
+   Compiling icu_properties_data v2.4.0
+   Compiling icu_normalizer_data v2.4.0
+   Compiling utf8_iter v1.1.0
+   Compiling rustls-pki-types v1.15.1
+   Compiling cmov v0.5.4
+   Compiling untrusted v0.9.0
+   Compiling parking v2.2.1
+   Compiling try-lock v0.2.5
+   Compiling bitflags v2.13.2
+   Compiling regex-syntax v0.8.11
+   Compiling subtle v2.6.1
+   Compiling tower-service v0.3.3
+   Compiling const-oid v0.10.2
+   Compiling event-listener v5.4.2
+   Compiling want v0.3.2
+   Compiling zerocopy v0.8.63
+   Compiling zmij v1.0.23
+   Compiling ctutils v0.4.8
+   Compiling httparse v1.10.1
+   Compiling form_urlencoded v1.2.2
+   Compiling aho-corasick v1.1.5
+   Compiling rustix v1.1.6
+   Compiling quote v1.0.47
+   Compiling http v1.5.0
+   Compiling atomic-waker v1.1.2
+   Compiling scopeguard v1.2.0
+   Compiling event-listener-strategy v0.5.4
+   Compiling sync_wrapper v1.0.2
+   Compiling lock_api v0.4.14
+   Compiling futures-channel v0.3.34
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling allocator-api2 v0.2.21
+   Compiling num-integer v0.1.47
+   Compiling hybrid-array v0.4.15
+   Compiling num-complex v0.4.6
+   Compiling bit-vec v0.8.0
+   Compiling borrow-or-share v0.2.4
+   Compiling futures-io v0.3.34
+   Compiling foldhash v0.2.0
+   Compiling linux-raw-sys v0.12.1
+   Compiling base64 v0.23.1
+   Compiling ipnet v2.12.2
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling jobserver v0.1.35
+   Compiling errno v0.3.14
+   Compiling socket2 v0.6.5
+   Compiling mio v1.2.4
+   Compiling signal-hook-registry v1.4.8
+   Compiling num-bigint v0.4.8
+   Compiling num-iter v0.1.46
+   Compiling cc v1.11.0
+   Compiling getrandom v0.3.4
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling http-body v1.1.0
+   Compiling block-padding v0.4.2
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling parking_lot_core v0.9.12
+   Compiling inout v0.2.5
+   Compiling getrandom v0.4.3
+   Compiling tower-layer v0.3.3
+   Compiling fastrand v2.5.0
+   Compiling cpufeatures v0.3.1
+   Compiling openssl-probe v0.2.2
+   Compiling parking_lot v0.12.5
+   Compiling bit-set v0.8.0
+   Compiling rustls-native-certs v0.8.5
+   Compiling hashbrown v0.17.1
+   Compiling async-broadcast v0.7.2
+   Compiling futures-lite v2.6.1
+   Compiling ordered-stream v0.2.0
+   Compiling vsimd v0.8.0
+   Compiling hex v0.4.3
+   Compiling outref v0.5.2
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling num-cmp v0.1.0
+   Compiling micromap v0.3.0
+   Compiling cpubits v0.1.1
+   Compiling proc-macro-crate v3.5.0
+   Compiling serde_json v1.0.154
+   Compiling regex-automata v0.4.18
+   Compiling uuid v1.29.0
+   Compiling hmac v0.13.0
+   Compiling num-rational v0.4.2
+   Compiling log v0.4.35
+   Compiling ryu v1.0.23
+   Compiling bytecount v0.6.9
+   Compiling hkdf v0.13.0
+   Compiling cmake v0.1.58
+   Compiling cbc v0.2.1
+   Compiling aes v0.9.4
+   Compiling uuid-simd v0.8.0
+   Compiling serde_spanned v1.1.2
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling sha2 v0.11.1
+   Compiling jsonschema-regex v0.60.2
+   Compiling num v0.4.3
+   Compiling fraction v0.17.0
+   Compiling unicode-general-category v1.1.0
+   Compiling http-body-util v0.1.5
+   Compiling data-encoding v2.11.1
+   Compiling toml_writer v1.1.3+spec-1.1.0
+   Compiling aws-lc-sys v0.47.0
+   Compiling liquid-widgets-daemon v0.1.0 (/home/nyong/.codex/worktrees/bb8e/gnome-widget/daemon)
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling regex v1.13.1
+   Compiling fancy-regex v0.19.2
+   Compiling enumflags2_derive v0.7.12
+   Compiling tracing-attributes v0.1.31
+   Compiling synstructure v0.14.0
+   Compiling strum_macros v0.28.0
+   Compiling tracing v0.1.44
+   Compiling serde_derive v1.0.229
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+   Compiling displaydoc v0.2.7
+   Compiling tokio-macros v2.7.2
+   Compiling futures-macro v0.3.34
+   Compiling ref-cast-impl v1.0.27
+   Compiling async-trait v0.1.92
+   Compiling async-recursion v1.2.0
+   Compiling serde_repr v0.1.21
+   Compiling thiserror-impl v2.0.21
+   Compiling strum v0.28.0
+   Compiling ref-cast v1.0.27
+   Compiling tokio v1.54.1
+   Compiling zerofrom v0.1.8
+   Compiling futures-util v0.3.34
+   Compiling yoke v0.8.4
+   Compiling zerotrie v0.2.5
+   Compiling zerovec v0.11.9
+   Compiling thiserror v2.0.21
+   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.4.0
+   Compiling icu_locale_core v2.4.0
+   Compiling serde v1.0.229
+   Compiling icu_provider v2.4.0
+   Compiling zvariant_utils v4.2.0
+   Compiling enumflags2 v0.7.12
+   Compiling zcheapstr v1.2.0
+   Compiling ahash v0.8.12
+   Compiling fluent-uri v0.4.1
+   Compiling serde_urlencoded v0.7.1
+   Compiling email_address v0.2.9
+   Compiling chrono v0.4.45
+   Compiling icu_normalizer v2.4.0
+   Compiling icu_properties v2.4.0
+   Compiling jsonschema-value v0.60.2
+   Compiling referencing v0.60.2
+   Compiling zvariant_derive v5.15.1
+   Compiling zvariant v5.15.1
+   Compiling jsonschema v0.60.2
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling aws-lc-rs v1.19.0
+   Compiling rustls v0.23.46
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling zbus_names v4.3.5
+   Compiling tower-http v0.6.11
+   Compiling hyper-util v0.1.21
+   Compiling zbus_macros v5.19.0
+   Compiling rustls-webpki v0.103.16
+   Compiling zbus v5.19.0
+   Compiling tokio-rustls v0.26.6
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling secret-service v5.2.0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 16.38s
+   Compiling tokio v1.54.1
+   Compiling fastrand v2.5.0
+   Compiling rustix v1.1.6
+   Compiling futures-lite v2.6.1
+   Compiling tempfile v3.27.0
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling tokio-rustls v0.26.6
+   Compiling zbus v5.19.0
+   Compiling tower-http v0.6.11
+   Compiling hyper-util v0.1.21
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling secret-service v5.2.0
+   Compiling liquid-widgets-daemon v0.1.0 (/home/nyong/.codex/worktrees/bb8e/gnome-widget/daemon)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.31s
+     Running unittests src/lib.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/liquid_widgets_daemon-e9fa3451d347c6d9)
+
+running 2 tests
+
+running 1 test
+test service::tests::live_measurements_are_not_written_or_restored_from_disk ... ok
+test service::tests::delayed_subscribe_does_not_keep_a_disconnected_sender ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.02s
+
+test service::tests::delayed_subscribe_does_not_keep_a_disconnected_sender ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/liquid_widgets_daemon-afdcd70c2907a773)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cache.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/cache-25133de211d65b8c)
+
+running 3 tests
+test invalid_names_symlinks_and_oversized_cache_are_rejected ... ok
+test atomic_cache_is_private_and_source_scoped ... ok
+test raw_calendar_cache_is_private_bounded_source_specific_and_removed_with_disconnect ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/calendar.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/calendar-9911a6732be4530d)
+
+running 30 tests
+test all_day_dates_survive_midnight_offset_transition ... ok
+test all_day_grid_end_boundary_is_exclusive_in_context_zone ... ok
+test custom_vtimezone_is_resolved ... ok
+test default_end_matches_ical_rules ... ok
+test dst_keeps_local_start ... ok
+test empty_optional_google_text_does_not_reject_calendar ... ok
+test explicit_gap_start_uses_pre_gap_offset_and_counts_as_first_occurrence ... ok
+test folded_nonempty_text_is_preserved_and_invalid_event_dates_still_fail ... ok
+test historical_iteration_budget_returns_error_without_partial_results ... ok
+test utc_until_is_inclusive_for_local_recurrence ... ok
+test moved_occurrence_replaces_original ... ok
+test nominal_day_duration_crosses_dst ... ok
+test all_day_end_is_exclusive ... ok
+test ambiguous_local_time_uses_first_occurrence ... ok
+test non_dst_offset_fold_uses_first_occurrence ... ok
+test cancelled_occurrence_is_absent ... ok
+test ongoing_event_overlaps_window ... ok
+test rdate_adds_and_exdate_removes ... ok
+test recurrence_in_a_dst_gap_skips_nonexistent_local_time ... ok
+test duplicate_rdates_and_multiple_exdates_are_deduplicated ... ok
+test expansion_limit_returns_error ... ok
+test explicit_gap_start_consumes_count_once ... ok
+test unbounded_recurrence_stops_at_window_end ... ok
+test floating_time_uses_requested_zone ... ok
+test unknown_zone_is_an_error ... ok
+test unsupported_range_is_explicit_error ... ok
+test invalid_dates_and_unsupported_periods_are_not_normalized ... ok
+test weekly_exdate_has_two_occurrences ... ok
+test input_limit_and_invalid_context_are_errors ... ok
+test historical_empty_text_warning_is_not_a_fatal_event_error ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/calendar_feed.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/calendar_feed-06018f653eaa4a3d)
+
+running 3 tests
+test live_google_public_calendar_format_probe ... ignored, live Google public feed; run explicitly, no private account
+test original_ics_reexpands_offline_for_new_context_and_preserves_fetch_timestamp ... ok
+test bounded_http_rejects_status_oversize_redirect_and_timeout_without_exposing_url ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/calendar_service.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/calendar_service-d2d9cc086dc67211)
+
+running 1 test
+
+running 1 test
+test calendar_ipc_connect_offline_context_disconnect_and_restart ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+test calendar_ipc_connect_offline_context_disconnect_and_restart ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/contract.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/contract-47f0cbceb2a5d07e)
+
+running 6 tests
+test errors_never_echo_private_input ... ok
+test utf8_limit_is_bytes_not_character_count ... ok
+test schema_integer_fields_accept_json_decimal_integer_notation ... ok
+test shared_fixtures_round_trip_without_field_changes ... ok
+test signal_payload_and_settings_inputs_use_shared_schemas ... ok
+test malformed_shared_cases_are_rejected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/ipc.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/ipc-0c193610dafd5222)
+
+running 3 tests
+
+running 1 test
+
+running 1 test
+
+running 1 test
+test location_change_rejects_previous_response ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.04s
+
+test location_change_rejects_previous_response ... ok
+test ipc_old_source_response_is_discarded_and_new_source_never_reads_old_cache ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.08s
+
+test ipc_old_source_response_is_discarded_and_new_source_never_reads_old_cache ... ok
+test ipc_subscription_lifecycle_and_reconnect ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.20s
+
+test ipc_subscription_lifecycle_and_reconnect ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/media.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/media-771e6602280e5336)
+
+running 10 tests
+test mpris_selects_playing_player ... ok
+test non_regular_art_cannot_block_collection ... ok
+test only_readable_local_art_is_accepted ... ok
+
+running 1 test
+
+running 1 test
+
+running 1 test
+
+running 1 test
+
+running 1 test
+
+running 1 test
+test remote_mpris_art_is_resolved_to_a_local_file ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.01s
+
+test remote_mpris_art_is_resolved_to_a_local_file ... ok
+test artwork_completion_rechecks_current_player_metadata ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.01s
+
+test artwork_completion_rechecks_current_player_metadata ... ok
+test paused_players_hide_card ... ok
+test track_pause_owner_and_collection_cancellation_drop_pending_artwork ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.02s
+
+test track_pause_owner_and_collection_cancellation_drop_pending_artwork ... ok
+test artwork_failure_preserves_title_artist_and_generic_art ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.03s
+
+test downloaded_art_waits_for_busy_workers_without_refetching ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.03s
+
+test artwork_failure_preserves_title_artist_and_generic_art ... ok
+test downloaded_art_waits_for_busy_workers_without_refetching ... ok
+test property_and_owner_events_update_without_polling ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.31s
+
+test property_and_owner_events_update_without_polling ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running tests/media_art.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/media_art-d4c6528af0af31d4)
+
+running 9 tests
+test invalid_remote_urls_and_readable_local_art_never_request_http ... ok
+test artwork_timeout_bounds_a_fetcher_that_never_finishes ... ok
+test empty_or_oversize_bytes_never_publish_a_cache_file ... ok
+test cache_rejects_symlinks_public_files_and_fifos_without_blocking ... ok
+test transient_failure_retries_once_and_permanent_failure_has_a_cooldown ... ok
+test http_art_is_private_atomic_stable_and_reused_after_restart ... ok
+test concurrent_requests_for_one_uri_share_the_download ... ok
+test cache_is_bounded_by_count_and_bytes_and_cleans_interrupted_writes ... ok
+test failed_http_status_redirect_oversize_and_timeout_keep_cache_empty ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.15s
+
+     Running tests/network.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/network-46945c4a3d23bf7b)
+
+running 5 tests
+test live_metrics_with_active_tailscale ... ignored, explicit live /proc and sysfs probe; no configuration is changed
+test automatic_route_ignores_tailscale_and_uses_one_default_interface ... ok
+test byte_deltas_use_elapsed_time_without_summing_interfaces ... ok
+test interface_change_resets_rate_and_history ... ok
+test history_contains_only_the_last_sixty_seconds ... ok
+
+test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/secrets.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/secrets-931ee75f544e463d)
+
+running 5 tests
+test calendar_url_accepts_only_google_https_ical_without_credentials ... ok
+
+running 1 test
+test reconnect_preserves_pending_cleanup_until_all_app_secrets_are_deleted ... ok
+test failed_secret_store_preserves_previous_source_and_never_persists_url ... ok
+test disconnect_removes_events_and_cache_even_when_keyring_delete_fails ... ok
+test real_keyring_adapter_uses_isolated_collection_and_handles_lock ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.31s
+
+test real_keyring_adapter_uses_isolated_collection_and_handles_lock ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/state.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/state-fee124c67f3771ce)
+
+running 7 tests
+test old_context_and_stopped_collection_results_are_discarded ... ok
+test old_source_response_is_discarded ... ok
+test oversized_provider_becomes_explicit_error_without_poisoning_snapshot ... ok
+test provider_failure_is_independent_and_preserves_last_success_time ... ok
+test offline_reexpansion_is_stale_with_original_success_time ... ok
+test oversized_refresh_keeps_previous_success_as_stale ... ok
+test aggregate_overflow_preserves_previous_provider_data ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/system.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/system-0efa81bc34e6cd06)
+
+running 3 tests
+test system_first_sample_has_no_cpu_rate ... ok
+test missing_sensor_is_null ... ok
+test identified_cpu_package_temperature_is_preferred_over_core_or_storage ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/weather.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/weather-ed82044ff7fc4b28)
+
+running 6 tests
+test live_open_meteo_search_and_forecast ... ignored, live Open-Meteo endpoints; no user location is saved
+test weather_backoff_is_bounded_and_resets_after_success ... ok
+test unix_hours_cross_local_midnight_and_missing_values_remain_null ... ok
+test malformed_arrays_and_api_errors_are_not_zero_weather ... ok
+test requests_use_utc_epochs_and_propagate_429_and_network_failure ... ok
+test search_retains_coordinates_and_timezone_and_ignores_incomplete_rows ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/weather_service.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/weather_service-3f612f1d4f1b7ec1)
+
+running 1 test
+
+running 1 test
+test weather_search_select_failure_and_clear_over_real_dbus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
+
+test weather_search_select_failure_and_clear_over_real_dbus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+
+     Running tests/worker.rs (/home/nyong/projet/gnome-widget/daemon/target/debug/deps/worker-0dc9ef3093ceb2d7)
+
+running 4 tests
+test queued_work_waits_for_capacity_and_drops_cancelled_tasks ... ok
+test blocking_work_is_bounded_and_does_not_block_executor ... ok
+test calendar_expansion_runs_on_bounded_worker ... ok
+test calendar_expansion_waits_for_busy_collectors ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests liquid_widgets_daemon
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling proc-macro2 v1.0.107
+   Compiling memchr v2.8.3
+   Compiling siphasher v1.0.4
+   Compiling iana-time-zone v0.1.65
+   Compiling regex-syntax v0.8.11
+   Compiling thiserror v1.0.69
+   Compiling chrono-tz v0.10.4
+   Compiling quote v1.0.47
+   Compiling num-traits v0.2.19
+   Compiling phf_shared v0.12.1
+   Compiling phf v0.12.1
+   Compiling aho-corasick v1.1.5
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling chrono v0.4.45
+   Compiling regex-automata v0.4.18
+   Compiling thiserror-impl v2.0.21
+   Compiling thiserror-impl v1.0.69
+   Compiling thiserror v2.0.21
+   Compiling ical v0.11.0
+   Compiling regex v1.13.1
+   Compiling rrule v0.14.0
+   Compiling calendar-candidates v0.0.0 (/home/nyong/.codex/worktrees/bb8e/gnome-widget/tests/calendar-candidates)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.30s
+     Running `/home/nyong/projet/gnome-widget/daemon/target/debug/calendar-candidates`
+ical 0.11.0: custom VTIMEZONE syntax parsed (no recurrence engine)
+rrule 0.14.0: IANA weekly recurrence + EXDATE passed
+rrule 0.14.0: custom TZID unsupported; requires another timezone engine
+
+> liquid-widgets-extension@0.1.1 format:check
+> prettier --check "src/**/*.ts" "scripts/{build,public-modules,generate-validators,test}.mjs"
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> liquid-widgets-extension@0.1.1 pretypecheck
+> npm run generate
+
+
+> liquid-widgets-extension@0.1.1 generate
+> node scripts/generate-validators.mjs
+
+
+> liquid-widgets-extension@0.1.1 typecheck
+> tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json && tsc -p tsconfig.prefs.json && tsc -p tsconfig.worker.json
+
+
+> liquid-widgets-extension@0.1.1 pretest
+> npm run generate
+
+
+> liquid-widgets-extension@0.1.1 generate
+> node scripts/generate-validators.mjs
+
+
+> liquid-widgets-extension@0.1.1 test
+> node scripts/test.mjs
+
+✔ agenda_excludes_ended_and_caps_at_three (150.49833ms)
+✔ all_day_is_active_until_exclusive_end (0.149111ms)
+✔ equal starts have stable uid and occurrence ordering without mutating input (0.652814ms)
+✔ agenda applies its own 30-day display-zone horizon and keeps ongoing events (0.227639ms)
+✔ mixed all-day and timed starts sort in the display zone (0.225314ms)
+✔ agenda captions identify dates for timed and all-day events (0.957021ms)
+✔ Rust retains existing metadata, schema, cache and secret identity (0.565767ms)
+✔ public identity has separate settings, data and build namespaces (0.176402ms)
+✔ Rust adapter retains transport behavior and destroy releases the session once (0.246142ms)
+✔ build guard follows UI chunks and rejects calendar engine and time zone imports (2.224787ms)
+✔ both emitted editions carry the selected metadata and schema without mutating source (2175.670247ms)
+✔ generated validators work in a checkout with spaces and Unicode in its path (600.273742ms)
+✔ summary has a bounded, closed schema and never exposes event titles (2.857723ms)
+✔ foreign_watch_token, per-sender/total caps, sender death and disable release demand (0.986181ms)
+✔ sender disappearing during asynchronous registration cannot leave a watch token (0.133607ms)
+✔ newer_signal_beats_watch_snapshot and completion_during_watch_setup retain newest revision (0.865843ms)
+✔ close_before_watch_reply releases the late token on its original owner without canceling the reply (0.27971ms)
+✔ owner_change_before_watch_reply and reenable_same_owner_new_instance cannot update new UI or remove its token (0.644691ms)
+✔ invalid initial summary still releases a valid allocated token; refresh targets unique owner (0.338546ms)
+✔ summary rejects state combinations that the provider DTO also rejects (0.28141ms)
+✔ summary context compares fields, not JSON property order, on completion (0.283862ms)
+✔ month_grid_uses_week_start (0.892986ms)
+✔ event dots cover local days and exclude the exclusive all-day end (9.651765ms)
+✔ calendar cells match the backend minimal full-week month range (0.1705ms)
+✔ fresh calendar sends raw bytes and bounded Google HTTPS request to a versioned worker job (3.752263ms)
+✔ switch_source_during_fetch and clear_then_late_cache_write never restore old data (1.385474ms)
+✔ switch_month_during_worker and disable discard late computed data and cache writes (1.05387ms)
+✔ offline_recompute uses raw cache for a new month, timezone, day and week start with original updatedAt (0.751662ms)
+✔ worker_timeout_keeps_stale for the same context, never a different context (0.621375ms)
+✔ cache pair digest prevents mixed or truncated atomic writes from becoming offline data (0.488948ms)
+✔ invalid URL and worker context are rejected; preview never writes regular caches (0.428299ms)
+✔ same_source_same_day_coalesces, midnight/week-start/resume each refresh exactly once (2.023846ms)
+✔ source is checked again inside the mutation lock and a failed clear reports failure (0.652291ms)
+✔ calendar preferences report real failures and completion after URL storage (0.654359ms)
+✔ summary status distinguishes settings preview from widget synchronization in both languages (0.319753ms)
+✔ card_states_do_not_fabricate_values (0.967812ms)
+✔ source switch loading state exposes no values from the previous source (0.094569ms)
+✔ column normalization preserves each known card once and appends missing cards to their default side (0.925755ms)
+✔ disabled cards retain their side and position regardless of enable sequence (0.198867ms)
+✔ within-column movement swaps only neighbors and respects boundaries (0.62286ms)
+✔ cross-column movement appends once, preserves the other rows, and permits an empty side (0.191631ms)
+✔ signal subscription precedes snapshot and newer revisions win (11.239969ms)
+✔ late_old_owner_response_is_discarded and reconnect accepts revision 1 (1.383039ms)
+✔ disable during Subscribe releases late token to original owner (0.335275ms)
+✔ disable and enable discard the previous generation even with the same owner (0.641835ms)
+✔ malformed signals cannot replace current data or leak error contents (0.579731ms)
+✔ transient snapshot failure recovers without a bus owner change (0.580063ms)
+✔ failed subscribe retries with bounded backoff and disable cancels recovery (0.406312ms)
+✔ owner change cancels retry scheduled for a previous owner (0.291842ms)
+✔ calendar context is sent before subscribe, serialized on change and refreshed at midnight (0.706337ms)
+✔ resume refreshes subscribed remote data, marks old data pending, retries failure and cancels on disable (1.63056ms)
+✔ resume does not refresh hidden or unconfigured providers (0.517421ms)
+✔ clock_values_follow_minute_boundary (0.548234ms)
+✔ clock faces use local wall time for hands and separate localized AM/PM from digits (30.471109ms)
+✔ analog updates align with the next wall-clock second (0.120744ms)
+✔ clock follows midnight, timezone and 12/24 hour preferences (1.783965ms)
+✔ concurrent_connect_clear serializes keyring and configuration changes (2.051205ms)
+✔ write_failure_preserves_old_source and cleans only the uncommitted new secret (0.979586ms)
+✔ delete_pending_survives_reconnect until an explicit successful disconnect (0.5155ms)
+✔ stale_cache_writer_after_clear cannot recreate cache data (0.317722ms)
+✔ transaction expires at release and replaces with a fresh revision UUID (0.36492ms)
+✔ missing_secret_gi_only_disables_calendar: non-secret settings remain usable (0.672218ms)
+✔ an uncertain old secret write cannot overwrite or delete a newer source (0.322332ms)
+✔ configuration rejects oversized, unknown and invalid persisted data (0.173844ms)
+✔ cache deletion failure after reconnect does not skip old-secret cleanup (0.290336ms)
+✔ cancellation after committing a replacement flags the obsolete secret until disconnect (0.551361ms)
+✔ cancellation before replacement commits removes only the unused new secret (0.307693ms)
+✔ shared fixtures round trip with independent provider states (4.963479ms)
+✔ reject unknown schema version (0.295388ms)
+✔ reject secret URL field (0.157077ms)
+✔ reject secret source ID (0.150996ms)
+✔ reject raw error is forbidden (0.173897ms)
+✔ reject wrong provider shape (0.234829ms)
+✔ reject impossible date (0.166985ms)
+✔ reject offset required (0.110979ms)
+✔ reject ok needs data (0.118378ms)
+✔ reject stale needs timestamp (0.18852ms)
+✔ reject unknown provider state (0.119652ms)
+✔ reject weekStart bounds (0.110657ms)
+✔ reject negative byte count (0.145139ms)
+✔ reject revision overflow (0.104191ms)
+✔ reject secret settings field (0.062293ms)
+✔ reject location latitude bounds (0.060453ms)
+✔ UTF-8 payload budget is measured in bytes (1.273127ms)
+✔ provider signals and setting inputs use the shared schemas (4.160796ms)
+✔ errors do not echo invalid private input (0.21556ms)
+✔ selected English reaches provider errors and calendar sync states without changing data (0.747374ms)
+✔ selected English reaches all-day, weather and first network measurement labels (9.430961ms)
+✔ switching bound text preserves drafts and uses the latest status, and disposal releases targets (0.466805ms)
+✔ left and right stacks pack independently with matching clock/weather dimensions (1.111574ms)
+✔ custom column order and hidden cards do not change other-column positions (0.251273ms)
+✔ an empty left column stays empty and no cards yields only the toolbar (0.12394ms)
+✔ small workarea stacks left then right without dropping cards (0.124923ms)
+✔ clock follows weather height, retains a ready-size baseline when weather is hidden, and never clips its content (0.208616ms)
+✔ measured heights include scale once and invalid values use defaults (0.113488ms)
+✔ lost monitor falls back to an available primary monitor (0.100579ms)
+✔ only enabled cards request providers, including enabled but paused music (0.819379ms)
+✔ network speed uses automatic binary units with a distinct unknown first sample (0.175182ms)
+✔ late_reply_ignored and source_change_clears_old_data without overlapping collection (2.900564ms)
+✔ last_good_same_source_only preserves original successful timestamp (1.560176ms)
+✔ stop_cards_keeps_prefs_calendar and last watcher stops its timer and request (0.463986ms)
+✔ destroy_cancels_everything and late callbacks cannot access the UI (0.340427ms)
+✔ resume_resets_samples and cancels old context before collecting again (0.340261ms)
+✔ manual refresh rate and periodic timers are independent and bounded (0.6078ms)
+✔ malformed provider state stays isolated from other providers (0.305564ms)
+✔ initial config snapshot cannot overwrite a newer file-watch update (0.244936ms)
+✔ hiding sampled cards resets their baseline before the next subscription (0.1928ms)
+✔ periodic system sampling retains the last complete presentation until its replacement arrives (1.001939ms)
+✔ periodic network sampling retains the last complete graph until the next sample (0.932471ms)
+✔ initial read and monitor failures recover with bounded backoff and destroy cancels recovery (1.023251ms)
+✔ deletion-pending changes notify preferences without restarting the calendar collector (0.283126ms)
+✔ MPRIS selects playing only, bounds discovery, switches owners and removes stopped players (2.305287ms)
+✔ late track A artwork and late old-owner properties cannot overwrite track B (0.557308ms)
+✔ concurrent property signals coalesce and disable cancels pending reads (0.327934ms)
+✔ art URI policy excludes credentials, fragments, non-HTTPS and remote file hosts (0.262933ms)
+✔ artwork retries network once after 2s, cools failures for 60s, bounds downloads and reuses cache (1.162048ms)
+✔ empty/oversize artwork never publishes; cancellation removes retry timers (0.841345ms)
+✔ art completion rechecks the real metadata even when its change signal is delayed (0.315141ms)
+✔ simultaneous artwork consumers share a fetch and one consumer may cancel independently (0.316922ms)
+✔ a hung artwork transport is bounded at five seconds per attempt (0.454606ms)
+✔ provider_revision_is_monotonic (4.515823ms)
+✔ snapshot cannot overwrite a signal received during subscription (0.272446ms)
+✔ owner reset keeps last values but permits a new owner revision 1 (0.551016ms)
+✔ unknown providers and malformed or oversized signal payloads fail without changing the store (1.372858ms)
+✔ CPU first sample, MemAvailable, guest exclusion and reset preserve Rust semantics (1.063674ms)
+✔ CPU sensor chooses package/Tdie before core/Tctl and excludes NVMe (0.718187ms)
+✔ network preserves exact deltas above 2^53 and uses elapsed monotonic time (0.20364ms)
+✔ network history is limited to sixty seconds and sixty samples (0.430487ms)
+✔ route selection prefers IPv4 and lowest metric, falls back to IPv6, excludes automatic Tailscale (0.410073ms)
+✔ manual Tailscale is allowed and disappearance resets network history (1.014241ms)
+✔ temperature is measured at most once per five seconds; resume resets CPU baseline (0.496694ms)
+✔ snapshot: factored validators preserve original accepted data (69.300079ms)
+✔ settings: factored validators preserve original accepted data (2.455711ms)
+✔ calendarContext: factored validators preserve original accepted data (1.465712ms)
+✔ weatherLocation: factored validators preserve original accepted data (1.8233ms)
+✔ locationSearchResults: factored validators preserve original accepted data (1.599519ms)
+✔ calendar: factored validators preserve original accepted data (5.672557ms)
+✔ weather: factored validators preserve original accepted data (10.18728ms)
+✔ system: factored validators preserve original accepted data (5.226809ms)
+✔ network: factored validators preserve original accepted data (6.504541ms)
+✔ media: factored validators preserve original accepted data (5.863527ms)
+✔ workerHeader: factored validators preserve original accepted data (2.899147ms)
+✔ workerControl: factored validators preserve original accepted data (0.766435ms)
+✔ workerReply: factored validators preserve original accepted data (6.282693ms)
+✔ dataConfig: factored validators preserve original accepted data (4.283374ms)
+✔ calendarSummary: factored validators preserve original accepted data (3.852291ms)
+✔ Unicode, format and numeric boundary checks remain strict (0.321615ms)
+✔ generated validation stays factored instead of inlining whole schemas (370.397525ms)
+✔ weather hours use selected timezone across midnight and preserve missing values (9.405539ms)
+✔ invalid timezone cannot crash the shell and unknown weather is not reported clear (0.496783ms)
+✔ Rust weather fixtures preserve coordinates, local timezone, nulls and numeric zero (6.096598ms)
+✔ requests use fixed HTTPS endpoints, UTC epoch data and 256 KiB/15 second bounds (3.071683ms)
+✔ offline cache preserves last success time across provider instances and clear removes it (0.743614ms)
+✔ city A late response never overwrites city B cache (0.688191ms)
+✔ location search permits one active query, one per second, and at most twenty results (0.599589ms)
+✔ weather scheduling backs off 30 to 900 seconds and resets after success (1.063038ms)
+✔ JSON framing counts UTF-8 bytes and accepts the exact boundary (1.085068ms)
+✔ length parsing rejects oversized, zero and truncated frame headers before allocation (0.119323ms)
+✔ malformed UTF-8 and JSON fail without reflecting input (0.10878ms)
+✔ job header rejects extra URL fields and invalid context (0.616951ms)
+✔ ready and busy control messages are distinct and versioned (0.215298ms)
+✔ reply must belong to the exact job, source, generation and calendar context (0.88748ms)
+✔ worker failures use a closed error enum and cannot smuggle partial data (0.162783ms)
+ℹ tests 163
+ℹ suites 0
+ℹ pass 163
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6632.840755
+
+> liquid-widgets-extension@0.1.1 build
+> node scripts/build.mjs --edition rust
+
+BUILD_TEST: rust metadata/schema, process imports and artifact policy passed
+GJS: bundled validators, Korean text and D-Bus XML passed
+GJS IPC: live Rust service, same-owner retry, provider signal, settings, owner restart, retained state, shared bus cleanup passed
+
+> liquid-widgets-extension@0.1.1 build
+> node scripts/build.mjs --edition gjs
+
+BUILD_TEST: gjs metadata/schema, process imports and artifact policy passed
+rust: 59/59 calendar cases passed
+gjs: 59/59 calendar cases passed
+{"name":"sparse","success":true,"elapsedMs":100.06}
+{"name":"impossible","success":true,"elapsedMs":0.76}
+{"test":"lease mutual exclusion, bounded wait and cancellation","success":true}
+{"test":"real worker result, clean exit and disposal","success":true}
+{"test":"reject truncated, reap before returning","success":true}
+{"test":"reject extra, reap before returning","success":true}
+{"test":"reject utf8, reap before returning","success":true}
+{"test":"reject oversize, reap before returning","success":true}
+{"test":"reject nonzero, reap before returning","success":true}
+{"test":"reject hang, reap before returning","success":true}
+{"test":"reject slow, reap before returning","success":true}
+{"test":"reject wrongjob, reap before returning","success":true}
+{"test":"reject crash, reap before returning","success":true}
+{"test":"reject controloversize, reap before returning","success":true}
+{"test":"exact 512 KiB response frame remains valid","success":true}
+{"test":"latest pending job replaces stale jobs and cancel reaps within one second","success":true}
+{"test":"busy waits for session lease, timeout and dispose cancel waits","success":true}
+{"test":"twenty process replacements do not leak file descriptors","success":true}
+PASS ready/busy race and EOF before input
+PASS exact input limit
+PASS input over limit
+PASS invalid UTF-8
+PASS truncated raw frame
+PASS extra input frame
+PASS 16 KiB header boundary
+PASS SIGKILL parent during input: child exit+reap in 0.051s
+PASS SIGKILL parent during compute: child exit+reap in 8.950s
+PASS internal 9 second deadline while awaiting input
+{"test":"private atomic files, size bound, regular-file-only and cancellation","success":true}
+{"test":"compressed_body_limit, redirect rejection and HTTP deadline","success":true}
+{"test":"missing Secret GI does not prevent other settings from loading","success":true}
+{"test":"unresponsive keyring releases ConfigLock at the total eight second deadline","success":true}
+{"test":"real isolated keyring saves, reads, removes and never prompts when locked","success":true}
+PASS ConfigLock owner death releases another process
+{"test":"twenty real GJS sessions cancel sources, watchers and callbacks","success":true}
+{"probe":"reads after one read with watcher","reads":1}
+{"test":"real config watch and preferences-only calendar demand","success":true}
+{"test":"real HTTP search/select/forecast/offline/429/clear through the local session","success":true}
+{"test":"GIO CPU/RAM/sensors/large network counters/routes/cancel and no idle polling","success":true}
+{"test":"real MPRIS owner/property/pause/timeout/disable; art cache bounds and native 16:9/square decode","success":true}
+{"test":"real calendar HTTP/worker/cache/offline/UTF-8/redirect; clear and disable during HTTP and computation; read-only preview","success":true}
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.0' (uid=1000 pid=832015 comm="gjs -m /home/nyong/.codex/worktrees/bb8e/gnome-wid" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=832088 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.10' (uid=1000 pid=832088 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.10' (uid=1000 pid=832088 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+
+** (xdg-desktop-portal-gnome:832111): WARNING **: 00:15:29.369: Failed to open service channel Wayland connection, portals dialogs may missbehave (Cannot invoke method; proxy is for the well-known name org.gnome.Mutter.ServiceChannel without an owner, and proxy was constructed with the G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START flag).
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.13' (uid=1000 pid=832111 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+
+** (process:832124): WARNING **: 00:15:29.438: Failed to open service channel Wayland connection, portal dialogs may misbehave (Cannot invoke method; proxy is for the well-known name org.gnome.Mutter.ServiceChannel without an owner, and proxy was constructed with the G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START flag).
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=832088 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.17' (uid=1000 pid=832132 comm="/usr/libexec/xdg-desktop-portal-gtk" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[832145]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=832132 comm="/usr/libexec/xdg-desktop-portal-gtk" label="unconfined")
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+dbus-daemon[832145]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+
+(/usr/libexec/xdg-desktop-portal:832088): xdg-desktop-portal-WARNING **: 00:15:29.574: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.10' (uid=1000 pid=832088 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 00:15:29.579: couldn't access control socket: /tmp/liquid-public-test-7gio7vsb/runtime/keyring/control: No such file or directory
+** Message: 00:15:29.579: couldn't access control socket: /tmp/liquid-public-test-7gio7vsb/runtime/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[832012]: [session uid=1000 pid=832012 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+{"test":"real GTK settings ignore old snapshots/errors and update same-source deletion warnings","success":true}
+{"test":"two production GTK sessions propagate failed cleanup and same-null-source successful retry","success":true}
+{"test":"20 actual GTK preview open/close cycles and two-window compute contention","success":true,"beforeFds":44,"afterFds":44}
+{"test":"prefs off/on, hidden demand, preview cancellation, late token, same owner new instance, two-window mutations, close during worker and real GTK display/close","success":true}
+{"test":"1000-event calendar and agenda presentation within 20ms median","samples":[{"agendaMs":9.97,"dotsMs":4.149,"totalMs":14.119},{"agendaMs":3.09,"dotsMs":3.366,"totalMs":6.456},{"agendaMs":2.843,"dotsMs":3.156,"totalMs":5.999},{"agendaMs":2.84,"dotsMs":3.17,"totalMs":6.01},{"agendaMs":2.893,"dotsMs":3.168,"totalMs":6.061}],"median":6.061,"success":true}
+PASS fixture replacement yields to the main loop and completes before refresh
+..............................
+----------------------------------------------------------------------
+Ran 30 tests in 1.392s
+
+OK
+Public ZIP: /tmp/tmpbmb3xjui/dist/liquid-widgets-public/liquid-widgets.shell-extension.zip

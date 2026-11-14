@@ -1,0 +1,414 @@
+libmutter-Message: 00:19:52.418: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:841381): libmutter-WARNING **: 00:19:52.419: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:841381): libmutter-WARNING **: 00:19:52.419: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 00:19:52.558: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 00:19:52.558: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 00:19:52.558: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 00:19:52.559: Obtained a high priority EGL context
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.3' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gtk.vfs.Daemon' requested by ':1.4' (uid=1000 pid=841399 comm="/usr/libexec/at-spi-bus-launcher" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gtk.vfs.Daemon'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.a11y.Bus'
+libmutter-Message: 00:19:52.597: Using public X11 display :2, (using unix:/tmp/.X11-unix/X3 for managed services)
+libmutter-Message: 00:19:52.597: Using Wayland display name 'liquid-widgets-test-841339'
+dbus-daemon[841411]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841411]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+
+(gnome-shell:841381): libmutter-WARNING **: 00:19:52.627: Failed to launch devkit: Failed to execute child process “/usr/libexec/mutter-devkit” (No such file or directory)
+GNOME Shell-Message: 00:19:52.793: Unset XDG_SESSION_ID, getCurrentSessionProxy() called outside a user session. Asking logind directly.
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Shell.Screencast' requested by ':1.2' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.2' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Shell.CalendarServer' requested by ':1.2' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Sources5' requested by ':1.11' (uid=1000 pid=841439 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+GNOME Shell-Message: 00:19:52.848: Registering session with GDM
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=841414 comm="/home/nyong/.codex/worktrees/bb8e/gnome-widget/.to" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.14' (uid=1000 pid=841465 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.OnlineAccounts' requested by ':1.12' (uid=1000 pid=841451 comm="/usr/libexec/evolution-source-registry" label="unconfined")
+GNOME Shell-Message: 00:19:52.882: Will monitor session 2
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Sources5'
+GNOME Shell-Message: 00:19:52.883: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.14' (uid=1000 pid=841465 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.evolution.dataserver.Calendar8' requested by ':1.11' (uid=1000 pid=841439 comm="/usr/libexec/gnome-shell-calendar-server" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Shell.CalendarServer'
+goa-daemon-Message: 00:19:52.894: goa-daemon version 3.58.0 starting
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Identity' requested by ':1.16' (uid=1000 pid=841476 comm="/usr/libexec/goa-daemon" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.OnlineAccounts'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Identity'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.Calendar8'
+GNOME Shell-Message: 00:19:52.906: Failed to register AuthenticationAgent
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gtk.vfs.Metadata' requested by ':1.17' (uid=1000 pid=841493 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Shell.Notifications' requested by ':1.2' (uid=1000 pid=841381 comm="/usr/bin/gnome-shell --automation-script /home/nyo" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gtk.vfs.Metadata'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.evolution.dataserver.AddressBook10' requested by ':1.17' (uid=1000 pid=841493 comm="/usr/libexec/evolution-calendar-factory" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.evolution.dataserver.AddressBook10'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Shell.Notifications'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.25' (uid=1000 pid=841467 comm="ibus-daemon --panel disable" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.19' (uid=1000 pid=841489 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.14' (uid=1000 pid=841465 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.14' (uid=1000 pid=841465 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 00:19:53.183: couldn't access control socket: /tmp/liquid-widgets-runtime-yn7mxutj/keyring/control: No such file or directory
+** Message: 00:19:53.183: couldn't access control socket: /tmp/liquid-widgets-runtime-yn7mxutj/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Shell.Screencast'
+libmutter-Message: 00:19:53.532: Added virtual monitor Meta-0
+GNOME Shell-Message: 00:19:54.161: GNOME Shell started at Sun Nov 15 2026 00:19:52 GMT+0900 (Korean Standard Time)
+GNOME Shell-Message: 00:19:54.162: Registering display with GDM
+
+(gnome-shell:841381): GnomeDesktop-WARNING **: 00:19:54.178: Could not create transient scope for PID 842018: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+Archive:  /tmp/ZBL1Y3.shell-extension.zip
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/dbus/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/dbus/client.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/dbus/services.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/stylesheet.css  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/backdrop/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/backdrop/damage.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/backdrop/output.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/backdrop/painted_view.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/backdrop/capture.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/corner_policy.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/effect_bounds.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/rounded_pipeline.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/antialiasing.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/snippet_cache.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/shader_effect.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/texture_region.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/shader/uniforms.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/dynamic_surface.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/render/paint_nodes.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/LICENSE  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/prefs.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/legacy_blur_notice.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/effect_chooser.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/pipeline_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/pipeline_page.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/components.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/pipelines/index.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/index.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/app_folders.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/component.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/dash.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/overview.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/panel.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/shell/popup.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/pages/applications.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/application_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/blur_mode_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/component_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/pipeline_choose_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/widgets/effect_row.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/bind_settings.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/subpage.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/resources.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/preferences/menu.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/conveniences/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/conveniences/connections.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/conveniences/utils.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/conveniences/window.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/conveniences/style.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/az/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/az/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/az/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/be/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/be/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/be/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/bg/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/bg/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/bg/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ca/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ca/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ca/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/cs/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/cs/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/cs/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/da/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/da/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/da/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/el/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/el/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/el/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/eo/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/eo/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/eo/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/es/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/es/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/es/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/et/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/et/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/et/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fi/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fi/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fi/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ga/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ga/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ga/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/he/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/he/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/he/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hi/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hi/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hi/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hr/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hr/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hr/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hu/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hu/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/hu/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/it/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/it/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/it/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ja/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ja/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ja/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ka/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ka/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ka/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/kn/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/kn/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/kn/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ko/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ko/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ko/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ml/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ml/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ml/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/mrh/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/mrh/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/mrh/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/my/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/my/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/my/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nb_NO/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nb_NO/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nb_NO/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nl/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nl/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nl/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nn/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nn/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/nn/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pl/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pl/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pl/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ro/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ro/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ro/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ru/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ru/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ru/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sk/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sk/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sk/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sl/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sl/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sl/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sq/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sq/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sq/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ta/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ta/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ta/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/th/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/th/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/th/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/tr/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/tr/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/tr/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/uk/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/uk/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/uk/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_CN/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_CN/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_CN/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_TW/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_TW/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/zh_TW/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ar/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ar/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/ar/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fa/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fa/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fa/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/af/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/af/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/af/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/de/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/de/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/de/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fr/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fr/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/fr/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/id/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/id/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/id/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt_BR/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt_BR/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/pt_BR/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sv/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sv/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/sv/LC_MESSAGES/blur-my-shell@aunetx.mo  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/vi/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/vi/LC_MESSAGES/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/locale/vi/LC_MESSAGES/blur-my-shell@aunetx.mo  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/extension.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/pipelines/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/pipelines/effects_manager.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/pipelines/pipeline.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/pipelines/pipelines_manager.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/actors.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/message_stacks.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/stack_mask.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/stack_mask.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/allocation.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/stack.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/transitions.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/fade.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/blur_surface.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/geometry.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/placement.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/signals.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/surface/style.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/dialog_backdrops.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/index.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/static_actor.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/unblurred_surfaces.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/popup/targets.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/overview_drag.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/window_opacity.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/window_geometry.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/index.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/menus.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/popup_mask.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/applications/window_rules.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/dock/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/dock/stage_update.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/dock/dock_targets.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/dock/dash_to_dock.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/dock/dock_surface.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/panel_discovery.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/window_proximity.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/panel_style.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/index.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/panel/panel_background.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/appfolders.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/coverflow_alt_tab.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/lockscreen.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/overview.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/screenshot.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/settings_connections.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/components/window_list.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/schemas/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/schemas/org.gnome.shell.extensions.blur-my-shell.gschema.xml  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/resources.gresource  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/blur/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/blur/kawase_sampling.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/blur/dual_kawase_blur.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/blur/info.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/blur/kawase_passes.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/color.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/color.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/hsl_to_rgb.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/hsl_to_rgb.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/luminosity.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/luminosity.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/rgb_to_hsl.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/rgb_to_hsl.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/color/info.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/corner/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/corner/corner.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/corner/corner.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/effects.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/refraction/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/refraction/info.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/refraction/refraction.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/refraction/refraction.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/refraction/refraction_config.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/derivative.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/derivative.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/downscale.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/downscale.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/noise.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/noise.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/pixelize.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/upscale.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/upscale.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/image.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/image.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/texture/info.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/ticker.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/wave.glsl  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/wave.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/wave_config.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/wave/info.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/effects/effect_groups.js  
+   creating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/pipeline_settings.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/settings.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/keys.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/settings_file.js  
+  inflating: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/settings/settings_updater.js  
+ extracting: /tmp/tmp155ai_nt/data/gnome-shell/extension-updates/blur-my-shell@aunetx/metadata.json  
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.gnome.Shell.Extensions' requested by ':1.40' (uid=1000 pid=842107 comm="gnome-extensions prefs liquid-widgets@nyongcho.git" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.gnome.Shell.Extensions'
+
+(org.gnome.Shell.Extensions:842112): Gjs-WARNING **: 00:19:55.485: Type GITypeInfo of property Adw.PreferencesWindow::visible-page does not match return type GITypeInfo of getter get_visible_page. Falling back to slow path
+
+(org.gnome.Shell.Extensions:842112): Gjs-WARNING **: 00:19:55.485: Type GITypeInfo of property Adw.PreferencesWindow::visible-page does not match type GITypeInfo of first argument of setter set_visible_page. Falling back to slow path
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Unsupported maximum keycode 708, clipping.
+>                   X11 cannot support keycodes above 255.
+> Warning:          Virtual modifier Hyper multiply defined
+>                   Using 0, ignoring 0
+> Warning:          Virtual modifier ScrollLock multiply defined
+>                   Using 0, ignoring 0
+Errors from xkbcomp are not fatal to the X server
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Activating service name='org.freedesktop.portal.IBus' requested by ':1.44' (uid=1000 pid=842151 comm="ibus-daemon --panel disable -r --xim" label="unconfined")
+dbus-daemon[841338]: [session uid=1000 pid=841338 pidfd=5] Successfully activated service 'org.freedesktop.portal.IBus'
+
+(gnome-shell:841381): libmutter-WARNING **: 00:19:57.234: Tried to ping window W0 (Liquid Widgets) with a bad serial! Not allowed.
+PACKAGE_TEST: final public ZIP installed, enabled, collected, opened preferences, disabled and uninstalled without Rust
+** Message: 00:19:57.322: Shutting down GNOME Shell
+libmutter-Message: 00:19:57.382: Removed virtual monitor Meta-0
+ 00:19:57 | INFO | Disconnected by EIS
+Gdk-Message: 00:19:57.383: Lost connection to Wayland compositor.
+Gdk-Message: 00:19:57.383: Lost connection to Wayland compositor.
+Gdk-Message: 00:19:57.383: Lost connection to Wayland compositor.
+Gdk-Message: 00:19:57.383: Error reading events from display: Broken pipe
+args: ['/home/nyong/.codex/worktrees/bb8e/gnome-widget/scripts/gnome-test-env.py', '/usr/bin/gnome-shell', '--automation-script', '/home/nyong/.codex/worktrees/bb8e/gnome-widget/tests/gnome/package.js', '--force-animations', '--devkit', '--wayland-display', 'gnome-shell-test-display']
+------------------------------------------------------------
+------------------------------------------------------------
+A connection to the bus can't be made
+gnome-shell-calendar-server[841439]: Lost (or failed to acquire) the name org.gnome.Shell.CalendarServer - exiting
+
+(evolution-calendar-factory:841493): libedbus-private-WARNING **: 00:19:57.508: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)
+
+(evolution-addressbook-factory:841534): libedbus-private-WARNING **: 00:19:57.509: Error setting property 'ConnectionStatus' on interface org.gnome.evolution.dataserver.Source: The connection is closed (g-io-error-quark, 18)

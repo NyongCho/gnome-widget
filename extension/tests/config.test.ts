@@ -78,3 +78,110 @@ test('cache deletion failure after reconnect does not skip old-secret cleanup',a
     assert.equal(f.secrets.has(previous),false,'obsolete secret must be removed even if cache deletion fails');
     assert.ok(f.secrets.has((await f.config.read(cancel())).calendar.sourceId!),'new committed secret remains');
 });
+
+test('cancellation after committing a replacement flags the obsolete secret until disconnect', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    const previous = (await f.config.read(cancel())).calendar.sourceId!;
+    const operation = cancel(), replace = f.privateFiles.replace;
+    f.privateFiles.replace = async (name, bytes, cancellation) => {
+        await replace(name, bytes, cancellation);
+        if (name === 'settings.json') operation.cancel();
+    };
+    await assert.rejects(f.settings.setCalendarSecret(url, operation));
+    const committed = await f.config.read(cancel());
+    assert.notEqual(committed.calendar.sourceId, previous);
+    assert.equal(f.secrets.get(committed.calendar.sourceId!), url);
+    assert.equal(f.secrets.get(previous), url);
+    assert.equal(committed.calendar.deletionPending, true);
+    await f.settings.setCalendarSecret(url, cancel());
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, true);
+    await f.settings.clearCalendarSecret(cancel());
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, false);
+    assert.equal(f.secrets.size, 0);
+});
+
+test('cancellation before replacement commits removes only the unused new secret', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    const previous = await f.config.read(cancel());
+    const operation = cancel();
+    f.privateFiles.replace = async () => { operation.cancel(); throw new Error('CANCELLED'); };
+    await assert.rejects(f.settings.setCalendarSecret(url, operation));
+    assert.deepEqual(await f.config.read(cancel()), previous);
+    assert.deepEqual([...f.secrets.keys()], [previous.calendar.sourceId]);
+});
+
+test('committed replacement retains cleanup intent even if subsequent config writes fail', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    const previous = (await f.config.read(cancel())).calendar.sourceId!;
+    const operation = cancel(), replace = f.privateFiles.replace;
+    let committed = false;
+    f.privateFiles.replace = async (name, bytes, cancellation) => {
+        if (committed) throw new Error('disk unavailable after rename');
+        await replace(name, bytes, cancellation);
+        committed = true;
+        operation.cancel();
+    };
+    await assert.rejects(f.settings.setCalendarSecret(url, operation));
+    const current = await f.config.read(cancel());
+    assert.equal(f.secrets.get(current.calendar.sourceId!), url);
+    assert.equal(f.secrets.get(previous), url);
+    assert.equal(current.calendar.deletionPending, true);
+    f.privateFiles.replace = replace;
+    await f.settings.setCalendarSecret(url, cancel());
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, true);
+});
+
+test('successful replacement clears only its own cleanup intent', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    await f.settings.setCalendarSecret(url, cancel());
+    const current = await f.config.read(cancel());
+    assert.deepEqual([...f.secrets.keys()], [current.calendar.sourceId]);
+    assert.equal(current.calendar.deletionPending, false);
+});
+
+test('disconnect queued after a cancelled committed replacement stays cleared', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    const operation = cancel(), replace = f.privateFiles.replace;
+    const committed = deferred(), resume = deferred();
+    let first = true;
+    f.privateFiles.replace = async (name, bytes, cancellation) => {
+        await replace(name, bytes, cancellation);
+        if (first) {
+            first = false;
+            committed.resolve();
+            await resume.promise;
+            operation.cancel();
+        }
+    };
+    const replacing = assert.rejects(f.settings.setCalendarSecret(url, operation));
+    await committed.promise;
+    const clearing = f.settings.clearCalendarSecret(cancel());
+    resume.resolve();
+    await Promise.all([replacing, clearing]);
+    assert.equal(f.secrets.size, 0);
+    assert.deepEqual((await f.config.read(cancel())).calendar, {
+        enabled: false, sourceId: null, deletionPending: false,
+    });
+});
+
+test('failed old-secret removal keeps committed cleanup intent through reconnect', async () => {
+    const f = fixture();
+    await f.settings.setCalendarSecret(url, cancel());
+    const previous = (await f.config.read(cancel())).calendar.sourceId!;
+    const remove = f.secretStore.remove;
+    f.secretStore.remove = async () => { throw new Error('locked'); };
+    await f.settings.setCalendarSecret(url, cancel());
+    assert.equal(f.secrets.get(previous), url);
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, true);
+    f.secretStore.remove = remove;
+    await f.settings.setCalendarSecret(url, cancel());
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, true);
+    await f.settings.clearCalendarSecret(cancel());
+    assert.equal(f.secrets.size, 0);
+    assert.equal((await f.config.read(cancel())).calendar.deletionPending, false);
+});

@@ -1,0 +1,291 @@
+
+> liquid-widgets-extension@0.1.1 format:check
+> prettier --check "src/**/*.ts" "scripts/{build,public-modules,generate-validators,test}.mjs"
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> liquid-widgets-extension@0.1.1 pretypecheck
+> npm run generate
+
+
+> liquid-widgets-extension@0.1.1 generate
+> node scripts/generate-validators.mjs
+
+
+> liquid-widgets-extension@0.1.1 typecheck
+> tsc --noEmit && tsc -p tsconfig.tests.json && tsc -p tsconfig.gnome.json && tsc -p tsconfig.prefs.json && tsc -p tsconfig.worker.json
+
+
+> liquid-widgets-extension@0.1.1 pretest
+> npm run generate
+
+
+> liquid-widgets-extension@0.1.1 generate
+> node scripts/generate-validators.mjs
+
+
+> liquid-widgets-extension@0.1.1 test
+> node scripts/test.mjs
+
+✔ agenda_excludes_ended_and_caps_at_three (10.233725ms)
+✔ all_day_is_active_until_exclusive_end (0.156692ms)
+✔ equal starts have stable uid and occurrence ordering without mutating input (0.636764ms)
+✔ agenda applies its own 30-day display-zone horizon and keeps ongoing events (0.230945ms)
+✔ mixed all-day and timed starts sort in the display zone (0.218924ms)
+✔ agenda captions identify dates for timed and all-day events (0.887621ms)
+✔ Rust retains existing metadata, schema, cache and secret identity (0.54196ms)
+✔ public identity has separate settings, data and build namespaces (0.176147ms)
+✔ Rust adapter retains transport behavior and destroy releases the session once (0.253593ms)
+✔ build guard follows UI chunks and rejects calendar engine and time zone imports (0.951233ms)
+✔ both emitted editions carry the selected metadata and schema without mutating source (1984.633186ms)
+✔ generated validators work in a checkout with spaces and Unicode in its path (545.129935ms)
+✔ summary has a bounded, closed schema and never exposes event titles (2.519844ms)
+✔ foreign_watch_token, per-sender/total caps, sender death and disable release demand (0.787002ms)
+✔ sender disappearing during asynchronous registration cannot leave a watch token (0.118748ms)
+✔ newer_signal_beats_watch_snapshot and completion_during_watch_setup retain newest revision (0.737521ms)
+✔ close_before_watch_reply releases the late token on its original owner without canceling the reply (0.225453ms)
+✔ owner_change_before_watch_reply and reenable_same_owner_new_instance cannot update new UI or remove its token (0.542683ms)
+✔ invalid initial summary still releases a valid allocated token; refresh targets unique owner (0.249796ms)
+✔ summary rejects state combinations that the provider DTO also rejects (0.24681ms)
+✔ summary context compares fields, not JSON property order, on completion (0.261361ms)
+✔ month_grid_uses_week_start (0.850391ms)
+✔ event dots cover local days and exclude the exclusive all-day end (9.378653ms)
+✔ calendar cells match the backend minimal full-week month range (0.153784ms)
+✔ fresh calendar sends raw bytes and bounded Google HTTPS request to a versioned worker job (3.555198ms)
+✔ switch_source_during_fetch and clear_then_late_cache_write never restore old data (1.368404ms)
+✔ switch_month_during_worker and disable discard late computed data and cache writes (0.610153ms)
+✔ offline_recompute uses raw cache for a new month, timezone, day and week start with original updatedAt (0.754807ms)
+✔ worker_timeout_keeps_stale for the same context, never a different context (0.660406ms)
+✔ cache pair digest prevents mixed or truncated atomic writes from becoming offline data (0.515538ms)
+✔ invalid URL and worker context are rejected; preview never writes regular caches (0.463419ms)
+✔ same_source_same_day_coalesces, midnight/week-start/resume each refresh exactly once (2.033899ms)
+✔ source is checked again inside the mutation lock and a failed clear reports failure (1.43028ms)
+✔ calendar preferences report real failures and completion after URL storage (0.613925ms)
+✔ summary status distinguishes settings preview from widget synchronization in both languages (0.254741ms)
+✔ card_states_do_not_fabricate_values (0.89334ms)
+✔ source switch loading state exposes no values from the previous source (0.097585ms)
+✔ column normalization preserves each known card once and appends missing cards to their default side (0.877208ms)
+✔ disabled cards retain their side and position regardless of enable sequence (0.191871ms)
+✔ within-column movement swaps only neighbors and respects boundaries (0.142966ms)
+✔ cross-column movement appends once, preserves the other rows, and permits an empty side (0.172106ms)
+✔ signal subscription precedes snapshot and newer revisions win (7.850986ms)
+✔ late_old_owner_response_is_discarded and reconnect accepts revision 1 (1.116154ms)
+✔ disable during Subscribe releases late token to original owner (0.439952ms)
+✔ disable and enable discard the previous generation even with the same owner (0.908477ms)
+✔ malformed signals cannot replace current data or leak error contents (1.680161ms)
+✔ transient snapshot failure recovers without a bus owner change (0.630743ms)
+✔ failed subscribe retries with bounded backoff and disable cancels recovery (0.4238ms)
+✔ owner change cancels retry scheduled for a previous owner (0.304818ms)
+✔ calendar context is sent before subscribe, serialized on change and refreshed at midnight (0.697997ms)
+✔ resume refreshes subscribed remote data, marks old data pending, retries failure and cancels on disable (1.550533ms)
+✔ resume does not refresh hidden or unconfigured providers (0.478929ms)
+✔ clock_values_follow_minute_boundary (0.48036ms)
+✔ clock faces use local wall time for hands and separate localized AM/PM from digits (9.77754ms)
+✔ analog updates align with the next wall-clock second (0.115377ms)
+✔ clock follows midnight, timezone and 12/24 hour preferences (1.632173ms)
+✔ concurrent_connect_clear serializes keyring and configuration changes (2.184412ms)
+✔ write_failure_preserves_old_source and cleans only the uncommitted new secret (0.976806ms)
+✔ delete_pending_survives_reconnect until an explicit successful disconnect (0.546146ms)
+✔ stale_cache_writer_after_clear cannot recreate cache data (0.32417ms)
+✔ transaction expires at release and replaces with a fresh revision UUID (0.361998ms)
+✔ missing_secret_gi_only_disables_calendar: non-secret settings remain usable (0.687973ms)
+✔ an uncertain old secret write cannot overwrite or delete a newer source (0.333085ms)
+✔ configuration rejects oversized, unknown and invalid persisted data (0.175897ms)
+✔ cache deletion failure after reconnect does not skip old-secret cleanup (0.335894ms)
+✔ cancellation after committing a replacement flags the obsolete secret until disconnect (0.505868ms)
+✔ cancellation before replacement commits removes only the unused new secret (0.313357ms)
+✔ committed replacement retains cleanup intent even if subsequent config writes fail (0.300984ms)
+✔ successful replacement clears only its own cleanup intent (0.205028ms)
+✔ disconnect queued after a cancelled committed replacement stays cleared (0.269919ms)
+✔ failed old-secret removal keeps committed cleanup intent through reconnect (0.309628ms)
+✔ shared fixtures round trip with independent provider states (5.026735ms)
+✔ reject unknown schema version (0.284063ms)
+✔ reject secret URL field (0.156151ms)
+✔ reject secret source ID (0.150662ms)
+✔ reject raw error is forbidden (0.162249ms)
+✔ reject wrong provider shape (0.237371ms)
+✔ reject impossible date (0.165706ms)
+✔ reject offset required (0.118935ms)
+✔ reject ok needs data (0.136333ms)
+✔ reject stale needs timestamp (0.211374ms)
+✔ reject unknown provider state (0.139437ms)
+✔ reject weekStart bounds (0.106518ms)
+✔ reject negative byte count (0.143461ms)
+✔ reject revision overflow (0.110682ms)
+✔ reject secret settings field (0.064721ms)
+✔ reject location latitude bounds (0.058021ms)
+✔ UTF-8 payload budget is measured in bytes (1.279167ms)
+✔ provider signals and setting inputs use the shared schemas (4.158175ms)
+✔ errors do not echo invalid private input (0.211286ms)
+✔ selected English reaches provider errors and calendar sync states without changing data (0.747895ms)
+✔ selected English reaches all-day, weather and first network measurement labels (9.339426ms)
+✔ switching bound text preserves drafts and uses the latest status, and disposal releases targets (0.479326ms)
+✔ left and right stacks pack independently with matching clock/weather dimensions (1.075721ms)
+✔ custom column order and hidden cards do not change other-column positions (0.260247ms)
+✔ an empty left column stays empty and no cards yields only the toolbar (0.134559ms)
+✔ small workarea stacks left then right without dropping cards (0.138046ms)
+✔ clock follows weather height, retains a ready-size baseline when weather is hidden, and never clips its content (0.210836ms)
+✔ measured heights include scale once and invalid values use defaults (0.127332ms)
+✔ lost monitor falls back to an available primary monitor (0.104786ms)
+✔ only enabled cards request providers, including enabled but paused music (0.800134ms)
+✔ network speed uses automatic binary units with a distinct unknown first sample (0.181717ms)
+✔ late_reply_ignored and source_change_clears_old_data without overlapping collection (2.81429ms)
+✔ last_good_same_source_only preserves original successful timestamp (1.440359ms)
+✔ stop_cards_keeps_prefs_calendar and last watcher stops its timer and request (0.449028ms)
+✔ destroy_cancels_everything and late callbacks cannot access the UI (0.284084ms)
+✔ resume_resets_samples and cancels old context before collecting again (0.305299ms)
+✔ manual refresh rate and periodic timers are independent and bounded (0.595655ms)
+✔ malformed provider state stays isolated from other providers (0.314251ms)
+✔ initial config snapshot cannot overwrite a newer file-watch update (0.254223ms)
+✔ hiding sampled cards resets their baseline before the next subscription (0.184566ms)
+✔ periodic system sampling retains the last complete presentation until its replacement arrives (0.934472ms)
+✔ periodic network sampling retains the last complete graph until the next sample (0.942176ms)
+✔ initial read and monitor failures recover with bounded backoff and destroy cancels recovery (0.993485ms)
+✔ deletion-pending changes notify preferences without restarting the calendar collector (0.286232ms)
+✔ MPRIS selects playing only, bounds discovery, switches owners and removes stopped players (2.263971ms)
+✔ late track A artwork and late old-owner properties cannot overwrite track B (0.489319ms)
+✔ concurrent property signals coalesce and disable cancels pending reads (0.297932ms)
+✔ art URI policy excludes credentials, fragments, non-HTTPS and remote file hosts (0.271954ms)
+✔ artwork retries network once after 2s, cools failures for 60s, bounds downloads and reuses cache (1.081606ms)
+✔ empty/oversize artwork never publishes; cancellation removes retry timers (0.759671ms)
+✔ art completion rechecks the real metadata even when its change signal is delayed (0.386035ms)
+✔ simultaneous artwork consumers share a fetch and one consumer may cancel independently (0.344631ms)
+✔ a hung artwork transport is bounded at five seconds per attempt (0.460648ms)
+✔ provider_revision_is_monotonic (4.480186ms)
+✔ snapshot cannot overwrite a signal received during subscription (0.270908ms)
+✔ owner reset keeps last values but permits a new owner revision 1 (0.452525ms)
+✔ unknown providers and malformed or oversized signal payloads fail without changing the store (1.506937ms)
+✔ CPU first sample, MemAvailable, guest exclusion and reset preserve Rust semantics (0.949797ms)
+✔ CPU sensor chooses package/Tdie before core/Tctl and excludes NVMe (0.680585ms)
+✔ network preserves exact deltas above 2^53 and uses elapsed monotonic time (0.210694ms)
+✔ network history is limited to sixty seconds and sixty samples (0.384125ms)
+✔ route selection prefers IPv4 and lowest metric, falls back to IPv6, excludes automatic Tailscale (0.392092ms)
+✔ manual Tailscale is allowed and disappearance resets network history (0.942944ms)
+✔ temperature is measured at most once per five seconds; resume resets CPU baseline (0.456138ms)
+✔ snapshot: factored validators preserve original accepted data (68.550448ms)
+✔ settings: factored validators preserve original accepted data (2.392461ms)
+✔ calendarContext: factored validators preserve original accepted data (1.277429ms)
+✔ weatherLocation: factored validators preserve original accepted data (1.737693ms)
+✔ locationSearchResults: factored validators preserve original accepted data (1.630234ms)
+✔ calendar: factored validators preserve original accepted data (4.734418ms)
+✔ weather: factored validators preserve original accepted data (9.51577ms)
+✔ system: factored validators preserve original accepted data (5.075454ms)
+✔ network: factored validators preserve original accepted data (6.443046ms)
+✔ media: factored validators preserve original accepted data (5.357144ms)
+✔ workerHeader: factored validators preserve original accepted data (2.390998ms)
+✔ workerControl: factored validators preserve original accepted data (0.74587ms)
+✔ workerReply: factored validators preserve original accepted data (6.21881ms)
+✔ dataConfig: factored validators preserve original accepted data (4.08613ms)
+✔ calendarSummary: factored validators preserve original accepted data (3.859601ms)
+✔ Unicode, format and numeric boundary checks remain strict (0.287395ms)
+✔ generated validation stays factored instead of inlining whole schemas (360.264728ms)
+✔ weather hours use selected timezone across midnight and preserve missing values (9.181221ms)
+✔ invalid timezone cannot crash the shell and unknown weather is not reported clear (0.498394ms)
+✔ Rust weather fixtures preserve coordinates, local timezone, nulls and numeric zero (5.868983ms)
+✔ requests use fixed HTTPS endpoints, UTC epoch data and 256 KiB/15 second bounds (2.930161ms)
+✔ offline cache preserves last success time across provider instances and clear removes it (0.673763ms)
+✔ city A late response never overwrites city B cache (0.658944ms)
+✔ location search permits one active query, one per second, and at most twenty results (0.594853ms)
+✔ weather scheduling backs off 30 to 900 seconds and resets after success (1.064361ms)
+✔ JSON framing counts UTF-8 bytes and accepts the exact boundary (1.05877ms)
+✔ length parsing rejects oversized, zero and truncated frame headers before allocation (0.120355ms)
+✔ malformed UTF-8 and JSON fail without reflecting input (0.116579ms)
+✔ job header rejects extra URL fields and invalid context (0.603667ms)
+✔ ready and busy control messages are distinct and versioned (0.211658ms)
+✔ reply must belong to the exact job, source, generation and calendar context (0.855587ms)
+✔ worker failures use a closed error enum and cannot smuggle partial data (0.159115ms)
+ℹ tests 167
+ℹ suites 0
+ℹ pass 167
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5226.368641
+
+> liquid-widgets-extension@0.1.1 build
+> node scripts/build.mjs --edition gjs
+
+BUILD_TEST: gjs metadata/schema, process imports and artifact policy passed
+gjs: 59/59 calendar cases passed
+{"name":"sparse","success":true,"elapsedMs":100.074}
+{"name":"impossible","success":true,"elapsedMs":0.92}
+{"test":"lease mutual exclusion, bounded wait and cancellation","success":true}
+{"test":"real worker result, clean exit and disposal","success":true}
+{"test":"reject truncated, reap before returning","success":true}
+{"test":"reject extra, reap before returning","success":true}
+{"test":"reject utf8, reap before returning","success":true}
+{"test":"reject oversize, reap before returning","success":true}
+{"test":"reject nonzero, reap before returning","success":true}
+{"test":"reject hang, reap before returning","success":true}
+{"test":"reject slow, reap before returning","success":true}
+{"test":"reject wrongjob, reap before returning","success":true}
+{"test":"reject crash, reap before returning","success":true}
+{"test":"reject controloversize, reap before returning","success":true}
+{"test":"exact 512 KiB response frame remains valid","success":true}
+{"test":"latest pending job replaces stale jobs and cancel reaps within one second","success":true}
+{"test":"busy waits for session lease, timeout and dispose cancel waits","success":true}
+{"test":"twenty process replacements do not leak file descriptors","success":true}
+PASS ready/busy race and EOF before input
+PASS exact input limit
+PASS input over limit
+PASS invalid UTF-8
+PASS truncated raw frame
+PASS extra input frame
+PASS 16 KiB header boundary
+PASS SIGKILL parent during input: child exit+reap in 0.051s
+PASS SIGKILL parent during compute: child exit+reap in 8.944s
+PASS internal 9 second deadline while awaiting input
+{"test":"private atomic files, size bound, regular-file-only and cancellation","success":true}
+{"test":"compressed_body_limit, redirect rejection and HTTP deadline","success":true}
+{"test":"missing Secret GI does not prevent other settings from loading","success":true}
+{"test":"unresponsive keyring releases ConfigLock at the total eight second deadline","success":true}
+{"test":"real isolated keyring saves, reads, removes and never prompts when locked","success":true}
+PASS ConfigLock owner death releases another process
+{"test":"twenty real GJS sessions cancel sources, watchers and callbacks","success":true}
+{"probe":"reads after one read with watcher","reads":1}
+{"test":"real config watch and preferences-only calendar demand","success":true}
+{"test":"real HTTP search/select/forecast/offline/429/clear through the local session","success":true}
+{"test":"GIO CPU/RAM/sensors/large network counters/routes/cancel and no idle polling","success":true}
+{"test":"real MPRIS owner/property/pause/timeout/disable; art cache bounds and native 16:9/square decode","success":true}
+{"test":"real calendar HTTP/worker/cache/offline/UTF-8/redirect; clear and disable during HTTP and computation; read-only preview","success":true}
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.0' (uid=1000 pid=839755 comm="gjs -m /home/nyong/.codex/worktrees/bb8e/gnome-wid" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=839824 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.portal.Documents' requested by ':1.10' (uid=1000 pid=839824 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.portal.Documents'
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gnome' requested by ':1.10' (uid=1000 pid=839824 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+
+** (xdg-desktop-portal-gnome:839847): WARNING **: 00:19:13.722: Failed to open service channel Wayland connection, portals dialogs may missbehave (Cannot invoke method; proxy is for the well-known name org.gnome.Mutter.ServiceChannel without an owner, and proxy was constructed with the G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START flag).
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.gnome.Settings.GlobalShortcutsProvider' requested by ':1.13' (uid=1000 pid=839847 comm="/usr/libexec/xdg-desktop-portal-gnome" label="unconfined")
+
+** (process:839864): WARNING **: 00:19:13.790: Failed to open service channel Wayland connection, portal dialogs may misbehave (Cannot invoke method; proxy is for the well-known name org.gnome.Mutter.ServiceChannel without an owner, and proxy was constructed with the G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START flag).
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.gnome.Settings.GlobalShortcutsProvider'
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gnome'
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=839824 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.17' (uid=1000 pid=839872 comm="/usr/libexec/xdg-desktop-portal-gtk" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[839885]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=839872 comm="/usr/libexec/xdg-desktop-portal-gtk" label="unconfined")
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+dbus-daemon[839885]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+
+(/usr/libexec/xdg-desktop-portal:839824): xdg-desktop-portal-WARNING **: 00:19:13.910: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Activating service name='org.freedesktop.secrets' requested by ':1.10' (uid=1000 pid=839824 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+** Message: 00:19:13.914: couldn't access control socket: /tmp/liquid-public-test-i4cw64r4/runtime/keyring/control: No such file or directory
+** Message: 00:19:13.914: couldn't access control socket: /tmp/liquid-public-test-i4cw64r4/runtime/keyring/control: No such file or directory
+discover_other_daemon: 0dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.secrets'
+dbus-daemon[839752]: [session uid=1000 pid=839752 pidfd=5] Successfully activated service 'org.freedesktop.portal.Desktop'
+{"test":"real GTK settings ignore old snapshots/errors and update same-source deletion warnings","success":true}
+{"test":"two production GTK sessions propagate failed cleanup and same-null-source successful retry","success":true}
+{"test":"20 actual GTK preview open/close cycles and two-window compute contention","success":true,"beforeFds":44,"afterFds":44}
+{"test":"prefs off/on, hidden demand, preview cancellation, late token, same owner new instance, two-window mutations, close during worker and real GTK display/close","success":true}
+{"test":"1000-event calendar and agenda presentation within 20ms median","samples":[{"agendaMs":10.192,"dotsMs":4.291,"totalMs":14.484},{"agendaMs":3.201,"dotsMs":3.498,"totalMs":6.7},{"agendaMs":2.894,"dotsMs":3.137,"totalMs":6.032},{"agendaMs":2.945,"dotsMs":3.104,"totalMs":6.05},{"agendaMs":2.92,"dotsMs":3.103,"totalMs":6.024}],"median":6.05,"success":true}
+PASS fixture replacement yields to the main loop and completes before refresh
+..............................
+----------------------------------------------------------------------
+Ran 30 tests in 1.347s
+
+OK
+Public ZIP: /tmp/tmpa9fsuoxr/dist/liquid-widgets-public/liquid-widgets.shell-extension.zip

@@ -1,0 +1,14 @@
+{
+  "artifact": "dist/liquid-widgets-public/liquid-widgets.shell-extension.zip",
+  "sha256": "0efe6bdc591428a39bf1d299e550b397cd3f0a10cdfb1f3cc86a2a5ef3769470",
+  "zipBytes": 371543,
+  "entries": 130,
+  "uncompressedBytes": 2533873,
+  "entryBytes": {
+    "extension.js": 4505,
+    "prefs.js": 370,
+    "calendar-worker.js": 3517
+  },
+  "compiledSchemaShipped": false,
+  "gnomeExtensionsSubmitted": false
+}

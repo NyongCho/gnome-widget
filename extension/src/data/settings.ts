@@ -48,7 +48,8 @@ export class DataSettingsService {
         try {
             await this.config.mutate(async (tx) => {
                 const source = this.uuid(),
-                    previous = tx.current.calendar.sourceId;
+                    previous = tx.current.calendar.sourceId,
+                    wasPending = tx.current.calendar.deletionPending;
                 try {
                     await this.secrets.save(source, url, cancel);
                 } catch (error) {
@@ -58,7 +59,12 @@ export class DataSettingsService {
                 try {
                     await tx.replace({
                         ...tx.current,
-                        calendar: { ...tx.current.calendar, enabled: true, sourceId: source },
+                        // Commit cleanup intent with the new source before cancellation can intervene.
+                        calendar: {
+                            enabled: true,
+                            sourceId: source,
+                            deletionPending: wasPending || Boolean(previous),
+                        },
                     });
                 } catch (error) {
                     // A cancelled atomic rename may already have committed. Never delete
@@ -83,15 +89,18 @@ export class DataSettingsService {
                     }
                 }
                 if (previous && previous !== source) {
+                    let removed = false;
                     try {
                         await this.secrets.remove(previous, cancel);
+                        removed = true;
                     } catch {
-                        uncertain = true;
+                        // The committed cleanup marker remains until an explicit disconnect.
+                    }
+                    if (removed && !wasPending)
                         await tx.replace({
                             ...tx.current,
-                            calendar: { ...tx.current.calendar, deletionPending: true },
+                            calendar: { ...tx.current.calendar, deletionPending: false },
                         });
-                    }
                 }
                 if (cacheFailed) throw new DataFailure('SERVICE_UNAVAILABLE');
             }, cancel);

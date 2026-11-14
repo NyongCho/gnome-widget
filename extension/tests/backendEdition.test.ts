@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { getEdition } from '../src/edition.js';
 import { RustWidgetSession } from '../src/backend/rust.js';
 import { ProviderStore } from '../src/shared/providerStore.js';
@@ -125,7 +126,7 @@ test('both emitted editions carry the selected metadata and schema without mutat
             const { build } = await import('esbuild');
             const linked = await build({
                 entryPoints: ['extension.js', 'prefs.js', 'calendar-worker.js'].map(
-                    (file) => new URL(file, base).pathname,
+                    (file) => fileURLToPath(new URL(file, base)),
                 ),
                 bundle: true,
                 write: false,

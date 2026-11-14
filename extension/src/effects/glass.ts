@@ -2,6 +2,7 @@ import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
 import Graphene from 'gi://Graphene';
+import { EDITION } from '../edition.js';
 import shader from '../../shaders/glass.glsl';
 import blurShader from '../../shaders/blur.glsl';
 
@@ -73,7 +74,7 @@ function rectangle(pipeline: Cogl.Pipeline, width: number, height: number): Clut
     return node;
 }
 export const GlassEffect = GObject.registerClass(
-    { GTypeName: 'LiquidWidgetsGlassEffect50', Signals: { failed: {} } },
+    { GTypeName: `LiquidWidgetsGlassEffect50_${EDITION.backend}`, Signals: { failed: {} } },
     class GlassEffect extends Clutter.Effect {
         failed = false;
         private target: Target | null = null;

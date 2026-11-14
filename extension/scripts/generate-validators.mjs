@@ -1,4 +1,5 @@
 import { readFile, readdir, rm, mkdir, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import standaloneCode from 'ajv/dist/standalone/index.js';
@@ -60,7 +61,7 @@ const entryPoints = {};
 for (const [name, id] of Object.entries(exports)) {
     const path = new URL(`${name}.js`, sources);
     await writeFile(path, standaloneCode(ajv, { [name]: id }));
-    entryPoints[name] = path.pathname;
+    entryPoints[name] = fileURLToPath(path);
     await writeFile(
         new URL(`validators/${name}.d.ts`, dir),
         `export function ${name}(data: unknown): boolean;\n`,
@@ -69,7 +70,7 @@ for (const [name, id] of Object.entries(exports)) {
 // Share Ajv's helper code without shipping Node or the schema compiler.
 await build({
     entryPoints,
-    outdir: new URL('validators/', dir).pathname,
+    outdir: fileURLToPath(validators),
     bundle: true,
     splitting: true,
     format: 'esm',

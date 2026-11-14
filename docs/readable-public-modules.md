@@ -2,6 +2,8 @@
 
 The owner's EGO version 2 was rejected for unreadable transpilation and monolithic output. This candidate changes the public build and source layout for review. It is **not an approved or submitted EGO version**. Published GitHub release assets remain unchanged.
 
+The later [2026-11-15 bug-fix verification](../outputs/verification/20261115-bugfixes/README.md) records the updated ZIP, edition isolation, calendar recovery and path handling fixes. Artifact sizes and test counts below describe the earlier modularization candidate.
+
 ## Package layout
 
 The public build preserves source module boundaries. Its entry points contain the extension, preferences and worker entry code; application modules remain under `src/`. `extension.js` exposes `enable()` and `disable()` directly. The installed extension requires neither Node nor Rust.
