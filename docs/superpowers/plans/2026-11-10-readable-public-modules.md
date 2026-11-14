@@ -58,5 +58,5 @@
 - [x] Extend the exact-ZIP native test to execute the actual emitted calendar worker with synthetic ICS and timezone data.
 - [x] Run `CARGO_TARGET_DIR=/home/nyong/projet/gnome-widget/daemon/target ./scripts/check.sh --edition all`, package checks, Shexli, and the disposable GNOME exact-ZIP lifecycle test.
 - [x] Obtain one fresh read-only whole-change review, address material findings with regressions, and record any limitations.
-- [ ] Commit and push the authorized source changes, preserve published release assets, and deliver the tested ZIP and accurate review notes.
-  - Implementation and verification are committed; the delivery ZIP is ready. Push is pending because the local GNOME keyring is locked and GitHub credential lookup failed. Existing release assets are unchanged.
+- [x] Commit and push the authorized source changes, preserve published release assets, and deliver the tested ZIP and accurate review notes.
+  - Source through `2e862bd` was pushed to `origin/codex/typescript-public` on 2026-11-15 after the keyring became available. The updated ZIP and three independent reviews are recorded in [bug-fix verification](../../../outputs/verification/20261115-bugfixes/README.md). Existing release assets are unchanged.
